@@ -16,7 +16,7 @@ from src.plane import Plane
 ###########
 
 # Load the plane
-plane = Plane("cessna_citation_III", "./plane_database")
+plane = Plane("cessna_citation_III")
 
 # Define the altitude
 z = 300

@@ -26,8 +26,13 @@ from .atmosphere import compute_air_density_from_altitude, compute_altitude_from
 # Constants #
 #############
 
+# Define physical constants
 P0 = 1e5  # Pa
 g = 9.81  # m.s-2
+
+# Define a default plane database location
+default_plane_database = os.path.join(os.path.dirname(
+    os.path.dirname(__file__)), "plane_database")
 
 ###########
 # Classes #
@@ -67,20 +72,28 @@ class Plane:
     ground_effect_coefficient: float | None = None
     C_L_max: float | None = None
 
-    def __init__(self, plane_data_name=None, plane_database_folder=None):
+    def __init__(self, plane_data_name: str | None = None, plane_database_folder: str = default_plane_database):
         if plane_data_name is not None:
             self.load_plane_data(plane_data_name, plane_database_folder)
 
     @property
-    def m(self):
+    def m(self) -> float:
+        """
+        Total mass of the plane.
+        """
+
         return self.m_empty + self.m_fuel + self.m_payload
 
     @property
-    def extension(self):
+    def extension(self) -> float:
+        """
+        Extension coefficient of the wings.
+        """
+
         return pow(self.b, 2) / self.S
 
     @property
-    def f_max(self):
+    def f_max(self) -> float:
         f_max = 1 / (2 * np.sqrt(self.k * self.C_D_0))
         return f_max
 
@@ -99,81 +112,81 @@ class Plane:
     def fuel_specific_conso_SI(self):
         return self.fuel_specific_conso / 3600
 
-    def update_k(self, force=False):
+    def update_k(self, force: bool = False):
         if self.k is None or force:
             self.k = 1 / (np.pi * self.wing_shape_coefficient * self.extension)
 
-    def update_P(self, force=False):
+    def update_P(self, force: bool = False):
         if self.P is None or force:
             self.P = self.m * g
 
-    def update_ground_effect_coefficient(self, force=False):
+    def update_ground_effect_coefficient(self, force: bool = False):
         if (self.ground_effect_coefficient is None or force) and self.wing_to_ground_height is not None:
             temp = np.power(16 * self.wing_to_ground_height / self.b, 2)
             self.ground_effect_coefficient = temp / (1 + temp)
 
-    def update_C_L_max(self, force=False):
+    def update_C_L_max(self, force: bool = False):
         if (self.C_L_max is None or force) and self.alpha_stall is not None and self.a is not None:
             self.C_L_max = self.C_L(self.alpha_stall)
 
-    def update_variables(self, force=False):
+    def update_variables(self, force: bool = False):
         self.update_k(force)
         self.update_P(force)
         self.update_ground_effect_coefficient(force)
         self.update_C_L_max(force)
 
-    def C_L(self, alpha):
+    def C_L(self, alpha: float):
         C_L = self.a * (alpha - self.alpha_0)
         return C_L
 
-    def C_D(self, alpha=None, C_L=None):
+    def C_D(self, alpha: float = None, C_L: float = None):
         self.update_k()
         if C_L is None:
             C_L = self.C_L(alpha)
         C_D = self.C_D_0 + self.k * pow(C_L, 2)
         return C_D
 
-    def f(self, alpha):
+    def f(self, alpha: float):
         C_L = self.C_L(alpha)
         C_D = self.C_D(alpha)
         f = C_L / C_D
         return f
 
-    def v(self, alpha, z=0):
+    def v(self, alpha: float, z: float = 0.):
         rho = compute_air_density_from_altitude(z)
         v = np.sqrt(self.P / (.5 * rho * self.S * self.C_L(alpha)))
         return v
 
-    def n(self, v, z, alpha):
+    def n(self, v: float, z: float, alpha: float):
         lift = self.compute_lift(v, z, alpha)
         n = lift / self.P
         return n
 
-    def compute_drag(self, v, z, alpha=None, C_L=None):
+    def compute_drag(self, v: float, z: float, alpha: float | None = None, C_L: float | None = None):
         drag = .5 * \
             compute_air_density_from_altitude(
                 z) * self.S * pow(v, 2) * self.C_D(alpha, C_L)
         return drag
 
-    def compute_lift(self, v, z, alpha=None, C_L=None):
+    def compute_lift(self, v: float, z: float, alpha: float | None = None, C_L: float | None = None):
         if C_L is None:
             C_L = self.C_L(alpha)
         lift = .5 * \
             compute_air_density_from_altitude(z) * self.S * pow(v, 2) * C_L
         return lift
 
-    def compute_thrust(self, z):
+    def compute_thrust(self, z: float):
         if self.engine_type == "turbo-reactor":
             sigma = compute_sigma_from_altitude(z)
             return self.thrust_per_engine * self.nb_engines * sigma
         else:
             raise NotImplementedError
 
-    def compute_normalized_thrust(self, z):
+    def compute_normalized_thrust(self, z: float):
         t = self.compute_thrust(z) * self.f_max / self.P
         return t
 
-    def compute_stall_speed(self, z: float = 0., alpha: float = None, C_L_max=None):
+    def compute_stall_speed(self, z: float = 0., alpha: float | None = None, C_L_max: float | None = None):
         if alpha is None:
             alpha = self.alpha_stall
         if C_L_max is None:
@@ -191,23 +204,23 @@ class Plane:
         gamma_min = -1 / self.f_max
         return gamma_min
 
-    def compute_v_at_gliding_v_z_min(self, z):
+    def compute_v_at_gliding_v_z_min(self, z: float):
         rho = compute_air_density_from_altitude(z)
         v_at_v_z_min = np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(self.k / (3 * self.C_D_0), 1 / 4)
         return v_at_v_z_min
 
-    def compute_gliding_v_z_min(self, z):
+    def compute_gliding_v_z_min(self, z: float):
         rho = compute_air_density_from_altitude(z)
         v_z_min = 4 * np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(pow(self.k, 3) * self.C_D_0 / 27, 1 / 4)
         return v_z_min
 
-    def compute_max_gliding_time(self, z):
+    def compute_max_gliding_time(self, z: float):
         v_z_min = self.compute_gliding_v_z_min(z)
         return z / v_z_min
 
-    def compute_velocity_interval_for_fixed_thrust(self, z):
+    def compute_velocity_interval_for_fixed_thrust(self, z: float):
         t = self.compute_normalized_thrust(z)
         v_ref = self.compute_reference_speed(z)
         v_max = float(np.sqrt(t + np.sqrt(pow(t, 2) - 1)) * v_ref)
@@ -235,11 +248,11 @@ class Plane:
 
         return v_ref
 
-    def compute_max_gliding_range(self, z):
+    def compute_max_gliding_range(self, z: float):
         R_max = self.f_max * z
         return R_max
 
-    def compute_thrust_needed(self, alpha, z):
+    def compute_thrust_needed(self, alpha: float, z: float):
         rho = compute_air_density_from_altitude(z)
         friction_drag = .5 * rho * self.S * self.v(alpha, z) * self.C_D_0
         induced_drag = (2 * self.k * self.P) / \
@@ -251,10 +264,10 @@ class Plane:
         min_thrust_needed = 2 * self.P * np.sqrt(self.k * self.C_D_0)
         return min_thrust_needed
 
-    def compute_speed_for_min_thrust_needed(self, z):
+    def compute_speed_for_min_thrust_needed(self, z: float):
         return self.compute_reference_speed(z)
 
-    def compute_speed_for_min_power_needed(self, z):
+    def compute_speed_for_min_power_needed(self, z: float):
         reference_speed = self.compute_reference_speed(z)
         v_for_w_min = (1 / pow(3, 1 / 4)) * reference_speed
         return v_for_w_min
@@ -293,7 +306,7 @@ class Plane:
         n_z = 1 / np.cos(phi)
         return n_z
 
-    def compute_max_range_at_fixed_altitude(self, z):
+    def compute_max_range_at_fixed_altitude(self, z: float):
         rho = compute_air_density_from_altitude(z)
         optimal_C_L = self.C_L_f_max / np.sqrt(3)
         plane_range = (2 / (self.fuel_specific_conso_SI * g)) * (np.sqrt(optimal_C_L) / self.C_D(C_L=optimal_C_L)) * \
@@ -301,28 +314,28 @@ class Plane:
                                            np.sqrt((self.m_empty + self.m_payload) * g))
         return plane_range
 
-    def compute_range_at_fixed_speed(self, v, alpha=None, f=None):
+    def compute_range_at_fixed_speed(self, v: float, alpha: float | None = None, f: float | None = None):
         if f is None:
             f = self.f(alpha)
         plane_range = (v / (self.fuel_specific_conso_SI * g)) * \
             f * np.log(self.P / ((self.m_empty + self.m_payload) * g))
         return plane_range
 
-    def compute_endurance(self, alpha=None, f=None):
+    def compute_endurance(self, alpha: float | None = None, f: float | None = None):
         if f is None:
             f = self.f(alpha)
         endurance = (1 / (self.fuel_specific_conso_SI * g)) * f * \
             np.log(self.P / ((self.m_empty + self.m_payload) * g))
         return endurance
 
-    def compute_take_off_distance_no_friction(self, z):
+    def compute_take_off_distance_no_friction(self, z: float):
         T = self.compute_thrust(z)
         rho = compute_air_density_from_altitude(z)
         d_take_off = (self.P / T) * (1.44 * self.P / self.S) / \
             (rho * g * self.C_L_max)
         return d_take_off
 
-    def compute_ground_effect(self, alpha=None, C_L=None):
+    def compute_ground_effect(self, alpha: float | None = None, C_L: float | None = None):
         if C_L is None:
             C_L = self.C_L(alpha)
         ground_effect = self.ground_effect_coefficient * \
@@ -330,26 +343,26 @@ class Plane:
                                 np.pi * self.extension)
         return ground_effect
 
-    def compute_drag_with_ground_effect(self, v, z, alpha=None, C_L=None):
+    def compute_drag_with_ground_effect(self, v: float, z: float, alpha: float | None = None, C_L: float | None = None):
         ground_effect = self.compute_ground_effect(alpha=alpha, C_L=C_L)
         rho = compute_air_density_from_altitude(z)
         drag_with_ground_effect = .5 * rho * self.S * \
             np.power(v, 2) * (self.C_D_0 + ground_effect)
         return drag_with_ground_effect
 
-    def compute_take_off_speed(self, z):
+    def compute_take_off_speed(self, z: float):
         rho = compute_air_density_from_altitude(z)
         take_off_speed = 1.2 * \
             np.sqrt(2 * self.P / (rho * self.S * self.C_L_max))
         return take_off_speed
 
-    def compute_landing_speed(self, z):
+    def compute_landing_speed(self, z: float):
         rho = compute_air_density_from_altitude(z)
         take_off_speed = 1.3 * \
             np.sqrt(2 * self.P / (rho * self.S * self.C_L_max))
         return take_off_speed
 
-    def compute_take_off_distance_with_friction(self, z, mu, C_L_max=None):
+    def compute_take_off_distance_with_friction(self, z: float, mu: float, C_L_max: float | None = None):
         if C_L_max is None:
             C_L_max = self.C_L_max
         take_off_speed = self.compute_take_off_speed(z)
@@ -394,7 +407,7 @@ class Plane:
         delta = sol[1]
         return alpha, delta
 
-    def plot_polar_graph(self, nb_points=100):
+    def plot_polar_graph(self, nb_points: int = 100):
         alpha_array = np.linspace(self.alpha_0, self.alpha_stall, nb_points)
         C_L_array = self.C_L(alpha_array)
         C_D_array = self.C_D(alpha_array)
@@ -440,7 +453,18 @@ class Plane:
         plt.title("WV graph of the plane")
         plt.show()
 
-    def load_plane_data(self, plane_data_name: str, plane_data_folder: str):
+    def load_plane_data(self, plane_data_name: str, plane_data_folder: str = default_plane_database):
+        """
+        Load the data from a plane stored in the given database folder.
+
+        Parameters
+        ----------
+        plane_data_name : str
+            Name of the plane.
+        plane_data_folder : str, optional
+            Path to the database folder, by default default_plane_database
+        """
+
         # Load the json file
         file_path = os.path.join(plane_data_folder, plane_data_name + ".json")
         with open(file_path, "r") as file:
@@ -454,4 +478,5 @@ class Plane:
             if key in plane_allowed_variables_list:
                 setattr(self, key, plane_data_dict[key])
 
+        # Update the variables
         self.update_variables()
