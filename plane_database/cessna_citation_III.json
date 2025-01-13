@@ -1,0 +1,13 @@
+{
+    "b": 16,
+    "S": 29.5,
+    "m_empty": 5600,
+    "m_fuel": 3384,
+    "thrust_per_engine": 16235,
+    "nb_engines": 2,
+    "fuel_specific_conso": 0.061,
+    "C_D_0": 0.02,
+    "wing_shape_coefficient": 0.81,
+    "C_L_max": 1,
+    "wing_to_ground_height": 1.82
+}

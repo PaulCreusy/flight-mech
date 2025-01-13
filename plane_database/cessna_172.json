@@ -1,0 +1,11 @@
+{
+    "m_empty": 1e3,
+    "m_fuel": 0,
+    "S": 16.2,
+    "b": 10.875,
+    "nb_engines": 1,
+    "thrust_per_engine": 6e3,
+    "C_D_0": 0.03,
+    "k": 0.05,
+    "C_L_max": 1.5
+}

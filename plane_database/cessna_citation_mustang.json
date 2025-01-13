@@ -1,0 +1,15 @@
+{
+    "m_empty": 5e3,
+    "m_fuel": 2e3,
+    "S": 20,
+    "b": 16,
+    "nb_engines": 2,
+    "thrust_per_engine": 10e3,
+    "C_D_0": 0.016,
+    "k": 0.045,
+    "C_L_alpha": 5,
+    "C_L_delta": 0.02,
+    "C_m_alpha": -0.27,
+    "C_m_0": 0.02,
+    "C_m_delta": -0.8
+}
