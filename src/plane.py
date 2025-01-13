@@ -20,7 +20,11 @@ import matplotlib.colors as mcolors
 
 # Local imports #
 
-from .atmosphere import compute_air_density_from_altitude, compute_altitude_from_sigma, compute_sigma_from_altitude
+from .atmosphere import (
+    compute_air_density_from_altitude,
+    compute_altitude_from_sigma,
+    compute_sigma_from_altitude
+)
 
 #############
 # Constants #
@@ -76,7 +80,9 @@ class Plane:
     ground_effect_coefficient: float | None = None
     C_L_max: float | None = None
 
-    def __init__(self, plane_data_name: str | None = None, plane_database_folder: str = default_plane_database):
+    def __init__(self,
+                 plane_data_name: str | None = None,
+                 plane_database_folder: str = default_plane_database):
         if plane_data_name is not None:
             self.load_plane_data(plane_data_name, plane_database_folder)
 
@@ -167,7 +173,8 @@ class Plane:
             self.ground_effect_coefficient = temp / (1 + temp)
 
     def update_C_L_max(self, force: bool = False):
-        if (self.C_L_max is None or force) and self.alpha_stall is not None and self.a is not None:
+        if (self.C_L_max is None or force) and\
+                self.alpha_stall is not None and self.a is not None:
             self.C_L_max = self.C_L(self.alpha_stall)
 
     def update_variables(self, force: bool = False):
@@ -203,13 +210,21 @@ class Plane:
         n = lift / self.P
         return n
 
-    def compute_drag(self, v: float, z: float, alpha: float | None = None, C_L: float | None = None):
+    def compute_drag(self,
+                     v: float,
+                     z: float,
+                     alpha: float | None = None,
+                     C_L: float | None = None):
         drag = .5 * \
             compute_air_density_from_altitude(
                 z) * self.S * pow(v, 2) * self.C_D(alpha, C_L)
         return drag
 
-    def compute_lift(self, v: float, z: float, alpha: float | None = None, C_L: float | None = None):
+    def compute_lift(self,
+                     v: float,
+                     z: float,
+                     alpha: float | None = None,
+                     C_L: float | None = None):
         if C_L is None:
             C_L = self.C_L(alpha)
         lift = .5 * \
@@ -227,7 +242,10 @@ class Plane:
         t = self.compute_thrust(z) * self.f_max / self.P
         return t
 
-    def compute_stall_speed(self, z: float = 0., alpha: float | None = None, C_L_max: float | None = None):
+    def compute_stall_speed(self,
+                            z: float = 0.,
+                            alpha: float | None = None,
+                            C_L_max: float | None = None):
         if alpha is None:
             alpha = self.alpha_stall
         if C_L_max is None:
@@ -350,19 +368,25 @@ class Plane:
     def compute_max_range_at_fixed_altitude(self, z: float):
         rho = compute_air_density_from_altitude(z)
         optimal_C_L = self.C_L_f_max / np.sqrt(3)
-        plane_range = (2 / (self.fuel_specific_conso_SI * g)) * (np.sqrt(optimal_C_L) / self.C_D(C_L=optimal_C_L)) * \
-            np.sqrt(2 / (rho * self.S)) * (np.sqrt(self.P) -
-                                           np.sqrt((self.m_empty + self.m_payload) * g))
+        plane_range = (2 / (self.fuel_specific_conso_SI * g))\
+            * (np.sqrt(optimal_C_L) / self.C_D(C_L=optimal_C_L)) * \
+            np.sqrt(2 / (rho * self.S)) * \
+            (np.sqrt(self.P) - np.sqrt((self.m_empty + self.m_payload) * g))
         return plane_range
 
-    def compute_range_at_fixed_speed(self, v: float, alpha: float | None = None, f: float | None = None):
+    def compute_range_at_fixed_speed(self,
+                                     v: float,
+                                     alpha: float | None = None,
+                                     f: float | None = None):
         if f is None:
             f = self.f(alpha)
         plane_range = (v / (self.fuel_specific_conso_SI * g)) * \
             f * np.log(self.P / ((self.m_empty + self.m_payload) * g))
         return plane_range
 
-    def compute_endurance(self, alpha: float | None = None, f: float | None = None):
+    def compute_endurance(self,
+                          alpha: float | None = None,
+                          f: float | None = None):
         if f is None:
             f = self.f(alpha)
         endurance = (1 / (self.fuel_specific_conso_SI * g)) * f * \
@@ -376,7 +400,9 @@ class Plane:
             (rho * g * self.C_L_max)
         return d_take_off
 
-    def compute_ground_effect(self, alpha: float | None = None, C_L: float | None = None):
+    def compute_ground_effect(self,
+                              alpha: float | None = None,
+                              C_L: float | None = None):
         if C_L is None:
             C_L = self.C_L(alpha)
         ground_effect = self.ground_effect_coefficient * \
@@ -384,7 +410,11 @@ class Plane:
                                 np.pi * self.extension)
         return ground_effect
 
-    def compute_drag_with_ground_effect(self, v: float, z: float, alpha: float | None = None, C_L: float | None = None):
+    def compute_drag_with_ground_effect(self,
+                                        v: float,
+                                        z: float,
+                                        alpha: float | None = None,
+                                        C_L: float | None = None):
         ground_effect = self.compute_ground_effect(alpha=alpha, C_L=C_L)
         rho = compute_air_density_from_altitude(z)
         drag_with_ground_effect = .5 * rho * self.S * \
@@ -403,7 +433,10 @@ class Plane:
             np.sqrt(2 * self.P / (rho * self.S * self.C_L_max))
         return take_off_speed
 
-    def compute_take_off_distance_with_friction(self, z: float, mu: float, C_L_max: float | None = None):
+    def compute_take_off_distance_with_friction(self,
+                                                z: float,
+                                                mu: float,
+                                                C_L_max: float | None = None):
         if C_L_max is None:
             C_L_max = self.C_L_max
         take_off_speed = self.compute_take_off_speed(z)
@@ -416,7 +449,12 @@ class Plane:
                                                    C_L_max) * (self.P / (T - (D + mu * (self.P - L))))
         return d_take_off
 
-    def compute_landing_distance(self, z: float, mu: float, reverse_thrust: float = 0., C_L: float | None = None, C_L_max: float | None = None):
+    def compute_landing_distance(self,
+                                 z: float,
+                                 mu: float,
+                                 reverse_thrust: float = 0.,
+                                 C_L: float | None = None,
+                                 C_L_max: float | None = None):
         if C_L_max is None:
             C_L_max = self.C_L_max
         if C_L is None:
@@ -431,7 +469,9 @@ class Plane:
 
         return d_landing
 
-    def compute_alpha_and_delta_at_flight_point(self, z: float = 0, v: float | None = None):
+    def compute_alpha_and_delta_at_flight_point(self,
+                                                z: float = 0,
+                                                v: float | None = None):
         rho = compute_air_density_from_altitude(z)
         if v is None:
             v = self.compute_reference_speed(z)
