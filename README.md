@@ -54,3 +54,45 @@ Additionally, the following graphs can be generated:
 - power-speed graph
 
 Some examples are provided in the `examples` folder (please note that they do not cover all the use cases) as well with a few plane models in the `plane_database` folder. 
+
+Here is an overview of what the software can compute:
+
+```python
+# Load the plane
+plane = Plane("cessna_172", "./plane_database")
+
+# Compute the fmax and CL at fmax
+print("C_L_f_max", plane.C_L_f_max)
+print("fmax", plane.f_max)
+```
+
+> C_L_f_max 0.7745966692414834
+fmax 12.909944487358056
+
+```python
+# Compute the speed interval at 8000 meters
+plane.m_fuel = 136.26  # kg
+plane.update_variables(True)
+print("reference speed at 8000m [m.s-1]", plane.compute_reference_speed(8000))
+print("speed interval at 8000m [m.s-1]",
+      plane.compute_velocity_interval_for_fixed_thrust(8000))
+print("stall speed at 8000m [m.s-1]",
+      plane.compute_stall_speed(8000, C_L_max=1.5))
+```
+
+> reference speed at 8000m [m.s-1] 56.214394963985406
+speed interval at 8000m [m.s-1] (22.544275306567194, 140.17120347383343)
+stall speed at 8000m [m.s-1] 41.80281924283373
+
+```python
+# Compute the ascension speed and slope at sea level
+plane.m_fuel = 0  # kg
+plane.update_variables(True)
+print("max ascension speed [m.s-1]", plane.compute_max_ascension_speed(z=0))
+print("reference speed at 0m [m.s-1]", plane.compute_reference_speed(z=0))
+print("max slope at 0m [%]", plane.compute_max_ascension_slope(z=0))
+```
+
+> max ascension speed [m.s-1] 32.89763560421959
+reference speed at 0m [m.s-1] 34.523934888646956
+max slope at 0m [%] 0.5695896796157822
