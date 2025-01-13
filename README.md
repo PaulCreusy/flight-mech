@@ -53,4 +53,4 @@ Additionally, the following graphs can be generated:
 - thrust-speed graph
 - power-speed graph
 
-Some examples are provided in the `examples` folder (TODO) as well with a few plane models in the `plane_database` folder. 
+Some examples are provided in the `examples` folder (please note that they do not cover all the use cases) as well with a few plane models in the `plane_database` folder. 

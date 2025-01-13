@@ -67,9 +67,9 @@ class Plane:
     ground_effect_coefficient: float | None = None
     C_L_max: float | None = None
 
-    def __init__(self, plane_data_name=None):
+    def __init__(self, plane_data_name=None, plane_database_folder=None):
         if plane_data_name is not None:
-            self.load_plane_data(plane_data_name)
+            self.load_plane_data(plane_data_name, plane_database_folder)
 
     @property
     def m(self):
