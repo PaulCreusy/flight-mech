@@ -1,5 +1,7 @@
 # Flight Mechanics Calculator
 
+![Pylint Badge](https://github.com/PaulCreusy/Flight-Mechanics-Calculator/actions/workflows/pylint.yml/badge.svg)
+
 ## License
 
 This software has been developed by Paul Creusy and is shared under the MIT License.

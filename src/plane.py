@@ -39,6 +39,10 @@ default_plane_database = os.path.join(os.path.dirname(
 ###########
 
 class Plane:
+    """
+    Model to define a plane and compute its characteristics.
+    """
+
     # Mass
     m_empty: float | None = None  # kg
     m_fuel: float = 0.  # kg
@@ -94,29 +98,66 @@ class Plane:
 
     @property
     def f_max(self) -> float:
+        """
+        Max gliding ratio.
+        """
+
         f_max = 1 / (2 * np.sqrt(self.k * self.C_D_0))
+
         return f_max
 
     @property
     def C_L_f_max(self):
+        """
+        Lift coefficient at max gliding ratio.
+        """
+
         C_L_star = np.sqrt(self.C_D_0 / self.k)
+
         return C_L_star
 
     @property
     def alpha_f_max(self):
+        """
+        Angle of incidence at max gliding ratio.
+        """
+
         C_L_star = self.C_L_f_max
         alpha_f_max = C_L_star / self.a + self.alpha_0
+
         return alpha_f_max
 
     @property
     def fuel_specific_conso_SI(self):
+        """
+        Fuel specific consumption in International unit system.
+        """
+
         return self.fuel_specific_conso / 3600
 
     def update_k(self, force: bool = False):
+        """
+        Update the value of k.
+
+        Parameters
+        ----------
+        force : bool, optional
+            Force the computation of k even if it already exists, by default False
+        """
+
         if self.k is None or force:
             self.k = 1 / (np.pi * self.wing_shape_coefficient * self.extension)
 
     def update_P(self, force: bool = False):
+        """
+        Update the value of the weight.
+
+        Parameters
+        ----------
+        force : bool, optional
+            Force the computation of the weight even if it already exists, by default False
+        """
+
         if self.P is None or force:
             self.P = self.m * g
 
