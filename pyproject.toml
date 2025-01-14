@@ -7,7 +7,7 @@ include = ["flight_mech"]
 
 [project]
 name = "flight-mech"
-version = "1.0.4"
+version = "1.0.5"
 authors = [{ name = "PaulCreusy", email = "paul.creusy@gmail.com" }]
 description = "A package to compute the characteristics of an airplane using simple flight mechanics equations."
 readme = "README.md"

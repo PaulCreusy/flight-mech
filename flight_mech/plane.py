@@ -168,23 +168,65 @@ class Plane:
             self.P = self.m * g
 
     def update_ground_effect_coefficient(self, force: bool = False):
+        """
+        Update the value of the ground effect coefficient.
+
+        Parameters
+        ----------
+        force : bool, optional
+            Force the computation of the ground effect coefficient even if it already exists, by default False
+        """
+
         if (self.ground_effect_coefficient is None or force) and self.wing_to_ground_height is not None:
             temp = np.power(16 * self.wing_to_ground_height / self.b, 2)
             self.ground_effect_coefficient = temp / (1 + temp)
 
     def update_C_L_max(self, force: bool = False):
+        """
+        Update the value of the CL max.
+
+        Parameters
+        ----------
+        force : bool, optional
+            Force the computation of the CL max even if it already exists, by default False
+        """
+
         if (self.C_L_max is None or force) and\
                 self.alpha_stall is not None and self.a is not None:
             self.C_L_max = self.C_L(self.alpha_stall)
 
     def update_variables(self, force: bool = False):
+        """
+        Update the value of the variables k, P, ground effect and CL max.
+
+        Parameters
+        ----------
+        force : bool, optional
+            Force the computation of the variables even if they already exist, by default False
+        """
+
         self.update_k(force)
         self.update_P(force)
         self.update_ground_effect_coefficient(force)
         self.update_C_L_max(force)
 
     def C_L(self, alpha: float):
+        """
+        Compute the CL for the given angle of incidence.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence.
+
+        Returns
+        -------
+        float
+            Lift coefficient.
+        """
+
         C_L = self.a * (alpha - self.alpha_0)
+
         return C_L
 
     def C_D(self, alpha: float = None, C_L: float = None):
