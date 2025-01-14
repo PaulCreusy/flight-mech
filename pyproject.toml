@@ -2,9 +2,12 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = ["flight_mech"]
+
 [project]
 name = "flight-mech"
-version = "1.0.0"
+version = "1.0.4"
 authors = [{ name = "PaulCreusy", email = "paul.creusy@gmail.com" }]
 description = "A package to compute the characteristics of an airplane using simple flight mechanics equations."
 readme = "README.md"
@@ -15,6 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["numpy", "matplotlib"]
+keywords = ["flight", "airplane", "plane", "mechanics", "flight mechanics"]
 
 [project.urls]
 Homepage = "https://github.com/PaulCreusy/flight-mech"

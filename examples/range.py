@@ -8,14 +8,14 @@ Example file for the range computations.
 
 import sys
 sys.path.append(".")
-from src.flight_mech import Plane
+from flight_mech import Plane
 
 ###########
 # Process #
 ###########
 
 # Load the plane
-plane = Plane("cessna_citation_III", "./plane_database")
+plane = Plane("cessna_citation_III")
 
 # Define the altitude
 z = 6700  # m

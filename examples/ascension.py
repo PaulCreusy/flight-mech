@@ -8,14 +8,14 @@ Example file for the ascension computations.
 
 import sys
 sys.path.append(".")
-from src.flight_mech import Plane
+from flight_mech import Plane
 
 ###########
 # Process #
 ###########
 
 # Load the plane
-plane = Plane("cessna_172", "./plane_database")
+plane = Plane("cessna_172")
 
 # Compute the fmax and CL at fmax
 print("C_L_f_max", plane.C_L_f_max)

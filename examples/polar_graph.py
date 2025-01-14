@@ -9,14 +9,14 @@ Example file for the polar graph.
 import sys
 sys.path.append(".")
 import numpy as np
-from src.flight_mech import Plane
+from flight_mech import Plane
 
 ###########
 # Process #
 ###########
 
 # Load the plane
-plane = Plane("cessna_citation_III", "./plane_database")
+plane = Plane("cessna_citation_III")
 
 # Set the missing lift coefficient
 plane.a = 2 * np.pi

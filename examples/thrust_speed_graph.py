@@ -9,14 +9,14 @@ Example file for the thrust-speed graph.
 import sys
 import numpy as np
 sys.path.append(".")
-from src.flight_mech import Plane
+from flight_mech import Plane
 
 ###########
 # Process #
 ###########
 
 # Load the plane
-plane = Plane("cessna_citation_III", "./plane_database")
+plane = Plane("cessna_citation_III")
 
 # Set the missing lift coefficient
 plane.a = 2 * np.pi

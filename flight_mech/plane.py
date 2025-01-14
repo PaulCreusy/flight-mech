@@ -35,8 +35,8 @@ P0 = 1e5  # Pa
 g = 9.81  # m.s-2
 
 # Define a default plane database location
-default_plane_database = os.path.join(os.path.dirname(
-    os.path.dirname(__file__)), "plane_database")
+default_plane_database = os.path.join(
+    os.path.dirname(__file__), "plane_database")
 
 ###########
 # Classes #

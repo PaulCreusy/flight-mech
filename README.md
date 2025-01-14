@@ -20,6 +20,8 @@ pip install -r requirements.txt
 
 This software includes a simple atmospheric model and a set of flight mechanics equations allowing to compute plane characteristics.
 
+**Please note that all equations and variables are defined in the international unit system.**
+
 The plane model allows to compute the following quantities:
 - max glide ratio
 - speed at specific angle of incidence and altitude

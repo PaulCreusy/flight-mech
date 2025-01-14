@@ -8,14 +8,14 @@ Example file for the take-off computations.
 
 import sys
 sys.path.append(".")
-from src.flight_mech import Plane
+from flight_mech import Plane
 
 ###########
 # Process #
 ###########
 
 # Load the plane
-plane = Plane("cessna_citation_III", "./plane_database")
+plane = Plane("cessna_citation_III")
 
 # Define the friction coefficient of the runway
 mu = 0.02
