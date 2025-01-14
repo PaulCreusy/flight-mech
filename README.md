@@ -10,7 +10,17 @@ This software has been developed by Paul Creusy and is shared under the MIT Lice
 
 ### Installation
 
-To install this software, please clone the repository and install the required Python libraries using the command:
+#### Pip installation
+
+To install this module with pip, please use:
+
+```bash
+pip install flight-mech
+```
+
+#### Manual installation
+
+For a manual installation, please clone the repository and install the required Python libraries using the command:
 
 ```bash
 pip install -r requirements.txt
