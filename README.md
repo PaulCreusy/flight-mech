@@ -1,6 +1,6 @@
 # Flight Mechanics Calculator
 
-[![PyPI version](https://badge.fury.io/py/flight-mech.svg)](https://pypi.org/project/flight-mech/)![Pylint Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pylint.yml/badge.svg)
+![PyPI - Version](https://img.shields.io/pypi/v/flight-mech)![Pylint Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pylint.yml/badge.svg)
 
 ## License
 
