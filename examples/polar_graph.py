@@ -9,7 +9,7 @@ Example file for the polar graph.
 import sys
 sys.path.append(".")
 import numpy as np
-from src.plane import Plane
+from src.flight_mech import Plane
 
 ###########
 # Process #

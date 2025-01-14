@@ -9,7 +9,7 @@ Example file for the thrust-speed graph.
 import sys
 import numpy as np
 sys.path.append(".")
-from src.plane import Plane
+from src.flight_mech import Plane
 
 ###########
 # Process #

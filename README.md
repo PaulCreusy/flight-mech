@@ -1,6 +1,6 @@
 # Flight Mechanics Calculator
 
-![Pylint Badge](https://github.com/PaulCreusy/Flight-Mechanics-Calculator/actions/workflows/pylint.yml/badge.svg)
+![Pylint Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pylint.yml/badge.svg)
 
 ## License
 

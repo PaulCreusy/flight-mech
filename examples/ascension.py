@@ -8,7 +8,7 @@ Example file for the ascension computations.
 
 import sys
 sys.path.append(".")
-from src.plane import Plane
+from src.flight_mech import Plane
 
 ###########
 # Process #
