@@ -46,7 +46,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.plane module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.plane module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.plane.Plane"><code class="docutils literal notranslate"><span class="pre">Plane</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -78,8 +81,480 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="flight-mech-plane-module">
-<h1>flight_mech.plane module<a class="headerlink" href="#flight-mech-plane-module" title="Link to this heading"></a></h1>
+  <section id="module-flight_mech.plane">
+<span id="flight-mech-plane-module"></span><h1>flight_mech.plane module<a class="headerlink" href="#module-flight_mech.plane" title="Link to this heading"></a></h1>
+<p>Module to compute the plane performances.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.plane.</span></span><span class="sig-name descname"><span class="pre">Plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane_data_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_database_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/./flight_mech/plane_database'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model to define a plane and compute its characteristics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_D">
+<span class="sig-name descname"><span class="pre">C_D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.C_D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.C_D" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_D_0">
+<span class="sig-name descname"><span class="pre">C_D_0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_D_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_L">
+<span class="sig-name descname"><span class="pre">C_L</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.C_L"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.C_L" title="Link to this definition"></a></dt>
+<dd><p>Compute the CL for the given angle of incidence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lift coefficient.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_L_alpha">
+<span class="sig-name descname"><span class="pre">C_L_alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_L_alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_L_delta">
+<span class="sig-name descname"><span class="pre">C_L_delta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_L_delta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_L_f_max">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_L_f_max</span></span><a class="headerlink" href="#flight_mech.plane.Plane.C_L_f_max" title="Link to this definition"></a></dt>
+<dd><p>Lift coefficient at max gliding ratio.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_L_max">
+<span class="sig-name descname"><span class="pre">C_L_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_L_max" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_m_0">
+<span class="sig-name descname"><span class="pre">C_m_0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_m_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_m_alpha">
+<span class="sig-name descname"><span class="pre">C_m_alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_m_alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.C_m_delta">
+<span class="sig-name descname"><span class="pre">C_m_delta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.C_m_delta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.P" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.S">
+<span class="sig-name descname"><span class="pre">S</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.S" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.a">
+<span class="sig-name descname"><span class="pre">a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.a" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.alpha_0">
+<span class="sig-name descname"><span class="pre">alpha_0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#flight_mech.plane.Plane.alpha_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.alpha_f_max">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha_f_max</span></span><a class="headerlink" href="#flight_mech.plane.Plane.alpha_f_max" title="Link to this definition"></a></dt>
+<dd><p>Angle of incidence at max gliding ratio.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.alpha_stall">
+<span class="sig-name descname"><span class="pre">alpha_stall</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.2617993877991494</span></em><a class="headerlink" href="#flight_mech.plane.Plane.alpha_stall" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.b">
+<span class="sig-name descname"><span class="pre">b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.b" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.c">
+<span class="sig-name descname"><span class="pre">c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.c" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_alpha_and_delta_at_flight_point">
+<span class="sig-name descname"><span class="pre">compute_alpha_and_delta_at_flight_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_alpha_and_delta_at_flight_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_alpha_and_delta_at_flight_point" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_ascension_slope">
+<span class="sig-name descname"><span class="pre">compute_ascension_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_ascension_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_ascension_slope" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_drag">
+<span class="sig-name descname"><span class="pre">compute_drag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_drag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_drag" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_drag_with_ground_effect">
+<span class="sig-name descname"><span class="pre">compute_drag_with_ground_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_drag_with_ground_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_drag_with_ground_effect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_endurance">
+<span class="sig-name descname"><span class="pre">compute_endurance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_endurance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_endurance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_gliding_speed">
+<span class="sig-name descname"><span class="pre">compute_gliding_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_gliding_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_gliding_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_gliding_v_z_min">
+<span class="sig-name descname"><span class="pre">compute_gliding_v_z_min</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_gliding_v_z_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_gliding_v_z_min" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_ground_effect">
+<span class="sig-name descname"><span class="pre">compute_ground_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_ground_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_ground_effect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_landing_distance">
+<span class="sig-name descname"><span class="pre">compute_landing_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse_thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_landing_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_landing_distance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_landing_speed">
+<span class="sig-name descname"><span class="pre">compute_landing_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_landing_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_landing_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_lift">
+<span class="sig-name descname"><span class="pre">compute_lift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_lift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_lift" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_load_factor_from_roll_angle">
+<span class="sig-name descname"><span class="pre">compute_load_factor_from_roll_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_load_factor_from_roll_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_load_factor_from_roll_angle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_altitude">
+<span class="sig-name descname"><span class="pre">compute_max_altitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_altitude" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_ascension_slope">
+<span class="sig-name descname"><span class="pre">compute_max_ascension_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_ascension_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_ascension_slope" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_ascension_speed">
+<span class="sig-name descname"><span class="pre">compute_max_ascension_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_ascension_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_ascension_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_gliding_range">
+<span class="sig-name descname"><span class="pre">compute_max_gliding_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_gliding_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_gliding_range" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_gliding_time">
+<span class="sig-name descname"><span class="pre">compute_max_gliding_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_gliding_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_gliding_time" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_range_at_fixed_altitude">
+<span class="sig-name descname"><span class="pre">compute_max_range_at_fixed_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_range_at_fixed_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_range_at_fixed_altitude" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_min_descent_gliding_slope">
+<span class="sig-name descname"><span class="pre">compute_min_descent_gliding_slope</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_min_descent_gliding_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_min_descent_gliding_slope" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_min_thrust_needed">
+<span class="sig-name descname"><span class="pre">compute_min_thrust_needed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_min_thrust_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_min_thrust_needed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_normalized_thrust">
+<span class="sig-name descname"><span class="pre">compute_normalized_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_normalized_thrust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_normalized_thrust" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_range_at_fixed_speed">
+<span class="sig-name descname"><span class="pre">compute_range_at_fixed_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_range_at_fixed_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_range_at_fixed_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_reference_speed">
+<span class="sig-name descname"><span class="pre">compute_reference_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_reference_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_reference_speed" title="Link to this definition"></a></dt>
+<dd><p>Corresponds to the gliding velocity at f_max.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude of the plane.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference velocity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_max_ascension_speed">
+<span class="sig-name descname"><span class="pre">compute_speed_for_max_ascension_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_max_ascension_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_max_ascension_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_min_power_needed">
+<span class="sig-name descname"><span class="pre">compute_speed_for_min_power_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_min_power_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_min_power_needed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_min_thrust_needed">
+<span class="sig-name descname"><span class="pre">compute_speed_for_min_thrust_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_min_thrust_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_min_thrust_needed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_stall_speed">
+<span class="sig-name descname"><span class="pre">compute_stall_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_stall_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_stall_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_take_off_distance_no_friction">
+<span class="sig-name descname"><span class="pre">compute_take_off_distance_no_friction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_take_off_distance_no_friction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_take_off_distance_no_friction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_take_off_distance_with_friction">
+<span class="sig-name descname"><span class="pre">compute_take_off_distance_with_friction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_take_off_distance_with_friction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_take_off_distance_with_friction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_take_off_speed">
+<span class="sig-name descname"><span class="pre">compute_take_off_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_take_off_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_take_off_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_thrust">
+<span class="sig-name descname"><span class="pre">compute_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_thrust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_thrust" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_thrust_needed">
+<span class="sig-name descname"><span class="pre">compute_thrust_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_thrust_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_thrust_needed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_v_at_gliding_v_z_min">
+<span class="sig-name descname"><span class="pre">compute_v_at_gliding_v_z_min</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_v_at_gliding_v_z_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_v_at_gliding_v_z_min" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_velocity_interval_for_fixed_thrust">
+<span class="sig-name descname"><span class="pre">compute_velocity_interval_for_fixed_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_velocity_interval_for_fixed_thrust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_velocity_interval_for_fixed_thrust" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.engine_type">
+<span class="sig-name descname"><span class="pre">engine_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'moto-propeller'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'turbo-reactor'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'turbo-reactor'</span></em><a class="headerlink" href="#flight_mech.plane.Plane.engine_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.extension">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.plane.Plane.extension" title="Link to this definition"></a></dt>
+<dd><p>Extension coefficient of the wings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.f">
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.f" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.f_max">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">f_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.plane.Plane.f_max" title="Link to this definition"></a></dt>
+<dd><p>Max gliding ratio.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.fuel_specific_conso">
+<span class="sig-name descname"><span class="pre">fuel_specific_conso</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.fuel_specific_conso" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.fuel_specific_conso_SI">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fuel_specific_conso_SI</span></span><a class="headerlink" href="#flight_mech.plane.Plane.fuel_specific_conso_SI" title="Link to this definition"></a></dt>
+<dd><p>Fuel specific consumption in International unit system.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.ground_effect_coefficient">
+<span class="sig-name descname"><span class="pre">ground_effect_coefficient</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.ground_effect_coefficient" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.k">
+<span class="sig-name descname"><span class="pre">k</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.k" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.load_plane_data">
+<span class="sig-name descname"><span class="pre">load_plane_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane_data_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/./flight_mech/plane_database'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.load_plane_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.load_plane_data" title="Link to this definition"></a></dt>
+<dd><p>Load the data from a plane stored in the given database folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plane_data_name</strong> (<em>str</em>) – Name of the plane.</p></li>
+<li><p><strong>plane_data_folder</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the database folder, by default default_plane_database</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.m">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">m</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.plane.Plane.m" title="Link to this definition"></a></dt>
+<dd><p>Total mass of the plane.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.m_empty">
+<span class="sig-name descname"><span class="pre">m_empty</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.m_empty" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.m_fuel">
+<span class="sig-name descname"><span class="pre">m_fuel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#flight_mech.plane.Plane.m_fuel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.m_payload">
+<span class="sig-name descname"><span class="pre">m_payload</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#flight_mech.plane.Plane.m_payload" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.n">
+<span class="sig-name descname"><span class="pre">n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.n"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.n" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.nb_engines">
+<span class="sig-name descname"><span class="pre">nb_engines</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#flight_mech.plane.Plane.nb_engines" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.plot_gliding_TV_graph">
+<span class="sig-name descname"><span class="pre">plot_gliding_TV_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.plot_gliding_TV_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.plot_gliding_TV_graph" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.plot_gliding_WV_graph">
+<span class="sig-name descname"><span class="pre">plot_gliding_WV_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.plot_gliding_WV_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.plot_gliding_WV_graph" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.plot_polar_graph">
+<span class="sig-name descname"><span class="pre">plot_polar_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.plot_polar_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.plot_polar_graph" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.thrust_per_engine">
+<span class="sig-name descname"><span class="pre">thrust_per_engine</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.thrust_per_engine" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.update_C_L_max">
+<span class="sig-name descname"><span class="pre">update_C_L_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.update_C_L_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.update_C_L_max" title="Link to this definition"></a></dt>
+<dd><p>Update the value of the CL max.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) – Force the computation of the CL max even if it already exists, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.update_P">
+<span class="sig-name descname"><span class="pre">update_P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.update_P"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.update_P" title="Link to this definition"></a></dt>
+<dd><p>Update the value of the weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) – Force the computation of the weight even if it already exists, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.update_ground_effect_coefficient">
+<span class="sig-name descname"><span class="pre">update_ground_effect_coefficient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.update_ground_effect_coefficient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.update_ground_effect_coefficient" title="Link to this definition"></a></dt>
+<dd><p>Update the value of the ground effect coefficient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) – Force the computation of the ground effect coefficient even if it already exists, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.update_k">
+<span class="sig-name descname"><span class="pre">update_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.update_k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.update_k" title="Link to this definition"></a></dt>
+<dd><p>Update the value of k.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) – Force the computation of k even if it already exists, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.update_variables">
+<span class="sig-name descname"><span class="pre">update_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.update_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.update_variables" title="Link to this definition"></a></dt>
+<dd><p>Update the value of the variables k, P, ground effect and CL max.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) – Force the computation of the variables even if they already exist, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.v">
+<span class="sig-name descname"><span class="pre">v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.v" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.wing_shape_coefficient">
+<span class="sig-name descname"><span class="pre">wing_shape_coefficient</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#flight_mech.plane.Plane.wing_shape_coefficient" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.plane.Plane.wing_to_ground_height">
+<span class="sig-name descname"><span class="pre">wing_to_ground_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.plane.Plane.wing_to_ground_height" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
 
