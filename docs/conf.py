@@ -7,8 +7,9 @@
 
 import os
 import sys
-sys.path.insert(
-    0, 'C:\\Users\\paulc\\Documents\\Projets\\Flight-Mechanics-Calculator')
+# sys.path.insert(
+#     0, 'C:\\Users\\paulc\\Documents\\Projets\\Flight-Mechanics-Calculator')
+sys.path.append(".")
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
