@@ -116,3 +116,16 @@ print("max slope at 0m [%]", plane.compute_max_ascension_slope(z=0))
 >> reference speed at 0m [m.s-1] 34.523934888646956
 >> max slope at 0m [%] 0.5695896796157822
 ```
+
+### Documentation
+
+If you decided to clone the repository, you can generate the documentation using the following commands:
+
+```bash
+cd docs
+make html
+```
+
+And open the file `docs/_build/html/index.html` in your browser. 
+
+Otherwise, the documentation is available online [here] TODO.
