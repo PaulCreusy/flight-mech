@@ -210,9 +210,9 @@ class Plane:
         self.update_ground_effect_coefficient(force)
         self.update_C_L_max(force)
 
-    def C_L(self, alpha: float):
+    def C_L(self, alpha: float) -> float:
         """
-        Compute the CL for the given angle of incidence.
+        Compute the lift coefficient for the given angle of incidence.
 
         Parameters
         ----------
@@ -229,106 +229,346 @@ class Plane:
 
         return C_L
 
-    def C_D(self, alpha: float = None, C_L: float = None):
+    def C_D(self, alpha: float = None, C_L: float = None) -> float:
+        """
+        Compute the drag coefficient for a given angle of incidence or lift coefficient.
+
+        Parameters
+        ----------
+        alpha : float, optional
+            Angle of incidence, by default None
+        C_L : float, optional
+            Lift coefficient, by default None
+
+        Returns
+        -------
+        float
+            Drag coefficient.
+        """
+
+        # Update k if necessary
         self.update_k()
+
+        # Compute the lift coefficient if not provided
         if C_L is None:
             C_L = self.C_L(alpha)
+
+        # Compute the drag coefficient
         C_D = self.C_D_0 + self.k * pow(C_L, 2)
+
         return C_D
 
-    def f(self, alpha: float):
+    def f(self, alpha: float) -> float:
+        """
+        Compute the gliding ratio at a given angle of incidence.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence.
+
+        Returns
+        -------
+        float
+            Gliding ratio.
+        """
+
         C_L = self.C_L(alpha)
         C_D = self.C_D(alpha)
         f = C_L / C_D
+
         return f
 
-    def v(self, alpha: float, z: float = 0.):
+    def v(self, alpha: float, z: float = 0.) -> float:
+        """
+        Compute the velocity at a given angle of incidence and altitude.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence.
+        z : float, optional
+            Altitude, by default 0.
+
+        Returns
+        -------
+        float
+            Velocity.
+        """
+
         rho = compute_air_density_from_altitude(z)
         v = np.sqrt(self.P / (.5 * rho * self.S * self.C_L(alpha)))
+
         return v
 
-    def n(self, v: float, z: float, alpha: float):
+    def n(self, v: float, z: float, alpha: float) -> float:
+        """
+        Compute the loading factor at a given velocity, altitude and angle of incidence.
+
+        Parameters
+        ----------
+        v : float
+            Velocity.
+        z : float
+            Altitude.
+        alpha : float
+            Angle of incidence.
+
+        Returns
+        -------
+        float
+            Loading factor.
+        """
+
         lift = self.compute_lift(v, z, alpha)
         n = lift / self.P
+
         return n
 
     def compute_drag(self,
                      v: float,
                      z: float,
                      alpha: float | None = None,
-                     C_L: float | None = None):
-        drag = .5 * \
-            compute_air_density_from_altitude(
-                z) * self.S * pow(v, 2) * self.C_D(alpha, C_L)
+                     C_L: float | None = None) -> float:
+        """
+        Compute the drag at a given velocity, altitude and angle of incidence or lift coefficient.
+
+        Parameters
+        ----------
+        v : float
+            Velocity.
+        z : float
+            Altitude.
+        alpha : float | None, optional
+            Angle of incidence, by default None
+        C_L : float | None, optional
+            Lift coefficient, by default None
+
+        Returns
+        -------
+        float
+            Drag force.
+        """
+
+        drag = .5 * compute_air_density_from_altitude(z) * \
+            self.S * pow(v, 2) * self.C_D(alpha, C_L)
+
         return drag
 
     def compute_lift(self,
                      v: float,
                      z: float,
                      alpha: float | None = None,
-                     C_L: float | None = None):
+                     C_L: float | None = None) -> float:
+        """
+        Compute the lift at a given velocity, altitude and angle of incidence or lift coefficient.
+
+        Parameters
+        ----------
+        v : float
+            Velocity.
+        z : float
+            Altitude.
+        alpha : float | None, optional
+            Angle of incidence, by default None
+        C_L : float | None, optional
+            Lift coefficient, by default None
+
+        Returns
+        -------
+        float
+            Lift force.
+        """
+
         if C_L is None:
             C_L = self.C_L(alpha)
-        lift = .5 * \
-            compute_air_density_from_altitude(z) * self.S * pow(v, 2) * C_L
+        lift = .5 * compute_air_density_from_altitude(z) * \
+            self.S * pow(v, 2) * C_L
+
         return lift
 
-    def compute_thrust(self, z: float):
+    def compute_thrust(self, z: float) -> float:
+        """
+        Compute the thrust at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Thrust force.
+
+        Raises
+        ------
+        NotImplementedError
+            The engines types other than turbo-reactor are currently not supported.
+        """
+
         if self.engine_type == "turbo-reactor":
             sigma = compute_sigma_from_altitude(z)
             return self.thrust_per_engine * self.nb_engines * sigma
         else:
-            raise NotImplementedError
+            raise NotImplementedError(
+                "More engines types will be added in the next versions.")
 
-    def compute_normalized_thrust(self, z: float):
+    def compute_normalized_thrust(self, z: float) -> float:
+        """
+        Compute the normalized thrust at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Normalized thrust.
+        """
+
         t = self.compute_thrust(z) * self.f_max / self.P
+
         return t
 
     def compute_stall_speed(self,
                             z: float = 0.,
-                            alpha: float | None = None,
-                            C_L_max: float | None = None):
-        if alpha is None:
-            alpha = self.alpha_stall
+                            alpha_stall: float | None = None,
+                            C_L_max: float | None = None) -> float:
+        """
+        Compute the stall speed at a given altitude.
+
+        Parameters
+        ----------
+        z : float, optional
+            Altitude, by default 0.
+        alpha_stall : float | None, optional
+            Stall angle, by default None
+        C_L_max : float | None, optional
+            Max lift coefficient, by default None
+
+        Returns
+        -------
+        float
+            Stall speed.
+        """
+
         if C_L_max is None:
-            C_L_max = self.C_L(alpha)
+            if alpha_stall is None:
+                alpha_stall = self.alpha_stall
+            C_L_max = self.C_L(alpha_stall)
         rho = compute_air_density_from_altitude(z)
         stall_speed = np.sqrt((2 * self.P) / (rho * self.S * C_L_max))
+
         return stall_speed
 
-    def compute_gliding_speed(self, alpha: float, z: float):
+    def compute_gliding_speed(self, alpha: float, z: float) -> float:
+        """
+        Compute the gliding speed at a given angle of incidence and altitude.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence.
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Gliding speed.
+        """
+
         rho = compute_air_density_from_altitude(z)
         v = np.sqrt((2 * self.P) / (rho * self.S * self.C_L(alpha)))
+
         return v
 
-    def compute_min_descent_gliding_slope(self):
+    def compute_min_descent_gliding_slope(self) -> float:
+        """
+        Compute the minimum descent slope when gliding.
+
+        Returns
+        -------
+        float
+            Minimum descent gliding slope.
+        """
+
         gamma_min = -1 / self.f_max
+
         return gamma_min
 
-    def compute_v_at_gliding_v_z_min(self, z: float):
+    def compute_v_at_gliding_v_z_min(self, z: float) -> float:
+        """
+        Compute the velocity associated to the minimum gliding vertical speed at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Velocity associated to the minimum gliding vertical speed.
+        """
+
         rho = compute_air_density_from_altitude(z)
         v_at_v_z_min = np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(self.k / (3 * self.C_D_0), 1 / 4)
+
         return v_at_v_z_min
 
-    def compute_gliding_v_z_min(self, z: float):
+    def compute_gliding_v_z_min(self, z: float) -> float:
+        """
+        Compute the minimum gliding vertical speed at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Minimum gliding vertical speed.
+        """
+
         rho = compute_air_density_from_altitude(z)
         v_z_min = 4 * np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(pow(self.k, 3) * self.C_D_0 / 27, 1 / 4)
+
         return v_z_min
 
-    def compute_max_gliding_time(self, z: float):
+    def compute_max_gliding_time(self, z: float) -> float:
+        """
+        Compute the maximum gliding time at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Maximum gliding time.
+        """
+
         v_z_min = self.compute_gliding_v_z_min(z)
+
         return z / v_z_min
 
-    def compute_velocity_interval_for_fixed_thrust(self, z: float):
+    def compute_velocity_interval_for_fixed_thrust(self, z: float) -> float:
         t = self.compute_normalized_thrust(z)
         v_ref = self.compute_reference_speed(z)
         v_max = float(np.sqrt(t + np.sqrt(pow(t, 2) - 1)) * v_ref)
         v_min = float(np.sqrt(t - np.sqrt(pow(t, 2) - 1)) * v_ref)
         return v_min, v_max
 
-    def compute_reference_speed(self, z: float):
+    def compute_reference_speed(self, z: float) -> float:
         """
         Corresponds to the gliding velocity at f_max.
 
