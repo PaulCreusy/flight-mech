@@ -1,0 +1,16 @@
+flight\_mech package
+====================
+
+.. automodule:: flight_mech
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 5
+
+   flight_mech.atmosphere
+   flight_mech.plane
