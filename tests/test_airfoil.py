@@ -30,7 +30,9 @@ airfoil_database_path = "./flight_mech/airfoil_database/"
 def test_load_selig_file():
     airfoil = Airfoil()
     airfoil.load_selig_file(os.path.join(
-        airfoil_database_path, "FX 62-K-153.txt"), 1)
+        airfoil_database_path, "fx62k153.txt"), 1)
 
-
-test_load_selig_file()
+def test_import_from_airfoiltools():
+    airfoil = Airfoil()
+    airfoil.import_from_airfoiltools(
+        "NACA", max_thickness=16, min_thickness=15, maximise_glide_ratio_at_reynolds="50k")
