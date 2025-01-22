@@ -14,3 +14,4 @@ Submodules
 
    flight_mech.atmosphere
    flight_mech.plane
+   flight_mech.airfoil

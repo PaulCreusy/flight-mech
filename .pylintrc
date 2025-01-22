@@ -1,5 +1,6 @@
 [MASTER]
 init-hook='import sys; sys.path.append(".")'
+ignore=tests
 
 [MESSAGES CONTROL]
 

@@ -173,5 +173,5 @@ cython_debug/
 # Ignore draft files
 draft*
 
-# Ignore vs code files 
+# Ignore vs code files
 .vscode
