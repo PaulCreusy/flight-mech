@@ -6,11 +6,17 @@
 flight-mech documentation
 =========================
 
-This software includes a simple atmospheric model and a set of flight mechanics equations allowing to compute plane characteristics.
+This software includes a simple atmospheric model and a set of flight mechanics equations allowing to compute plane and airfoils characteristics.
+
+You can install the library using Pip with:
+
+```
+pip install flight-mech
+```
 
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 2
    :caption: Contents:
 
    flight_mech
