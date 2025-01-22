@@ -18,8 +18,8 @@ project = 'flight-mech'
 copyright = '2025, PaulCreusy'
 author = 'PaulCreusy'
 
-version = '1.0.5'
-release = '1.0.5'
+version = '1.0.6'
+release = '1.0.6'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
