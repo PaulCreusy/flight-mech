@@ -10,13 +10,12 @@ This software includes a simple atmospheric model and a set of flight mechanics 
 
 You can install the library using Pip with:
 
-```
-pip install flight-mech
-```
+.. code-block:: bash
 
+   pip install flight-mech
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    flight_mech

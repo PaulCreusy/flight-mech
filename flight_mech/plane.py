@@ -20,7 +20,7 @@ import matplotlib.colors as mcolors
 
 # Local imports #
 
-from atmosphere import (
+from flight_mech.atmosphere import (
     compute_air_density_from_altitude,
     compute_altitude_from_sigma,
     compute_sigma_from_altitude
