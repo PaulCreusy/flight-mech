@@ -14,6 +14,8 @@ You can install the library using Pip with:
 
    pip install flight-mech
 
+The source code is available on Github at this `link <https://github.com/PaulCreusy/flight-mech/tree/main>`_.
+
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
