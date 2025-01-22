@@ -67,3 +67,13 @@ def test_max_camber():
     airfoil = Airfoil("fx62k153")
     check_value(0.041, airfoil.max_camber)
     check_value(0.629, airfoil.max_camber_location)
+
+def test_compute_airfoil_fourrier_coefficients():
+    airfoil = Airfoil("n11h9")
+    airfoil.compute_airfoil_fourrier_coefficients()
+    check_value(0.1049, airfoil._a0, tolerance=0.2)
+    check_value(0.2501, airfoil._a1, tolerance=0.2)
+    check_value(0.2388, airfoil._a2, tolerance=0.2)
+
+
+test_compute_airfoil_fourrier_coefficients()
