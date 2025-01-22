@@ -47,7 +47,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.airfoil module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.airfoil module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.Airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.convert_float_or_none_to_string"><code class="docutils literal notranslate"><span class="pre">convert_float_or_none_to_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.download_web_file"><code class="docutils literal notranslate"><span class="pre">download_web_file()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -79,8 +84,272 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="flight-mech-airfoil-module">
-<h1>flight_mech.airfoil module<a class="headerlink" href="#flight-mech-airfoil-module" title="Link to this heading"></a></h1>
+  <section id="module-flight_mech.airfoil">
+<span id="flight-mech-airfoil-module"></span><h1>flight_mech.airfoil module<a class="headerlink" href="#module-flight_mech.airfoil" title="Link to this heading"></a></h1>
+<p>Module to analyse airfoil aerodynamic properties.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">Airfoil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airfoil</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.camber_z_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">camber_z_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.camber_z_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.chord_length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chord_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.chord_length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.chord_z_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chord_z_array</span></span><a class="headerlink" href="#flight_mech.airfoil.Airfoil.chord_z_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients">
+<span class="sig-name descname"><span class="pre">compute_airfoil_fourrier_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.compute_airfoil_fourrier_coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients" title="Link to this definition"></a></dt>
+<dd><p>Compute the airfoil Fourrier’s coefficients to be able to compute lift and moment values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nb_points</strong> (<em>int</em>) – Number of points to use for the interpolation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fourier’s coefficients.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float,float,float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.compute_lift_coefficient">
+<span class="sig-name descname"><span class="pre">compute_lift_coefficient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.compute_lift_coefficient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.compute_lift_coefficient" title="Link to this definition"></a></dt>
+<dd><p>Compute the lift coefficient for a given angle of incidence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence in radians.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lift coefficient.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_aero_center">
+<span class="sig-name descname"><span class="pre">compute_momentum_coefficient_at_aero_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.compute_momentum_coefficient_at_aero_center"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_aero_center" title="Link to this definition"></a></dt>
+<dd><p>Compute the momentum coefficient at the aerodynamic center for a given angle of incidence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence in radians.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Momentum coefficient.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_leading_edge">
+<span class="sig-name descname"><span class="pre">compute_momentum_coefficient_at_leading_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.compute_momentum_coefficient_at_leading_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_leading_edge" title="Link to this definition"></a></dt>
+<dd><p>Compute the momentum coefficient at leading edge for a given angle of incidence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence in radians.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Momentum coefficient.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.extrados_z_array">
+<span class="sig-name descname"><span class="pre">extrados_z_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.extrados_z_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.import_from_airfoiltools">
+<span class="sig-name descname"><span class="pre">import_from_airfoiltools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airfoil_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_camber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_camber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximise_glide_ratio_at_reynolds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'50k'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'100k'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'200k'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'500k'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'1M'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'2M'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'5M'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">airfoil_data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/flight_mech/airfoil_database'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.import_from_airfoiltools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.import_from_airfoiltools" title="Link to this definition"></a></dt>
+<dd><p>Import an airfoil from airfoiltools.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>airfoil_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the airfoil to search, by default “”</p></li>
+<li><p><strong>max_thickness</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Max thickness value in percent, by default None</p></li>
+<li><p><strong>min_thickness</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Min thickness value in percent, by default None</p></li>
+<li><p><strong>max_camber</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Max camber value in percent, by default None</p></li>
+<li><p><strong>min_camber</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Min camber value in percent, by default None</p></li>
+<li><p><strong>maximise_glide_ratio_at_reynolds</strong> (<em>Literal</em><em>[</em><em>&quot;50k&quot;</em><em>, </em><em>&quot;100k&quot;</em><em>, </em><em>&quot;200k&quot;</em><em>, </em><em>&quot;500k&quot;</em><em>, </em><em>&quot;1M&quot;</em><em>, </em><em>&quot;2M&quot;</em><em>, </em><em>&quot;5M&quot;</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Indicate Reynolds number to sort by optimal ratio, by default None</p></li>
+<li><p><strong>airfoil_data_folder</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder containing the airfoil database, by default default_airfoil_database</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The thickness and camber values must be expressed in percents.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Raise error if no corresponding profile is found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.import_xz_selig_arrays">
+<span class="sig-name descname"><span class="pre">import_xz_selig_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_selig_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_selig_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.import_xz_selig_arrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.import_xz_selig_arrays" title="Link to this definition"></a></dt>
+<dd><p>Import x and z arrays containing an airfoil in selig format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_selig_array</strong> (<em>np.ndarray</em>) – X coordinates.</p></li>
+<li><p><strong>z_selig_array</strong> (<em>np.ndarray</em>) – Z coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.intrados_z_array">
+<span class="sig-name descname"><span class="pre">intrados_z_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.intrados_z_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.list_airfoils_in_database">
+<span class="sig-name descname"><span class="pre">list_airfoils_in_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airfoil_data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/flight_mech/airfoil_database'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.list_airfoils_in_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.list_airfoils_in_database" title="Link to this definition"></a></dt>
+<dd><p>Return the list of airfoils stored in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>airfoil_data_folder</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the airfoil database folder, by default default_airfoil_database</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of airfoils stored in the database.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.load_database_airfoil">
+<span class="sig-name descname"><span class="pre">load_database_airfoil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">airfoil_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">airfoil_data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/flight_mech/airfoil_database'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.load_database_airfoil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.load_database_airfoil" title="Link to this definition"></a></dt>
+<dd><p>Load an airfoil contained in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>airfoil_name</strong> (<em>str</em>) – Name of the airfoil.</p></li>
+<li><p><strong>airfoil_data_folder</strong> (<em>str</em><em>, </em><em>optional</em>) – Folder containing the airfoil file, by default default_airfoil_database</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.load_selig_file">
+<span class="sig-name descname"><span class="pre">load_selig_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.load_selig_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.load_selig_file" title="Link to this definition"></a></dt>
+<dd><p>Load an airfoil contained in a selig txt file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – Path of the file to load.</p></li>
+<li><p><strong>skiprows</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of rows to skip at the beginning of the file, by default 1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_camber">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_camber</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_camber" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_camber_location">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_camber_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_camber_location" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_thickness">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_thickness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_thickness" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_thickness_location">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_thickness_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_thickness_location" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hold_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_chord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_camber_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.plot" title="Link to this definition"></a></dt>
+<dd><p>Plot the geometry of the airfoil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hold_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate if the plot shall be kept for later, by default False</p></li>
+<li><p><strong>show_chord</strong> (<em>bool</em><em>, </em><em>optional</em>) – Display the chord line if true, by default False</p></li>
+<li><p><strong>show_camber_line</strong> (<em>bool</em><em>, </em><em>optional</em>) – Display the camber line if true, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.re_interpolate">
+<span class="sig-name descname"><span class="pre">re_interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_x_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_x_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.re_interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.re_interpolate" title="Link to this definition"></a></dt>
+<dd><p>Re-interpolate the extrados and intrados on the given array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_x_array</strong> (<em>np.ndarray</em>) – New x array on which to interpolate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution">
+<span class="sig-name descname"><span class="pre">re_interpolate_with_cosine_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.re_interpolate_with_cosine_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution" title="Link to this definition"></a></dt>
+<dd><p>Re-interpolate the extrados and the intrados on a x array defined by a cosine distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nb_points</strong> (<em>int</em>) – Number of points in the cosine distribution.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.x_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.x_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.airfoil.convert_float_or_none_to_string">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">convert_float_or_none_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#convert_float_or_none_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.convert_float_or_none_to_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.airfoil.download_web_file">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">download_web_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#download_web_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.download_web_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 

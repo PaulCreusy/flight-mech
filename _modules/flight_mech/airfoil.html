@@ -1,0 +1,660 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.airfoil &mdash; flight-mech 1.0.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d55fa986"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flight_mech.airfoil</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for flight_mech.airfoil</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to analyse airfoil aerodynamic properties.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Imports #</span>
+<span class="c1">###########</span>
+
+<span class="c1"># Python imports #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="c1"># Dependencies #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_interp_spline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Constants #</span>
+<span class="c1">#############</span>
+
+<span class="c1"># Define a default plane database location</span>
+<span class="n">default_airfoil_database</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;airfoil_database&quot;</span><span class="p">)</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Functions #</span>
+<span class="c1">#############</span>
+
+<div class="viewcode-block" id="convert_float_or_none_to_string">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.convert_float_or_none_to_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_float_or_none_to_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="download_web_file">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.download_web_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_web_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
+    <span class="c1"># Make the GET request to download the file</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+    <span class="c1"># Write the file content to the specified output file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div>
+
+
+
+<span class="c1">###########</span>
+<span class="c1"># Classes #</span>
+<span class="c1">###########</span>
+
+<div class="viewcode-block" id="Airfoil">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Airfoil</span><span class="p">:</span>
+
+    <span class="n">extrados_z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">intrados_z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">_x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">_chord_length</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">_a0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_a1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_a2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airfoil</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">airfoil</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_airfoils_in_database</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_database_airfoil</span><span class="p">(</span><span class="n">airfoil</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">airfoil</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_selig_file</span><span class="p">(</span><span class="n">airfoil</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">camber_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">camber_z_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">camber_z_array</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">max_thickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
+        <span class="k">return</span> <span class="n">max_thickness</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">max_thickness_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span>
+        <span class="n">max_thickness_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[</span><span class="n">max_thickness_idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">max_thickness_location</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_camber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">max_camber</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">-</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
+        <span class="k">return</span> <span class="n">max_camber</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_camber_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">max_camber_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">-</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">))</span>
+        <span class="n">max_camber_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[</span><span class="n">max_camber_idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">max_camber_location</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">x_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_array</span>
+
+    <span class="nd">@x_array</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">x_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_array</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">re_interpolate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">update_x_array</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x_array</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x_array</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chord_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chord_length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chord_length</span>
+
+    <span class="nd">@chord_length</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chord_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chord_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">*</span> <span class="n">ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">*</span> <span class="n">ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">*</span> <span class="n">ratio</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chord_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x_0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">x_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
+        <span class="n">y_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_1</span> <span class="o">-</span> <span class="n">y_0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x_1</span> <span class="o">-</span> <span class="n">x_0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">+</span> <span class="n">y_0</span>
+
+<div class="viewcode-block" id="Airfoil.list_airfoils_in_database">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_airfoils_in_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airfoil_data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">default_airfoil_database</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the list of airfoils stored in the database.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        airfoil_data_folder : str, optional</span>
+<span class="sd">            Name of the airfoil database folder, by default default_airfoil_database</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            List of airfoils stored in the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">file_names_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">airfoil_data_folder</span><span class="p">)</span>
+        <span class="n">airfoil_names_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">file_names_list</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">airfoil_names_list</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.load_database_airfoil">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_database_airfoil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">airfoil_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">airfoil_data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">default_airfoil_database</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load an airfoil contained in the database.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        airfoil_name : str</span>
+<span class="sd">            Name of the airfoil.</span>
+<span class="sd">        airfoil_data_folder : str, optional</span>
+<span class="sd">            Folder containing the airfoil file, by default default_airfoil_database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">airfoil_data_folder</span><span class="p">,</span> <span class="n">airfoil_name</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_selig_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.load_selig_file">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_selig_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_selig_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skiprows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load an airfoil contained in a selig txt file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path : str</span>
+<span class="sd">            Path of the file to load.</span>
+<span class="sd">        skiprows : int, optional</span>
+<span class="sd">            Number of rows to skip at the beginning of the file, by default 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Extract airfoil name</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">first_line</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">first_line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Extract airfoil coordinates</span>
+        <span class="n">file_content</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">)</span>
+        <span class="n">x_selig_array</span> <span class="o">=</span> <span class="n">file_content</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">z_selig_array</span> <span class="o">=</span> <span class="n">file_content</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">import_xz_selig_arrays</span><span class="p">(</span><span class="n">x_selig_array</span><span class="p">,</span> <span class="n">z_selig_array</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.import_xz_selig_arrays">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_xz_selig_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_selig_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">z_selig_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Import x and z arrays containing an airfoil in selig format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x_selig_array : np.ndarray</span>
+<span class="sd">            X coordinates.</span>
+<span class="sd">        z_selig_array : np.ndarray</span>
+<span class="sd">            Z coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute the x derivative to split parts of the airfoil</span>
+        <span class="n">x_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x_selig_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x_diff</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_selig_array</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">x_selig_array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x_diff</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_diff</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="c1"># Split parts</span>
+        <span class="n">diff_sign</span> <span class="o">=</span> <span class="n">x_diff</span> <span class="o">*</span> <span class="n">x_diff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">common_point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">diff_sign</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">diff_sign</span><span class="p">[</span><span class="n">common_point</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">part_1_x</span> <span class="o">=</span> <span class="n">x_selig_array</span><span class="p">[</span><span class="n">diff_sign</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">part_1_z</span> <span class="o">=</span> <span class="n">z_selig_array</span><span class="p">[</span><span class="n">diff_sign</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">part_2_x</span> <span class="o">=</span> <span class="n">x_selig_array</span><span class="p">[</span><span class="n">diff_sign</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">part_2_z</span> <span class="o">=</span> <span class="n">z_selig_array</span><span class="p">[</span><span class="n">diff_sign</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Extract all x locations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x_selig_array</span><span class="p">)</span>
+
+        <span class="c1"># Reorder arrays for interpolation</span>
+        <span class="n">part_1_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">part_1_x</span><span class="p">)</span>
+        <span class="n">part_2_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">part_2_x</span><span class="p">)</span>
+
+        <span class="c1"># Interpolate both parts on all x locations</span>
+        <span class="n">part_1_z_interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="n">part_1_x</span><span class="p">[</span><span class="n">part_1_order</span><span class="p">],</span> <span class="n">part_1_z</span><span class="p">[</span><span class="n">part_1_order</span><span class="p">])</span>
+        <span class="n">part_2_z_interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="n">part_2_x</span><span class="p">[</span><span class="n">part_2_order</span><span class="p">],</span> <span class="n">part_2_z</span><span class="p">[</span><span class="n">part_2_order</span><span class="p">])</span>
+
+        <span class="c1"># Assign depending on which part is extrados or intrados</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">part_1_z_interpolated</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">part_2_z_interpolated</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">part_1_z_interpolated</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">part_2_z_interpolated</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">part_2_z_interpolated</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">part_1_z_interpolated</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.plot">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hold_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_chord</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_camber_line</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the geometry of the airfoil.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hold_plot : bool, optional</span>
+<span class="sd">            Indicate if the plot shall be kept for later, by default False</span>
+<span class="sd">        show_chord : bool, optional</span>
+<span class="sd">            Display the chord line if true, by default False</span>
+<span class="sd">        show_camber_line : bool, optional</span>
+<span class="sd">            Display the camber line if true, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Concatenate extrados and intrados to plot a single line</span>
+        <span class="n">x_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Plot extrados and intrados</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">y_plot</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Plot chord if needed</span>
+        <span class="k">if</span> <span class="n">show_chord</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">,</span>
+                     <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;chord </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Plot camber if needed</span>
+        <span class="k">if</span> <span class="n">show_camber_line</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span><span class="p">,</span>
+                     <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;camber </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Display the plot if needed</span>
+        <span class="k">if</span> <span class="n">hold_plot</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Airfoil visualization&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.re_interpolate">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">re_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">update_x_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-interpolate the extrados and intrados on the given array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_x_array : np.ndarray</span>
+<span class="sd">            New x array on which to interpolate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">extrados_function</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">)</span>
+        <span class="n">intrados_function</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">extrados_function</span><span class="p">(</span><span class="n">new_x_array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">intrados_function</span><span class="p">(</span><span class="n">new_x_array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">update_x_array</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="n">new_x_array</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.import_from_airfoiltools">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_from_airfoiltools">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_from_airfoiltools</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">airfoil_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">max_thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">min_thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">max_camber</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">min_camber</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">maximise_glide_ratio_at_reynolds</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;50k&quot;</span><span class="p">,</span> <span class="s2">&quot;100k&quot;</span><span class="p">,</span>
+                                                      <span class="s2">&quot;200k&quot;</span><span class="p">,</span> <span class="s2">&quot;500k&quot;</span><span class="p">,</span> <span class="s2">&quot;1M&quot;</span><span class="p">,</span> <span class="s2">&quot;2M&quot;</span><span class="p">,</span> <span class="s2">&quot;5M&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">airfoil_data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">default_airfoil_database</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Import an airfoil from airfoiltools.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        airfoil_name : str, optional</span>
+<span class="sd">            Name of the airfoil to search, by default &quot;&quot;</span>
+<span class="sd">        max_thickness : float | None, optional</span>
+<span class="sd">            Max thickness value in percent, by default None</span>
+<span class="sd">        min_thickness : float | None, optional</span>
+<span class="sd">            Min thickness value in percent, by default None</span>
+<span class="sd">        max_camber : float | None, optional</span>
+<span class="sd">            Max camber value in percent, by default None</span>
+<span class="sd">        min_camber : float | None, optional</span>
+<span class="sd">            Min camber value in percent, by default None</span>
+<span class="sd">        maximise_glide_ratio_at_reynolds : Literal[&quot;50k&quot;, &quot;100k&quot;, &quot;200k&quot;, &quot;500k&quot;, &quot;1M&quot;, &quot;2M&quot;, &quot;5M&quot;] | None, optional</span>
+<span class="sd">            Indicate Reynolds number to sort by optimal ratio, by default None</span>
+<span class="sd">        airfoil_data_folder : str, optional</span>
+<span class="sd">            Folder containing the airfoil database, by default default_airfoil_database</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        The thickness and camber values must be expressed in percents.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raise error if no corresponding profile is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Define the URL for the search</span>
+        <span class="n">search_url</span> <span class="o">=</span> <span class="s2">&quot;http://airfoiltools.com/search/index&quot;</span>
+
+        <span class="c1"># Set the sort mode</span>
+        <span class="k">if</span> <span class="n">maximise_glide_ratio_at_reynolds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sort_mode</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">9</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;50k&quot;</span><span class="p">,</span> <span class="s2">&quot;100k&quot;</span><span class="p">,</span> <span class="s2">&quot;200k&quot;</span><span class="p">,</span> <span class="s2">&quot;500k&quot;</span><span class="p">,</span> <span class="s2">&quot;1M&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;2M&quot;</span><span class="p">,</span> <span class="s2">&quot;5M&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">maximise_glide_ratio_at_reynolds</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sort_mode</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+
+        <span class="c1"># Convert input parameters to string</span>
+        <span class="n">max_thickness</span> <span class="o">=</span> <span class="n">convert_float_or_none_to_string</span><span class="p">(</span><span class="n">max_thickness</span><span class="p">)</span>
+        <span class="n">min_thickness</span> <span class="o">=</span> <span class="n">convert_float_or_none_to_string</span><span class="p">(</span><span class="n">min_thickness</span><span class="p">)</span>
+        <span class="n">max_camber</span> <span class="o">=</span> <span class="n">convert_float_or_none_to_string</span><span class="p">(</span><span class="n">max_camber</span><span class="p">)</span>
+        <span class="n">min_camber</span> <span class="o">=</span> <span class="n">convert_float_or_none_to_string</span><span class="p">(</span><span class="n">min_camber</span><span class="p">)</span>
+
+        <span class="c1"># Set the query parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;MAirfoilSearchForm[textSearch]&quot;</span><span class="p">:</span> <span class="n">airfoil_name</span><span class="p">,</span>
+            <span class="s2">&quot;MAirfoilSearchForm[maxThickness]&quot;</span><span class="p">:</span> <span class="n">max_thickness</span><span class="p">,</span>
+            <span class="s2">&quot;MAirfoilSearchForm[minThickness]&quot;</span><span class="p">:</span> <span class="n">min_thickness</span><span class="p">,</span>
+            <span class="s2">&quot;MAirfoilSearchForm[maxCamber]&quot;</span><span class="p">:</span> <span class="n">max_camber</span><span class="p">,</span>
+            <span class="s2">&quot;MAirfoilSearchForm[minCamber]&quot;</span><span class="p">:</span> <span class="n">min_camber</span><span class="p">,</span>
+            <span class="s2">&quot;MAirfoilSearchForm[grp]&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;MAirfoilSearchForm[sort]&quot;</span><span class="p">:</span> <span class="n">sort_mode</span><span class="p">,</span>
+            <span class="s2">&quot;yt0&quot;</span><span class="p">:</span> <span class="s2">&quot;Search&quot;</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Make the GET request to the search page</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">search_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+        <span class="c1"># Parse the HTML content</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Find the first research proposal link (specific to the provided element structure)</span>
+        <span class="n">proposal_link</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="s2">&quot;Airfoil details&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">proposal_link</span> <span class="ow">and</span> <span class="s1">&#39;href&#39;</span> <span class="ow">in</span> <span class="n">proposal_link</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
+            <span class="n">airfoil_code</span> <span class="o">=</span> <span class="n">proposal_link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">selig_file_link</span> <span class="o">=</span> <span class="s2">&quot;http://airfoiltools.com/airfoil/seligdatfile?&quot;</span> <span class="o">+</span> <span class="n">airfoil_code</span>
+            <span class="n">airfoil_name</span> <span class="o">=</span> <span class="n">airfoil_code</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;airfoil=&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-il&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">output_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">airfoil_data_folder</span><span class="p">,</span> <span class="n">airfoil_name</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">)</span>
+            <span class="n">download_web_file</span><span class="p">(</span><span class="n">selig_file_link</span><span class="p">,</span> <span class="n">output_file_path</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Airfoil </span><span class="si">{</span><span class="n">airfoil_name</span><span class="si">}</span><span class="s2"> successfully downloaded.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_database_airfoil</span><span class="p">(</span><span class="n">airfoil_name</span><span class="p">,</span> <span class="n">airfoil_data_folder</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No corresponding airfoil found.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.re_interpolate_with_cosine_distribution">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">re_interpolate_with_cosine_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-interpolate the extrados and the intrados on a x array defined by a cosine distribution.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_points : int</span>
+<span class="sd">            Number of points in the cosine distribution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">theta_chord_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+        <span class="n">x_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_chord_array</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="n">x_array</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.compute_airfoil_fourrier_coefficients">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_airfoil_fourrier_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the airfoil Fourrier&#39;s coefficients to be able to compute lift and moment values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_points : int</span>
+<span class="sd">            Number of points to use for the interpolation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float,float,float]</span>
+<span class="sd">            Fourier&#39;s coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate a linear distribution of angles for interpolation</span>
+        <span class="n">theta_chord_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Compute x locations for each angle</span>
+        <span class="n">x_from_theta_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_chord_array</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="n">x_from_theta_array</span>
+
+        <span class="c1"># Compute the derivative of the camber line</span>
+        <span class="n">camber_z_derivative_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">)</span>
+
+        <span class="c1"># Compute the coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">camber_z_derivative_array</span><span class="p">,</span> <span class="n">theta_chord_array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_a1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span>\
+            <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">camber_z_derivative_array</span> <span class="o">*</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_chord_array</span><span class="p">),</span> <span class="n">theta_chord_array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_a2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span>\
+            <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">camber_z_derivative_array</span> <span class="o">*</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_chord_array</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="n">theta_chord_array</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a2</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.compute_lift_coefficient">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_lift_coefficient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_lift_coefficient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the lift coefficient for a given angle of incidence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence in radians.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Lift coefficient.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute Fourrier&#39;s coefficients if needed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_airfoil_fourrier_coefficients</span><span class="p">()</span>
+
+        <span class="c1"># Compute lift coefficient</span>
+        <span class="n">C_L</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_a1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">C_L</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.compute_momentum_coefficient_at_leading_edge">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_leading_edge">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_momentum_coefficient_at_leading_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the momentum coefficient at leading edge for a given angle of incidence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence in radians.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Momentum coefficient.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute Fourrier&#39;s coefficients if needed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_airfoil_fourrier_coefficients</span><span class="p">()</span>
+
+        <span class="c1"># Compute momentum coefficient</span>
+        <span class="n">C_m0</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">alpha</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">C_m0</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.compute_momentum_coefficient_at_aero_center">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_aero_center">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_momentum_coefficient_at_aero_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the momentum coefficient at the aerodynamic center for a given angle of incidence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence in radians.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Momentum coefficient.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute the momentum coefficient at leading edge</span>
+        <span class="n">C_m0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_momentum_coefficient_at_leading_edge</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+
+        <span class="c1"># Move it at the aero center</span>
+        <span class="n">C_m</span> <span class="o">=</span> <span class="n">C_m0</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
+
+        <span class="k">return</span> <span class="n">C_m</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
