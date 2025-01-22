@@ -2,3 +2,4 @@ numpy
 matplotlib
 pandas
 bs4
+scipy

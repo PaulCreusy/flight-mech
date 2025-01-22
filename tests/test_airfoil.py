@@ -61,7 +61,7 @@ def test_chord_length():
     thickness_1 = airfoil.max_thickness
     airfoil.chord_length = 2
     assert np.max(airfoil.x_array) == 2
-    assert airfoil.max_thickness == thickness_1
+    check_value(thickness_1, airfoil.max_thickness)
 
 def test_max_camber():
     airfoil = Airfoil("fx62k153")
@@ -74,6 +74,3 @@ def test_compute_airfoil_fourrier_coefficients():
     check_value(0.1049, airfoil._a0, tolerance=0.2)
     check_value(0.2501, airfoil._a1, tolerance=0.2)
     check_value(0.2388, airfoil._a2, tolerance=0.2)
-
-
-test_compute_airfoil_fourrier_coefficients()

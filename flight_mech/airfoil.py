@@ -107,7 +107,8 @@ class Airfoil:
     @x_array.setter
     def x_array(self, value: np.ndarray):
         if self.extrados_z_array is not None and self.intrados_z_array is not None:
-            self.re_interpolate(value, update_x_array=False)
+            if self._x_array.size == self.extrados_z_array.size:
+                self.re_interpolate(value, update_x_array=False)
             self._x_array = value
         else:
             self._x_array = value
