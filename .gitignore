@@ -169,3 +169,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ignore draft files
+draft*
+
+# Ignore vs code files 
+.vscode
