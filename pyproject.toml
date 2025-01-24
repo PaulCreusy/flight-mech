@@ -17,7 +17,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["numpy", "matplotlib"]
+dependencies = ["numpy", "matplotlib","scipy","bs4"]
 keywords = ["flight", "airplane", "plane", "mechanics", "flight mechanics"]
 
 [project.urls]
