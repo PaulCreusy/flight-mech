@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
@@ -333,8 +339,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_altitude">
-<span class="sig-name descname"><span class="pre">compute_max_altitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_altitude" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_max_altitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the max altitude that the plane can reach.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Max altitude.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_ascension_slope">
@@ -349,7 +364,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_gliding_range">
 <span class="sig-name descname"><span class="pre">compute_max_gliding_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_gliding_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_gliding_range" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute the max gliding range at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Max gliding range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_gliding_time">
@@ -438,13 +465,37 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_min_power_needed">
-<span class="sig-name descname"><span class="pre">compute_speed_for_min_power_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_min_power_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_min_power_needed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_speed_for_min_power_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_min_power_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_min_power_needed" title="Link to this definition"></a></dt>
+<dd><p>Compute the speed at the minimum power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Speed at the minimum power.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_min_thrust_needed">
-<span class="sig-name descname"><span class="pre">compute_speed_for_min_thrust_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_min_thrust_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_min_thrust_needed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_speed_for_min_thrust_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_min_thrust_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_min_thrust_needed" title="Link to this definition"></a></dt>
+<dd><p>Compute the speed at the minimum thrust.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Speed at the minimum thrust.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_stall_speed">
@@ -505,7 +556,23 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_thrust_needed">
 <span class="sig-name descname"><span class="pre">compute_thrust_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_thrust_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_thrust_needed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute the thrust needed for the plane at a given angle of incidence and altitude.</p>
+<p>This does not take into account the stall effect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Altitude.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Thrust needed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_v_at_gliding_v_z_min">
@@ -648,17 +715,41 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.plot_gliding_TV_graph">
 <span class="sig-name descname"><span class="pre">plot_gliding_TV_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.plot_gliding_TV_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.plot_gliding_TV_graph" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plot the thrust / speed graph of the plane at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>float</em><em> | </em><em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – Altitude, by default 0.</p></li>
+<li><p><strong>nb_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points for the plot, by default 100</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.plot_gliding_WV_graph">
 <span class="sig-name descname"><span class="pre">plot_gliding_WV_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.plot_gliding_WV_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.plot_gliding_WV_graph" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plot the power / speed graph of the plane at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>float</em><em> | </em><em>list</em><em> | </em><em>tuple</em><em>, </em><em>optional</em>) – Altitude, by default 0.</p></li>
+<li><p><strong>nb_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points for the plot, by default 100</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.plot_polar_graph">
 <span class="sig-name descname"><span class="pre">plot_polar_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.plot_polar_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.plot_polar_graph" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Plot the polar graph of the plane i.e. lift varying with drag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nb_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points for the plot, by default 100</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.thrust_per_engine">

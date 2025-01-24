@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>flight-mech documentation &mdash; flight-mech 1.0.6 documentation</title>
+  <title>Atmosphere module &mdash; flight-mech 1.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
@@ -20,7 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Atmosphere module" href="atmosphere_module.html" /> 
+    <link rel="next" title="Plane module" href="plane_module.html" />
+    <link rel="prev" title="flight-mech documentation" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +32,7 @@
 
           
           
-          <a href="#" class="icon icon-home">
+          <a href="index.html" class="icon icon-home">
             flight-mech
           </a>
 <div role="search">
@@ -43,8 +44,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Atmosphere module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#physical-background">Physical background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
 </ul>
@@ -59,17 +64,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">flight-mech</a>
+          <a href="index.html">flight-mech</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">flight-mech documentation</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Atmosphere module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/atmosphere_module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -77,43 +82,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="flight-mech-documentation">
-<h1>flight-mech documentation<a class="headerlink" href="#flight-mech-documentation" title="Link to this heading"></a></h1>
-<p>This software includes a simple atmospheric model and a set of flight mechanics equations allowing to compute plane and airfoils characteristics.</p>
-<p>You can install the library using Pip with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>flight-mech
+  <section id="atmosphere-module">
+<h1>Atmosphere module<a class="headerlink" href="#atmosphere-module" title="Link to this heading"></a></h1>
+<p>This module defines a simple atmospheric model that is mostly used to compute air density. The atmospheric model used is a simplification of the standard atmosphere and it is valid between 0 and 11km of altitude.</p>
+<section id="physical-background">
+<h2>Physical background<a class="headerlink" href="#physical-background" title="Link to this heading"></a></h2>
+<p>The model is based here on a single formula:</p>
+<div class="math notranslate nohighlight" id="equation-sigma-formula">
+<span class="eqno">(1)<a class="headerlink" href="#equation-sigma-formula" title="Link to this equation"></a></span>\[\sigma = \frac{20-z}{20+z}\]</div>
+<p>with:</p>
+<div class="math notranslate nohighlight" id="equation-sigma-def">
+<span class="eqno">(2)<a class="headerlink" href="#equation-sigma-def" title="Link to this equation"></a></span>\[\sigma = \frac{\rho}{\rho_0}\]</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>The functions allow to compute the density:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_sigma_from_altitude</span><span class="p">(</span><span class="mf">4.2e3</span><span class="p">)</span>
+<span class="go">0.6528925619834711</span>
 </pre></div>
 </div>
-<p>The source code is available on Github at this <a class="reference external" href="https://github.com/PaulCreusy/flight-mech/tree/main">link</a>.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
-</ul>
+<p>or directly the mass per cubic meter:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_air_density_from_altitude</span><span class="p">(</span><span class="mf">3e3</span><span class="p">)</span>
+<span class="go">0.9054347826086957</span>
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<p>For a given sigma, it is also possible to compute the altitude:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_altitude_from_sigma</span><span class="p">(</span><span class="mf">0.7891</span><span class="p">)</span>
+<span class="go">2357.609971494047</span>
+</pre></div>
 </div>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="atmosphere_module.html" class="btn btn-neutral float-right" title="Atmosphere module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="flight-mech documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plane_module.html" class="btn btn-neutral float-right" title="Plane module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -39,7 +39,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
 </ul>
@@ -731,18 +737,57 @@
 <div class="viewcode-block" id="Plane.compute_max_gliding_range">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_max_gliding_range">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_gliding_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the max gliding range at a given altitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Max gliding range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">R_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_max</span> <span class="o">*</span> <span class="n">z</span>
+
         <span class="k">return</span> <span class="n">R_max</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_thrust_needed">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_thrust_needed">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_thrust_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the thrust needed for the plane at a given angle of incidence and altitude.</span>
+
+<span class="sd">        This does not take into account the stall effect.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence.</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Thrust needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute the air density</span>
         <span class="n">rho</span> <span class="o">=</span> <span class="n">compute_air_density_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="c1"># Compute the drag sources</span>
         <span class="n">friction_drag</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_D_0</span>
         <span class="n">induced_drag</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> <span class="o">/</span> \
             <span class="p">(</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="c1"># Compute the thrust needed</span>
         <span class="n">thrust_needed</span> <span class="o">=</span> <span class="n">friction_drag</span> <span class="o">+</span> <span class="n">induced_drag</span>
+
         <span class="k">return</span> <span class="n">thrust_needed</span></div>
 
 
@@ -755,24 +800,68 @@
 
 <div class="viewcode-block" id="Plane.compute_speed_for_min_thrust_needed">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_speed_for_min_thrust_needed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_for_min_thrust_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_for_min_thrust_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the speed at the minimum thrust.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Speed at the minimum thrust.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_speed_for_min_power_needed">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_speed_for_min_power_needed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_for_min_power_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_for_min_power_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the speed at the minimum power.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Speed at the minimum power.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">reference_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">v_for_w_min</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span><span class="p">))</span> <span class="o">*</span> <span class="n">reference_speed</span>
+
         <span class="k">return</span> <span class="n">v_for_w_min</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_max_altitude">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_max_altitude">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the max altitude that the plane can reach.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Max altitude.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute the thrust at max glide ratio</span>
         <span class="n">thrust_needed_at_f_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_max</span>
+
+        <span class="c1"># Compute the min sigma at which the plane can fly</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="n">thrust_needed_at_f_max</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_thrust</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Compute the altitude from sigma</span>
         <span class="n">z_max</span> <span class="o">=</span> <span class="n">compute_altitude_from_sigma</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">z_max</span></div>
 
 
@@ -978,9 +1067,25 @@
 <div class="viewcode-block" id="Plane.plot_polar_graph">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.plot_polar_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_polar_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the polar graph of the plane i.e. lift varying with drag.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points for the plot, by default 100</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create an array with values for the angle of incidence</span>
         <span class="n">alpha_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_stall</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Compute lift coefficient</span>
         <span class="n">C_L_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_L</span><span class="p">(</span><span class="n">alpha_array</span><span class="p">)</span>
+
+        <span class="c1"># Compute drag coefficient</span>
         <span class="n">C_D_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_D</span><span class="p">(</span><span class="n">alpha_array</span><span class="p">)</span>
+
+        <span class="c1"># Plot the graph</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">C_D_array</span><span class="p">,</span> <span class="n">C_L_array</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;C_D&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;C_L&quot;</span><span class="p">)</span>
@@ -991,9 +1096,25 @@
 <div class="viewcode-block" id="Plane.plot_gliding_TV_graph">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.plot_gliding_TV_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_gliding_TV_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the thrust / speed graph of the plane at a given altitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float | list | tuple, optional</span>
+<span class="sd">            Altitude, by default 0.</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points for the plot, by default 100</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the list of colors to use for the plots</span>
         <span class="n">colors_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mcolors</span><span class="o">.</span><span class="n">TABLEAU_COLORS</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Convert z to a list if it is a single value</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
             <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">z</span><span class="p">]</span>
+
+        <span class="c1"># Iterate over the values of z compute thrust and speed and plot the curve</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)):</span>
             <span class="n">alpha_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">alpha_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_stall</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
@@ -1004,19 +1125,36 @@
                 <span class="n">thrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">V_array</span><span class="p">[</span><span class="n">V_array</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])],</span> <span class="p">[</span>
                          <span class="n">thrust</span><span class="p">,</span> <span class="n">thrust</span><span class="p">],</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Thrust at z=</span><span class="si">{</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># Add labels</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;TV graph of the plane&quot;</span><span class="p">)</span>
 
+        <span class="c1"># Show the graph</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Plane.plot_gliding_WV_graph">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.plot_gliding_WV_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_gliding_WV_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the power / speed graph of the plane at a given altitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float | list | tuple, optional</span>
+<span class="sd">            Altitude, by default 0.</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points for the plot, by default 100</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Convert z to a list if it is a single value</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
             <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">z</span><span class="p">]</span>
+
+        <span class="c1"># Iterate over the values of z to compute speed and power and plot the curve</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)):</span>
             <span class="n">alpha_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">alpha_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_stall</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
@@ -1024,9 +1162,13 @@
             <span class="n">V_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">(</span><span class="n">alpha_array</span><span class="p">,</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">W_array</span> <span class="o">=</span> <span class="n">T_array</span> <span class="o">*</span> <span class="n">V_array</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V_array</span><span class="p">,</span> <span class="n">W_array</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;z=</span><span class="si">{</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Add labels</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;W&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;WV graph of the plane&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Show the graph</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 

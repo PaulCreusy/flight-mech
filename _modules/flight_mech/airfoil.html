@@ -39,7 +39,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
 </ul>
@@ -150,17 +156,38 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">camber_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of the camber line z coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">camber_z_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="n">camber_z_array</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chord_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of the chord line z coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">x_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
+        <span class="n">y_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_1</span> <span class="o">-</span> <span class="n">y_0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x_1</span> <span class="o">-</span> <span class="n">x_0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">+</span> <span class="n">y_0</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Max thickness value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">max_thickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
         <span class="k">return</span> <span class="n">max_thickness</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Location of the max thickness value in x.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">max_thickness_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span>
                                       <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span>
         <span class="n">max_thickness_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[</span><span class="n">max_thickness_idx</span><span class="p">]</span>
@@ -168,12 +195,18 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_camber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Max camber value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">max_camber</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">-</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
         <span class="k">return</span> <span class="n">max_camber</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_camber_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Location of the max camber value in x.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">max_camber_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">-</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">))</span>
         <span class="n">max_camber_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[</span><span class="n">max_camber_idx</span><span class="p">]</span>
@@ -181,6 +214,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">x_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of x coordinates used for the airfoil definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_array</span>
 
     <span class="nd">@x_array</span><span class="o">.</span><span class="n">setter</span>
@@ -195,6 +231,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">chord_length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Length of the chord.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chord_length</span>
 
     <span class="nd">@chord_length</span><span class="o">.</span><span class="n">setter</span>
@@ -203,15 +242,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">*</span> <span class="n">ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">*</span> <span class="n">ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">*</span> <span class="n">ratio</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">chord_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">x_0</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">x_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
-        <span class="n">y_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">y_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_1</span> <span class="o">-</span> <span class="n">y_0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x_1</span> <span class="o">-</span> <span class="n">x_0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">+</span> <span class="n">y_0</span>
 
 <div class="viewcode-block" id="Airfoil.list_airfoils_in_database">
 <a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">[docs]</a>
@@ -626,6 +656,99 @@
         <span class="n">C_m</span> <span class="o">=</span> <span class="n">C_m0</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
 
         <span class="k">return</span> <span class="n">C_m</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.plot_CL_graph">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_CL_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="s2">&quot;rad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span><span class="p">,</span> <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the CL graph of the airfoil.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha_min : float, optional</span>
+<span class="sd">            Minimum value of alpha, by default -1</span>
+<span class="sd">        alpha_max : float, optional</span>
+<span class="sd">            Maximum value of alpha, by default 1</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points, by default 100</span>
+<span class="sd">        mode : Literal[&quot;deg&quot;, &quot;rad&quot;], optional</span>
+<span class="sd">            Mode for alpha definition, by default &quot;rad&quot;</span>
+<span class="sd">        hold_plot : bool, optional</span>
+<span class="sd">            Indicate wether to display the plot or keep it, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Define the array of angle of incidence</span>
+        <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Convert it in radians if needed for the computations</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;deg&quot;</span><span class="p">:</span>
+            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span>
+
+        <span class="c1"># Compute the lift coefficient</span>
+        <span class="n">CL_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_lift_coefficient</span><span class="p">(</span><span class="n">alpha_array_comp</span><span class="p">)</span>
+
+        <span class="c1"># Plot the graph</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha [</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;CL&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha_array_graph</span><span class="p">,</span> <span class="n">CL_array</span><span class="p">)</span>
+
+        <span class="c1"># Show it if needed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hold_plot</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Lift coefficient&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.plot_Cm_graph">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_Cm_graph">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_Cm_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="s2">&quot;rad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;leading_edge&quot;</span><span class="p">,</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">,</span> <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the Cm graph of the airfoil.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha_min : float, optional</span>
+<span class="sd">            Minimum value of alpha, by default -1</span>
+<span class="sd">        alpha_max : float, optional</span>
+<span class="sd">            Maximum value of alpha, by default 1</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points, by default 100</span>
+<span class="sd">        mode : Literal[&quot;deg&quot;, &quot;rad&quot;], optional</span>
+<span class="sd">            Mode for alpha definition, by default &quot;rad&quot;</span>
+<span class="sd">        location : Literal[&quot;leading_edge&quot;,&quot;aero_center&quot;]</span>
+<span class="sd">            Location of the Cm, by default &quot;aero_center&quot;</span>
+<span class="sd">        hold_plot : bool, optional</span>
+<span class="sd">            Indicate wether to display the plot or keep it, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Define the array of angle of incidence</span>
+        <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Convert it in radians if needed for the computations</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;deg&quot;</span><span class="p">:</span>
+            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span>
+
+        <span class="c1"># Compute the lift coefficient</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">:</span>
+            <span class="n">Cm_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_momentum_coefficient_at_aero_center</span><span class="p">(</span>
+                <span class="n">alpha_array_comp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Cm_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_momentum_coefficient_at_leading_edge</span><span class="p">(</span>
+                <span class="n">alpha_array_comp</span><span class="p">)</span>
+
+        <span class="c1"># Plot the graph</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha [</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cm&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha_array_graph</span><span class="p">,</span> <span class="n">Cm_array</span><span class="p">)</span>
+
+        <span class="c1"># Show it if needed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hold_plot</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Momentum coefficient&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 </div>
 
 </pre></div>

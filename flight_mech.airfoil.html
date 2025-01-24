@@ -41,7 +41,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
@@ -94,17 +100,20 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.camber_z_array">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">camber_z_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.camber_z_array" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Array of the camber line z coordinates.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.chord_length">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chord_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.chord_length" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Length of the chord.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.chord_z_array">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chord_z_array</span></span><a class="headerlink" href="#flight_mech.airfoil.Airfoil.chord_z_array" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Array of the chord line z coordinates.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients">
@@ -274,22 +283,26 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_camber">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_camber</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_camber" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Max camber value.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_camber_location">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_camber_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_camber_location" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Location of the max camber value in x.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_thickness">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_thickness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_thickness" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Max thickness value.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.max_thickness_location">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_thickness_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.max_thickness_location" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Location of the max thickness value in x.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.name">
@@ -306,6 +319,41 @@
 <li><p><strong>hold_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate if the plot shall be kept for later, by default False</p></li>
 <li><p><strong>show_chord</strong> (<em>bool</em><em>, </em><em>optional</em>) – Display the chord line if true, by default False</p></li>
 <li><p><strong>show_camber_line</strong> (<em>bool</em><em>, </em><em>optional</em>) – Display the camber line if true, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.plot_CL_graph">
+<span class="sig-name descname"><span class="pre">plot_CL_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'deg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'rad'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rad'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hold_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.plot_CL_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.plot_CL_graph" title="Link to this definition"></a></dt>
+<dd><p>Plot the CL graph of the airfoil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum value of alpha, by default -1</p></li>
+<li><p><strong>alpha_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum value of alpha, by default 1</p></li>
+<li><p><strong>nb_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points, by default 100</p></li>
+<li><p><strong>mode</strong> (<em>Literal</em><em>[</em><em>&quot;deg&quot;</em><em>, </em><em>&quot;rad&quot;</em><em>]</em><em>, </em><em>optional</em>) – Mode for alpha definition, by default “rad”</p></li>
+<li><p><strong>hold_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate wether to display the plot or keep it, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.plot_Cm_graph">
+<span class="sig-name descname"><span class="pre">plot_Cm_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'deg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'rad'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rad'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'leading_edge'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'aero_center'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'aero_center'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hold_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.plot_Cm_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.plot_Cm_graph" title="Link to this definition"></a></dt>
+<dd><p>Plot the Cm graph of the airfoil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum value of alpha, by default -1</p></li>
+<li><p><strong>alpha_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum value of alpha, by default 1</p></li>
+<li><p><strong>nb_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points, by default 100</p></li>
+<li><p><strong>mode</strong> (<em>Literal</em><em>[</em><em>&quot;deg&quot;</em><em>, </em><em>&quot;rad&quot;</em><em>]</em><em>, </em><em>optional</em>) – Mode for alpha definition, by default “rad”</p></li>
+<li><p><strong>location</strong> (<em>Literal</em><em>[</em><em>&quot;leading_edge&quot;</em><em>,</em><em>&quot;aero_center&quot;</em><em>]</em>) – Location of the Cm, by default “aero_center”</p></li>
+<li><p><strong>hold_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate wether to display the plot or keep it, by default False</p></li>
 </ul>
 </dd>
 </dl>
@@ -336,7 +384,8 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.x_array">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.x_array" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Array of x coordinates used for the airfoil definition.</p>
+</dd></dl>
 
 </dd></dl>
 
