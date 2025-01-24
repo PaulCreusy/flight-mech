@@ -590,33 +590,116 @@ class Plane:
         return v_ref
 
     def compute_max_gliding_range(self, z: float):
+        """
+        Compute the max gliding range at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Max gliding range.
+        """
+
         R_max = self.f_max * z
+
         return R_max
 
     def compute_thrust_needed(self, alpha: float, z: float):
+        """
+        Compute the thrust needed for the plane at a given angle of incidence and altitude.
+
+        This does not take into account the stall effect.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence.
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Thrust needed.
+        """
+
+        # Compute the air density
         rho = compute_air_density_from_altitude(z)
+
+        # Compute the drag sources
         friction_drag = .5 * rho * self.S * self.v(alpha, z) * self.C_D_0
         induced_drag = (2 * self.k * self.P) / \
             (rho * self.S * pow(self.v(alpha, z), 2))
+
+        # Compute the thrust needed
         thrust_needed = friction_drag + induced_drag
+
         return thrust_needed
 
     def compute_min_thrust_needed(self):
         min_thrust_needed = 2 * self.P * np.sqrt(self.k * self.C_D_0)
         return min_thrust_needed
 
-    def compute_speed_for_min_thrust_needed(self, z: float):
+    def compute_speed_for_min_thrust_needed(self, z: float) -> float:
+        """
+        Compute the speed at the minimum thrust.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Speed at the minimum thrust.
+        """
+
         return self.compute_reference_speed(z)
 
-    def compute_speed_for_min_power_needed(self, z: float):
+    def compute_speed_for_min_power_needed(self, z: float) -> float:
+        """
+        Compute the speed at the minimum power.
+
+        Parameters
+        ----------
+        z : float
+            Altitude.
+
+        Returns
+        -------
+        float
+            Speed at the minimum power.
+        """
+
         reference_speed = self.compute_reference_speed(z)
         v_for_w_min = (1 / pow(3, 1 / 4)) * reference_speed
+
         return v_for_w_min
 
-    def compute_max_altitude(self):
+    def compute_max_altitude(self) -> float:
+        """
+        Compute the max altitude that the plane can reach.
+
+        Returns
+        -------
+        float
+            Max altitude.
+        """
+
+        # Compute the thrust at max glide ratio
         thrust_needed_at_f_max = self.P / self.f_max
+
+        # Compute the min sigma at which the plane can fly
         sigma = thrust_needed_at_f_max / self.compute_thrust(0)
+
+        # Compute the altitude from sigma
         z_max = compute_altitude_from_sigma(sigma)
+
         return z_max
 
     def compute_speed_for_max_ascension_speed(self, z: float):
@@ -771,9 +854,25 @@ class Plane:
         return alpha, delta
 
     def plot_polar_graph(self, nb_points: int = 100):
+        """
+        Plot the polar graph of the plane i.e. lift varying with drag.
+
+        Parameters
+        ----------
+        nb_points : int, optional
+            Number of points for the plot, by default 100
+        """
+
+        # Create an array with values for the angle of incidence
         alpha_array = np.linspace(self.alpha_0, self.alpha_stall, nb_points)
+
+        # Compute lift coefficient
         C_L_array = self.C_L(alpha_array)
+
+        # Compute drag coefficient
         C_D_array = self.C_D(alpha_array)
+
+        # Plot the graph
         plt.plot(C_D_array, C_L_array)
         plt.xlabel("C_D")
         plt.ylabel("C_L")
@@ -781,9 +880,25 @@ class Plane:
         plt.show()
 
     def plot_gliding_TV_graph(self, z: float | list | tuple = 0., nb_points: int = 100):
+        """
+        Plot the thrust / speed graph of the plane at a given altitude.
+
+        Parameters
+        ----------
+        z : float | list | tuple, optional
+            Altitude, by default 0.
+        nb_points : int, optional
+            Number of points for the plot, by default 100
+        """
+
+        # Get the list of colors to use for the plots
         colors_list = list(mcolors.TABLEAU_COLORS.values())
+
+        # Convert z to a list if it is a single value
         if not isinstance(z, (list, tuple)):
             z = [z]
+
+        # Iterate over the values of z compute thrust and speed and plot the curve
         for i in range(len(z)):
             alpha_array = np.linspace(
                 self.alpha_0, self.alpha_stall, nb_points)
@@ -794,16 +909,33 @@ class Plane:
                 thrust = self.compute_thrust(z[i])
                 plt.plot([0, np.max(V_array[V_array != np.inf])], [
                          thrust, thrust], "--", label=f"Thrust at z={z[i]}", color=colors_list[i])
+
+        # Add labels
         plt.legend()
         plt.xlabel("v")
         plt.ylabel("T")
         plt.title("TV graph of the plane")
 
+        # Show the graph
         plt.show()
 
     def plot_gliding_WV_graph(self, z: float | list | tuple = 0., nb_points: int = 100):
+        """
+        Plot the power / speed graph of the plane at a given altitude.
+
+        Parameters
+        ----------
+        z : float | list | tuple, optional
+            Altitude, by default 0.
+        nb_points : int, optional
+            Number of points for the plot, by default 100
+        """
+
+        # Convert z to a list if it is a single value
         if not isinstance(z, (list, tuple)):
             z = [z]
+
+        # Iterate over the values of z to compute speed and power and plot the curve
         for i in range(len(z)):
             alpha_array = np.linspace(
                 self.alpha_0, self.alpha_stall, nb_points)
@@ -811,9 +943,13 @@ class Plane:
             V_array = self.v(alpha_array, z[i])
             W_array = T_array * V_array
             plt.plot(V_array, W_array, label=f"z={z[i]}")
+
+        # Add labels
         plt.xlabel("v")
         plt.ylabel("W")
         plt.title("WV graph of the plane")
+
+        # Show the graph
         plt.show()
 
     def load_plane_data(self, plane_data_name: str, plane_data_folder: str = default_plane_database):

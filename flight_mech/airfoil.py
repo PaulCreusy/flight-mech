@@ -71,17 +71,38 @@ class Airfoil:
 
     @property
     def camber_z_array(self) -> np.ndarray:
+        """
+        Array of the camber line z coordinates.
+        """
         camber_z_array = (self.extrados_z_array + self.intrados_z_array) / 2
         return camber_z_array
 
     @property
+    def chord_z_array(self):
+        """
+        Array of the chord line z coordinates.
+        """
+        x_0 = 0
+        x_1 = self.chord_length
+        y_0 = self.extrados_z_array[0]
+        y_1 = self.extrados_z_array[-1]
+        slope = (y_1 - y_0) / (x_1 - x_0)
+        return slope * self.x_array + y_0
+
+    @property
     def max_thickness(self) -> float:
+        """
+        Max thickness value.
+        """
         max_thickness = np.max(self.extrados_z_array -
                                self.intrados_z_array) / self.chord_length
         return max_thickness
 
     @property
     def max_thickness_location(self) -> float:
+        """
+        Location of the max thickness value in x.
+        """
         max_thickness_idx = np.argmax(self.extrados_z_array -
                                       self.intrados_z_array)
         max_thickness_location = self.x_array[max_thickness_idx]
@@ -89,12 +110,18 @@ class Airfoil:
 
     @property
     def max_camber(self) -> float:
+        """
+        Max camber value.
+        """
         max_camber = np.max(np.abs(self.camber_z_array -
                             self.chord_z_array)) / self.chord_length
         return max_camber
 
     @property
     def max_camber_location(self) -> float:
+        """
+        Location of the max camber value in x.
+        """
         max_camber_idx = np.argmax(np.abs(self.camber_z_array -
                                           self.chord_z_array))
         max_camber_location = self.x_array[max_camber_idx]
@@ -102,6 +129,9 @@ class Airfoil:
 
     @property
     def x_array(self) -> np.ndarray:
+        """
+        Array of x coordinates used for the airfoil definition.
+        """
         return self._x_array
 
     @x_array.setter
@@ -116,6 +146,9 @@ class Airfoil:
 
     @property
     def chord_length(self) -> float:
+        """
+        Length of the chord.
+        """
         return self._chord_length
 
     @chord_length.setter
@@ -124,15 +157,6 @@ class Airfoil:
         self.x_array = self.x_array * ratio
         self.extrados_z_array = self.extrados_z_array * ratio
         self.intrados_z_array = self.intrados_z_array * ratio
-
-    @property
-    def chord_z_array(self):
-        x_0 = 0
-        x_1 = self.chord_length
-        y_0 = self.extrados_z_array[0]
-        y_1 = self.extrados_z_array[-1]
-        slope = (y_1 - y_0) / (x_1 - x_0)
-        return slope * self.x_array + y_0
 
     def list_airfoils_in_database(self, airfoil_data_folder: str = default_airfoil_database):
         """
@@ -512,3 +536,90 @@ class Airfoil:
         C_m = C_m0 + 0.25 * self.chord_length
 
         return C_m
+
+    def plot_CL_graph(self, alpha_min: float = -1, alpha_max: float = 1, nb_points: int = 100, mode: Literal["deg", "rad"] = "rad", hold_plot: bool = False):
+        """
+        Plot the CL graph of the airfoil.
+
+        Parameters
+        ----------
+        alpha_min : float, optional
+            Minimum value of alpha, by default -1
+        alpha_max : float, optional
+            Maximum value of alpha, by default 1
+        nb_points : int, optional
+            Number of points, by default 100
+        mode : Literal["deg", "rad"], optional
+            Mode for alpha definition, by default "rad"
+        hold_plot : bool, optional
+            Indicate wether to display the plot or keep it, by default False
+        """
+
+        # Define the array of angle of incidence
+        alpha_array_graph = np.linspace(alpha_min, alpha_max, nb_points)
+
+        # Convert it in radians if needed for the computations
+        if mode == "deg":
+            alpha_array_comp = alpha_array_graph * np.pi / 180
+        else:
+            alpha_array_comp = alpha_array_graph
+
+        # Compute the lift coefficient
+        CL_array = self.compute_lift_coefficient(alpha_array_comp)
+
+        # Plot the graph
+        plt.xlabel(f"alpha [{mode}]")
+        plt.ylabel("CL")
+        plt.plot(alpha_array_graph, CL_array)
+
+        # Show it if needed
+        if not hold_plot:
+            plt.title("Lift coefficient")
+            plt.show()
+
+    def plot_Cm_graph(self, alpha_min: float = -1, alpha_max: float = 1, nb_points: int = 100, mode: Literal["deg", "rad"] = "rad", location: Literal["leading_edge", "aero_center"] = "aero_center", hold_plot: bool = False):
+        """
+        Plot the Cm graph of the airfoil.
+
+        Parameters
+        ----------
+        alpha_min : float, optional
+            Minimum value of alpha, by default -1
+        alpha_max : float, optional
+            Maximum value of alpha, by default 1
+        nb_points : int, optional
+            Number of points, by default 100
+        mode : Literal["deg", "rad"], optional
+            Mode for alpha definition, by default "rad"
+        location : Literal["leading_edge","aero_center"]
+            Location of the Cm, by default "aero_center"
+        hold_plot : bool, optional
+            Indicate wether to display the plot or keep it, by default False
+        """
+
+        # Define the array of angle of incidence
+        alpha_array_graph = np.linspace(alpha_min, alpha_max, nb_points)
+
+        # Convert it in radians if needed for the computations
+        if mode == "deg":
+            alpha_array_comp = alpha_array_graph * np.pi / 180
+        else:
+            alpha_array_comp = alpha_array_graph
+
+        # Compute the lift coefficient
+        if location == "aero_center":
+            Cm_array = self.compute_momentum_coefficient_at_aero_center(
+                alpha_array_comp)
+        else:
+            Cm_array = self.compute_momentum_coefficient_at_leading_edge(
+                alpha_array_comp)
+
+        # Plot the graph
+        plt.xlabel(f"alpha [{mode}]")
+        plt.ylabel("Cm")
+        plt.plot(alpha_array_graph, Cm_array)
+
+        # Show it if needed
+        if not hold_plot:
+            plt.title("Momentum coefficient")
+            plt.show()
