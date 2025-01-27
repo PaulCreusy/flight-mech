@@ -39,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
@@ -87,14 +87,12 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
 <span class="c1"># Dependencies #</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_interp_spline</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
@@ -242,6 +240,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">*</span> <span class="n">ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">*</span> <span class="n">ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">*</span> <span class="n">ratio</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">x_selig_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">x_selig_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x_selig_array</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">z_selig_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">z_selig_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z_selig_array</span>
 
 <div class="viewcode-block" id="Airfoil.list_airfoils_in_database">
 <a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">[docs]</a>
@@ -653,7 +663,8 @@
         <span class="n">C_m0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_momentum_coefficient_at_leading_edge</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
 
         <span class="c1"># Move it at the aero center</span>
-        <span class="n">C_m</span> <span class="o">=</span> <span class="n">C_m0</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
+        <span class="n">C_m</span> <span class="o">=</span> <span class="n">C_m0</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_lift_coefficient</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">C_m</span></div>
 
@@ -679,13 +690,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Define the array of angle of incidence</span>
-        <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+        <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
 
         <span class="c1"># Convert it in radians if needed for the computations</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;deg&quot;</span><span class="p">:</span>
-            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+            <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">alpha_array_comp</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span>
+            <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">alpha_array_comp</span>
 
         <span class="c1"># Compute the lift coefficient</span>
         <span class="n">CL_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_lift_coefficient</span><span class="p">(</span><span class="n">alpha_array_comp</span><span class="p">)</span>
@@ -698,6 +709,7 @@
         <span class="c1"># Show it if needed</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">hold_plot</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Lift coefficient&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
@@ -724,13 +736,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Define the array of angle of incidence</span>
-        <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+        <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
 
         <span class="c1"># Convert it in radians if needed for the computations</span>
         <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;deg&quot;</span><span class="p">:</span>
-            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+            <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">alpha_array_comp</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">alpha_array_comp</span> <span class="o">=</span> <span class="n">alpha_array_graph</span>
+            <span class="n">alpha_array_graph</span> <span class="o">=</span> <span class="n">alpha_array_comp</span>
 
         <span class="c1"># Compute the lift coefficient</span>
         <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">:</span>
@@ -748,6 +760,7 @@
         <span class="c1"># Show it if needed</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">hold_plot</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Momentum coefficient&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 </div>
 
