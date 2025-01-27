@@ -10,14 +10,12 @@ Module to analyse airfoil aerodynamic properties.
 
 import os
 from typing import Literal
-import json
 
 # Dependencies #
 
 import numpy as np
 from scipy.interpolate import make_interp_spline
 import matplotlib.pyplot as plt
-import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
@@ -157,6 +155,18 @@ class Airfoil:
         self.x_array = self.x_array * ratio
         self.extrados_z_array = self.extrados_z_array * ratio
         self.intrados_z_array = self.intrados_z_array * ratio
+
+    @property
+    def x_selig_array(self) -> np.ndarray:
+        x_selig_array = np.concatenate(
+            (self.x_array, self.x_array[::-1], [self.x_array[0]]), axis=0)
+        return x_selig_array
+
+    @property
+    def z_selig_array(self) -> np.ndarray:
+        z_selig_array = np.concatenate(
+            (self.extrados_z_array, self.intrados_z_array[::-1], [self.extrados_z_array[0]]), axis=0)
+        return z_selig_array
 
     def list_airfoils_in_database(self, airfoil_data_folder: str = default_airfoil_database):
         """
@@ -533,7 +543,8 @@ class Airfoil:
         C_m0 = self.compute_momentum_coefficient_at_leading_edge(alpha)
 
         # Move it at the aero center
-        C_m = C_m0 + 0.25 * self.chord_length
+        C_m = C_m0 + 0.25 * self.chord_length * \
+            self.compute_lift_coefficient(alpha)
 
         return C_m
 
@@ -556,13 +567,13 @@ class Airfoil:
         """
 
         # Define the array of angle of incidence
-        alpha_array_graph = np.linspace(alpha_min, alpha_max, nb_points)
+        alpha_array_comp = np.linspace(alpha_min, alpha_max, nb_points)
 
         # Convert it in radians if needed for the computations
         if mode == "deg":
-            alpha_array_comp = alpha_array_graph * np.pi / 180
+            alpha_array_graph = alpha_array_comp * 180 / np.pi
         else:
-            alpha_array_comp = alpha_array_graph
+            alpha_array_graph = alpha_array_comp
 
         # Compute the lift coefficient
         CL_array = self.compute_lift_coefficient(alpha_array_comp)
@@ -575,6 +586,7 @@ class Airfoil:
         # Show it if needed
         if not hold_plot:
             plt.title("Lift coefficient")
+            plt.grid()
             plt.show()
 
     def plot_Cm_graph(self, alpha_min: float = -1, alpha_max: float = 1, nb_points: int = 100, mode: Literal["deg", "rad"] = "rad", location: Literal["leading_edge", "aero_center"] = "aero_center", hold_plot: bool = False):
@@ -598,13 +610,13 @@ class Airfoil:
         """
 
         # Define the array of angle of incidence
-        alpha_array_graph = np.linspace(alpha_min, alpha_max, nb_points)
+        alpha_array_comp = np.linspace(alpha_min, alpha_max, nb_points)
 
         # Convert it in radians if needed for the computations
         if mode == "deg":
-            alpha_array_comp = alpha_array_graph * np.pi / 180
+            alpha_array_graph = alpha_array_comp * 180 / np.pi
         else:
-            alpha_array_comp = alpha_array_graph
+            alpha_array_graph = alpha_array_comp
 
         # Compute the lift coefficient
         if location == "aero_center":
@@ -622,4 +634,5 @@ class Airfoil:
         # Show it if needed
         if not hold_plot:
             plt.title("Momentum coefficient")
+            plt.grid()
             plt.show()

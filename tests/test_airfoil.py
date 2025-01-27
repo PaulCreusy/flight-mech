@@ -15,6 +15,8 @@ sys.path.append(".")
 # Dependencies #
 
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Local imports #
 
@@ -29,6 +31,9 @@ from tests._common import check_value
 #############
 
 airfoil_database_path = "./flight_mech/airfoil_database/"
+airfoil_tools_predictions_naca4412 = pd.read_csv(
+    "tests/data/xf-naca4412-il-500000.csv", skiprows=10)
+coefficient_error_threshold = 0.05
 
 #########
 # Tests #
@@ -74,3 +79,23 @@ def test_compute_airfoil_fourrier_coefficients():
     check_value(0.1049, airfoil._a0, tolerance=0.2)
     check_value(0.2501, airfoil._a1, tolerance=0.2)
     check_value(0.2388, airfoil._a2, tolerance=0.2)
+
+def test_compute_lift_coefficient():
+    airfoil = Airfoil("naca4412")
+    alpha_deg = airfoil_tools_predictions_naca4412["Alpha"]
+    mask = np.abs(alpha_deg) <= 7.5
+    alpha = alpha_deg[mask] * np.pi / 180
+    CL_airfoil_tools = airfoil_tools_predictions_naca4412["Cl"][mask]
+    CL = airfoil.compute_lift_coefficient(alpha)
+    max_diff = np.max(np.abs(CL - CL_airfoil_tools))
+    assert max_diff < coefficient_error_threshold
+
+def test_compute_momentum_coefficient():
+    airfoil = Airfoil("naca4412")
+    alpha_deg = airfoil_tools_predictions_naca4412["Alpha"]
+    mask = np.abs(alpha_deg) <= 7.5
+    alpha = alpha_deg[mask] * np.pi / 180
+    Cm_airfoil_tools = airfoil_tools_predictions_naca4412["Cm"][mask]
+    Cm = airfoil.compute_momentum_coefficient_at_aero_center(alpha)
+    max_diff = np.max(np.abs(Cm - Cm_airfoil_tools))
+    assert max_diff < coefficient_error_threshold

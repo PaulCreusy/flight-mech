@@ -1,4 +1,4 @@
-# Flight Mechanics Calculator
+# Flight-mech
 
 ![PyPI - Version](https://img.shields.io/pypi/v/flight-mech)![PyPI - Downloads](https://img.shields.io/pypi/dm/flight-mech)![Pylint Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pylint.yml/badge.svg)![Pytest Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pytest.yml/badge.svg)
 
@@ -25,6 +25,19 @@ For a manual installation, please clone the repository and install the required 
 ```bash
 pip install -r requirements.txt
 ```
+
+### Documentation
+
+The documentation is available online [here](https://flight-mech.creusy.fr).
+
+Otherwise, if you decided to clone the repository, you can generate the documentation using the following commands:
+
+```bash
+cd docs
+make html
+```
+
+And open the file `docs/_build/html/index.html` in your browser. 
 
 ### Usage
 
@@ -117,15 +130,4 @@ print("max slope at 0m [%]", plane.compute_max_ascension_slope(z=0))
 >> max slope at 0m [%] 0.5695896796157822
 ```
 
-### Documentation
 
-The documentation is available online [here](https://paulcreusy.github.io/flight-mech/).
-
-Otherwise, if you decided to clone the repository, you can generate the documentation using the following commands:
-
-```bash
-cd docs
-make html
-```
-
-And open the file `docs/_build/html/index.html` in your browser. 
