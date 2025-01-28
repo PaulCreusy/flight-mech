@@ -41,11 +41,68 @@ default_wing_database = os.path.join(
 #############
 
 def check_pyvista_import():
+    """
+    Verify that pyvista is successfully imported.
+
+    Raises
+    ------
+    ImportError
+        Raise error if pyvista cannot be accessed.
+    """
+
     try:
         pv.__version__
     except:
         raise ImportError(
             "You need to install pyvista before using 3D visualization functions. You can do it with: 'pip install pyvista'")
+
+def convert_y_to_theta(y_array: np.ndarray, wing_span: float):
+    """
+    Convert a y array to theta.
+
+    Parameters
+    ----------
+    y_array : np.ndarray
+        Values of y coordinates.
+    wing_span : float
+        Wing span.
+
+    Returns
+    -------
+    np.ndarray
+        Theta array.
+    """
+
+    theta_array = np.acos(2 * y_array / wing_span)
+
+    return theta_array
+
+def convert_theta_to_y(theta_array: np.ndarray, wing_span: float):
+    """
+    Convert a theta array to y.
+
+    Parameters
+    ----------
+    theta_array : np.ndarray
+        Values of theta coordinates.
+    wing_span : float
+        Wing span.
+
+    Returns
+    -------
+    np.ndarray
+        Y coordinates array.
+    """
+
+    y_array = (wing_span / 2) * np.cos(theta_array)
+
+    return y_array
+
+def compute_chord_min_and_max_for_trapezoidal_wing(reference_surface, aspect_ratio, taper_ratio):
+    wing_span = np.sqrt(aspect_ratio * reference_surface)
+    max_chord = 2 * reference_surface / (wing_span * (1 + taper_ratio))
+    min_chord = max_chord * taper_ratio
+    return min_chord, max_chord
 
 ###########
 # Classes #
@@ -97,16 +154,35 @@ class Wing:
         """
         Wing span.
         """
-        wing_span = np.max(self.chord_length_array)
+        wing_span = np.max(self.y_array) * 2
         return wing_span
 
     @property
     def aspect_ratio(self):
         """
-        Aspect ratio.
+        Aspect ratio. It corresponds to the squared wing span over the reference surface.
         """
         aspect_ratio = pow(self.wing_span, 2) / self.reference_surface
         return aspect_ratio
+
+    @property
+    def sweep_angle_at_leading_edged(self):
+        # TODO
+        raise NotImplementedError
+
+    @property
+    def sweep_angle_at_trailing_edged(self):
+        # TODO
+        raise NotImplementedError
+
+    @property
+    def taper_ratio(self):
+        """
+        Taper ratio. It corresponds to the ratio of the min chord and the max chord.
+        """
+        taper_ratio = np.min(self.chord_length_array) / \
+            np.max(self.chord_length_array)
+        return taper_ratio
 
     def initialize(self):
         if self.y_array is None:
@@ -180,7 +256,7 @@ class Wing:
             axis_type="equal"
         )
 
-    def create_3D_animation(self, output_path: str, nb_points_airfoil=50, nb_frames=60, time_step=0.05):
+    def create_3D_animation(self, output_path: str, nb_points_airfoil: int = 50, nb_frames: int = 60, time_step: float = 0.05):
         """
         Create a rotating 3D animation of the wing.
 
@@ -213,7 +289,7 @@ class Wing:
         pl.orbit_on_path(path, write_frames=True, step=time_step)
         pl.close()
 
-    def create_wing_3D_surface(self, nb_points_airfoil=50):
+    def create_wing_3D_surface(self, nb_points_airfoil: int = 50):
         """
         Create a wing surface PyVista object for 3D plotting.
 
@@ -259,7 +335,7 @@ class Wing:
 
         return wing_surface
 
-    def plot_3D(self, nb_points_airfoil=50, show_symmetric_wing: bool = False):
+    def plot_3D(self, nb_points_airfoil: int = 50, show_symmetric_wing: bool = False):
         """
         Plot the shape of the wing in 3D.
         """
@@ -279,11 +355,79 @@ class Wing:
         p.add_mesh(wing_surface)
         p.show()
 
-    def compute_lift_and_drag(alpha: float, nb_points_fourrier: int):
+    def save_3D_shape(self, output_path: str, nb_points_airfoil: int = 50):
+        """
+        Save the wing shape as a 3D object. The format can be '.ply', '.vtp', '.stl', '.vtk', '.geo', '.obj' or '.iv'.
+
+        Parameters
+        ----------
+        output_path : str
+            Path of the output file.
+        nb_points_airfoil : int, optional
+            Number of points to use for the airfoil, by default 50
+        """
+
+        # Create the 3D surface
+        wing_surface = self.create_wing_3D_surface(nb_points_airfoil)
+
+        # Save the output file
+        wing_surface.extract_geometry().save(output_path)
+
+    def compute_fourrier_coefficients(self, alpha: float, nb_points_fourrier: int = 10):
+
+        # Change variable from y to theta
+        theta_array = convert_y_to_theta(self.y_array[::-1], self.wing_span)
+
+        # Create functions to be able to interpolate the arrays on new positions
+        chord_length_on_theta_func = make_interp_spline(
+            theta_array, self.chord_length_array[::-1])
+        twisting_angle_on_theta_func = make_interp_spline(
+            theta_array, self.twisting_angle_array[::-1])
 
         # Create theta positions to interpolate
         theta_interpolation_pos = np.linspace(
             np.pi / 2 / nb_points_fourrier, np.pi / 2, nb_points_fourrier)
+        chord_length_on_theta = chord_length_on_theta_func(
+            theta_interpolation_pos)
+        twisting_angle_on_theta = twisting_angle_on_theta_func(
+            theta_interpolation_pos)
 
-        # Interpolate the wing values on the theta positions
-        y_on_theta_array = ...
+        # Compute the alpha at zero lift for the airfoil
+        alpha_zero_lift = self.base_airfoil.compute_alpha_zero_lift()
+
+        # Allocate variables to define the system to solve
+        mat_A = np.zeros((nb_points_fourrier, nb_points_fourrier))
+        vec_B = np.zeros(nb_points_fourrier)
+
+        # Iterate to fill the system
+        for i in range(nb_points_fourrier):
+            mu_loc = (
+                2 * np.pi * chord_length_on_theta[i]) / (4 * self.wing_span)
+            for j in range(nb_points_fourrier):
+                n = 2 * j + 1
+                mat_A[i, j] = (np.sin(theta_interpolation_pos[i]) +
+                               n * mu_loc) * np.sin(n * theta_interpolation_pos[i])
+
+            vec_B[i] = np.sin(theta_interpolation_pos[i]) * \
+                (-twisting_angle_on_theta[i] +
+                 alpha - alpha_zero_lift) * mu_loc
+
+        # Solve the system
+        An_vec_odd = np.linalg.solve(mat_A, vec_B)
+        n_vec_odd = np.linspace(
+            1, nb_points_fourrier * 2 - 1, nb_points_fourrier)
+
+        return An_vec_odd, n_vec_odd
+
+    def compute_lift_and_induced_drag_coefficients(self, alpha: float, nb_points_fourrier: int = 10):
+
+        # Compute the fourrier coefficients
+        An_vec_odd, n_vec_odd = self.compute_fourrier_coefficients(
+            alpha, nb_points_fourrier)
+
+        # Compute the lift and induced drag coefficients
+        CL = np.pi * An_vec_odd[0] * self.aspect_ratio
+        CD = np.pi * self.aspect_ratio * \
+            np.sum(n_vec_odd * np.power(An_vec_odd, 2))
+
+        return CL, CD

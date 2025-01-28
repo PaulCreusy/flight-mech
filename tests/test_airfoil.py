@@ -108,3 +108,9 @@ def test_plot_Cm_graph():
     airfoil = Airfoil("naca4412")
     airfoil.plot_Cm_graph(save_path=os.path.join(
         output_folder, "Cm.png"), clear_before_plot=True, hold_plot=True)
+
+def test_compute_alpha_zero_lift():
+    airfoil = Airfoil("naca4412")
+    alpha_zero_lift_airfoil_tools = -4.35 * np.pi / 180
+    alpha_zero_lift = airfoil.compute_alpha_zero_lift()
+    check_value(alpha_zero_lift_airfoil_tools, alpha_zero_lift)

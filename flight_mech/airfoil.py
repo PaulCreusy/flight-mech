@@ -696,4 +696,20 @@ class Airfoil:
         return rotated_x_array, rotated_z_array
 
     def compute_alpha_zero_lift(self):
-        pass
+        """
+        Compute the angle of incidence for which the airfoil's lift is zero.
+
+        Returns
+        -------
+        float
+            Angle of incidence at zero lift.
+        """
+
+        # Compute coefficients if needed
+        if self._a0 is None:
+            self.compute_airfoil_fourrier_coefficients()
+
+        # Compute the angle
+        alpha = (self._a0 * 2 - self._a1) / 2
+
+        return alpha
