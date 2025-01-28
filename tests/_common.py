@@ -2,11 +2,19 @@
 Module to define common functions for the tests.
 """
 
+###########
+# Imports #
+###########
+
+import os
+
 #############
 # Constants #
 #############
 
 tolerance = 0.1
+output_folder = os.path.join(os.path.dirname(__file__), "output")
+data_folder = os.path.join(os.path.dirname(__file__), "data")
 
 #############
 # Functions #

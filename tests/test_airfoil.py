@@ -24,15 +24,14 @@ import matplotlib.pyplot as plt
 from flight_mech.airfoil import Airfoil
 
 # Import test tools
-from tests._common import check_value
+from tests._common import check_value, output_folder, data_folder
 
 #############
 # Constants #
 #############
 
-airfoil_database_path = "./flight_mech/airfoil_database/"
 airfoil_tools_predictions_naca4412 = pd.read_csv(
-    "tests/data/xf-naca4412-il-500000.csv", skiprows=10)
+    os.path.join(data_folder, "xf-naca4412-il-500000.csv"), skiprows=10)
 coefficient_error_threshold = 0.05
 
 #########
@@ -42,7 +41,7 @@ coefficient_error_threshold = 0.05
 def test_load_selig_file():
     airfoil = Airfoil()
     airfoil.load_selig_file(os.path.join(
-        airfoil_database_path, "fx62k153.txt"), 1)
+        data_folder, "fx62k153.txt"), 1)
 
 def test_import_from_airfoiltools():
     airfoil = Airfoil()
@@ -99,3 +98,13 @@ def test_compute_momentum_coefficient():
     Cm = airfoil.compute_momentum_coefficient_at_aero_center(alpha)
     max_diff = np.max(np.abs(Cm - Cm_airfoil_tools))
     assert max_diff < coefficient_error_threshold
+
+def test_plot_CL_graph():
+    airfoil = Airfoil("naca4412")
+    airfoil.plot_CL_graph(save_path=os.path.join(
+        output_folder, "CL.png"), clear_before_plot=True, hold_plot=True)
+
+def test_plot_Cm_graph():
+    airfoil = Airfoil("naca4412")
+    airfoil.plot_Cm_graph(save_path=os.path.join(
+        output_folder, "Cm.png"), clear_before_plot=True, hold_plot=True)

@@ -19,6 +19,10 @@ import matplotlib.pyplot as plt
 import requests
 from bs4 import BeautifulSoup
 
+# Local imports #
+
+from flight_mech._common import plot_graph
+
 #############
 # Constants #
 #############
@@ -54,7 +58,7 @@ class Airfoil:
 
     extrados_z_array: np.ndarray | None = None
     intrados_z_array: np.ndarray | None = None
-    name: str
+    name: str | None = None
     _x_array: np.ndarray
     _chord_length: float
     _a0: float | None = None
@@ -548,7 +552,14 @@ class Airfoil:
 
         return C_m
 
-    def plot_CL_graph(self, alpha_min: float = -1, alpha_max: float = 1, nb_points: int = 100, mode: Literal["deg", "rad"] = "rad", hold_plot: bool = False):
+    def plot_CL_graph(self,
+                      alpha_min: float = -1,
+                      alpha_max: float = 1,
+                      nb_points: int = 100,
+                      mode: Literal["deg", "rad"] = "rad",
+                      hold_plot: bool = False,
+                      save_path: str | None = None,
+                      clear_before_plot: bool = False):
         """
         Plot the CL graph of the airfoil.
 
@@ -564,6 +575,10 @@ class Airfoil:
             Mode for alpha definition, by default "rad"
         hold_plot : bool, optional
             Indicate wether to display the plot or keep it, by default False
+        save_path : str | None, optional
+            Path to save the figure, by default None
+        clear_before_plot : bool, optional
+            Indicate wether to clear the plot before display, by default False
         """
 
         # Define the array of angle of incidence
@@ -579,17 +594,29 @@ class Airfoil:
         CL_array = self.compute_lift_coefficient(alpha_array_comp)
 
         # Plot the graph
-        plt.xlabel(f"alpha [{mode}]")
-        plt.ylabel("CL")
-        plt.plot(alpha_array_graph, CL_array)
+        plot_graph(
+            alpha_array_graph,
+            CL_array,
+            data_label=self.name,
+            title="Lift coefficient",
+            use_grid=True,
+            save_path=save_path,
+            hold_plot=hold_plot,
+            clear_before_plot=clear_before_plot,
+            x_label=f"alpha [{mode}]",
+            y_label="CL"
+        )
 
-        # Show it if needed
-        if not hold_plot:
-            plt.title("Lift coefficient")
-            plt.grid()
-            plt.show()
-
-    def plot_Cm_graph(self, alpha_min: float = -1, alpha_max: float = 1, nb_points: int = 100, mode: Literal["deg", "rad"] = "rad", location: Literal["leading_edge", "aero_center"] = "aero_center", hold_plot: bool = False):
+    def plot_Cm_graph(self,
+                      alpha_min: float = -1,
+                      alpha_max: float = 1,
+                      nb_points: int = 100,
+                      mode: Literal["deg", "rad"] = "rad",
+                      location: Literal["leading_edge",
+                                        "aero_center"] = "aero_center",
+                      hold_plot: bool = False,
+                      save_path: str | None = None,
+                      clear_before_plot: bool = False):
         """
         Plot the Cm graph of the airfoil.
 
@@ -607,6 +634,10 @@ class Airfoil:
             Location of the Cm, by default "aero_center"
         hold_plot : bool, optional
             Indicate wether to display the plot or keep it, by default False
+        save_path : str | None, optional
+            Path to save the figure, by default None
+        clear_before_plot : bool, optional
+            Indicate wether to clear the plot before display, by default False
         """
 
         # Define the array of angle of incidence
@@ -627,12 +658,42 @@ class Airfoil:
                 alpha_array_comp)
 
         # Plot the graph
-        plt.xlabel(f"alpha [{mode}]")
-        plt.ylabel("Cm")
-        plt.plot(alpha_array_graph, Cm_array)
+        plot_graph(
+            alpha_array_graph,
+            Cm_array,
+            data_label=self.name,
+            title="Momentum coefficient",
+            use_grid=True,
+            save_path=save_path,
+            hold_plot=hold_plot,
+            clear_before_plot=clear_before_plot,
+            x_label=f"alpha [{mode}]",
+            y_label="Cm"
+        )
 
-        # Show it if needed
-        if not hold_plot:
-            plt.title("Momentum coefficient")
-            plt.grid()
-            plt.show()
+    def get_rotated_selig_arrays(self, angle: float, rotation_center: float = 0.25):
+        """
+        Returns the selig arrays of the airfoil rotated by a given angle.
+
+        Parameters
+        ----------
+        angle : float
+            Angle of rotation.
+        rotation_center : float
+            Center of rotation in fraction of the chord.
+
+        Returns
+        -------
+        tuple[np.ndarray,np.ndarray]
+            Tuple containing the selig arrays.
+        """
+
+        rotated_x_array = (self.x_selig_array - self.chord_length * rotation_center) * \
+            np.cos(-angle) + self.z_selig_array * \
+            np.sin(-angle) + self.chord_length * rotation_center
+        rotated_z_array = -(self.x_selig_array - self.chord_length * rotation_center) * \
+            np.sin(-angle) + self.z_selig_array * np.cos(-angle)
+        return rotated_x_array, rotated_z_array
+
+    def compute_alpha_zero_lift(self):
+        pass
