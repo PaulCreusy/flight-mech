@@ -21,10 +21,7 @@ jobs:
 
     - name: Install system dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y xvfb libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr-dev \
-            libxinerama1 libxinerama-dev libxcursor1 libxcursor-dev libqt5gui5 \
-            libqt5opengl5 libosmesa6 mesa-utils
+        sudo apt-get install -y libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 x11-utils
 
     - name: Install Python dependencies
       run: |
