@@ -96,6 +96,10 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
+<span class="c1"># Local imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+
 <span class="c1">#############</span>
 <span class="c1"># Constants #</span>
 <span class="c1">#############</span>
@@ -139,7 +143,7 @@
 
     <span class="n">extrados_z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">intrados_z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">_chord_length</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">_a0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -671,7 +675,14 @@
 
 <div class="viewcode-block" id="Airfoil.plot_CL_graph">
 <a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_CL_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="s2">&quot;rad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span><span class="p">,</span> <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_CL_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">alpha_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                      <span class="n">alpha_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                      <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="s2">&quot;rad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span><span class="p">,</span>
+                      <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                      <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                      <span class="n">clear_before_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the CL graph of the airfoil.</span>
 
@@ -687,6 +698,10 @@
 <span class="sd">            Mode for alpha definition, by default &quot;rad&quot;</span>
 <span class="sd">        hold_plot : bool, optional</span>
 <span class="sd">            Indicate wether to display the plot or keep it, by default False</span>
+<span class="sd">        save_path : str | None, optional</span>
+<span class="sd">            Path to save the figure, by default None</span>
+<span class="sd">        clear_before_plot : bool, optional</span>
+<span class="sd">            Indicate wether to clear the plot before display, by default False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Define the array of angle of incidence</span>
@@ -702,20 +717,32 @@
         <span class="n">CL_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_lift_coefficient</span><span class="p">(</span><span class="n">alpha_array_comp</span><span class="p">)</span>
 
         <span class="c1"># Plot the graph</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha [</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;CL&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha_array_graph</span><span class="p">,</span> <span class="n">CL_array</span><span class="p">)</span>
-
-        <span class="c1"># Show it if needed</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">hold_plot</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Lift coefficient&quot;</span><span class="p">)</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">plot_graph</span><span class="p">(</span>
+            <span class="n">alpha_array_graph</span><span class="p">,</span>
+            <span class="n">CL_array</span><span class="p">,</span>
+            <span class="n">data_label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Lift coefficient&quot;</span><span class="p">,</span>
+            <span class="n">use_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">hold_plot</span><span class="o">=</span><span class="n">hold_plot</span><span class="p">,</span>
+            <span class="n">clear_before_plot</span><span class="o">=</span><span class="n">clear_before_plot</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;alpha [</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;CL&quot;</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Airfoil.plot_Cm_graph">
 <a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_Cm_graph">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_Cm_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="s2">&quot;rad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;leading_edge&quot;</span><span class="p">,</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">,</span> <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_Cm_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">alpha_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                      <span class="n">alpha_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                      <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span> <span class="s2">&quot;rad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span><span class="p">,</span>
+                      <span class="n">location</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;leading_edge&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;aero_center&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;aero_center&quot;</span><span class="p">,</span>
+                      <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                      <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                      <span class="n">clear_before_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the Cm graph of the airfoil.</span>
 
@@ -733,6 +760,10 @@
 <span class="sd">            Location of the Cm, by default &quot;aero_center&quot;</span>
 <span class="sd">        hold_plot : bool, optional</span>
 <span class="sd">            Indicate wether to display the plot or keep it, by default False</span>
+<span class="sd">        save_path : str | None, optional</span>
+<span class="sd">            Path to save the figure, by default None</span>
+<span class="sd">        clear_before_plot : bool, optional</span>
+<span class="sd">            Indicate wether to clear the plot before display, by default False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Define the array of angle of incidence</span>
@@ -753,15 +784,51 @@
                 <span class="n">alpha_array_comp</span><span class="p">)</span>
 
         <span class="c1"># Plot the graph</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha [</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cm&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha_array_graph</span><span class="p">,</span> <span class="n">Cm_array</span><span class="p">)</span>
+        <span class="n">plot_graph</span><span class="p">(</span>
+            <span class="n">alpha_array_graph</span><span class="p">,</span>
+            <span class="n">Cm_array</span><span class="p">,</span>
+            <span class="n">data_label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Momentum coefficient&quot;</span><span class="p">,</span>
+            <span class="n">use_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">hold_plot</span><span class="o">=</span><span class="n">hold_plot</span><span class="p">,</span>
+            <span class="n">clear_before_plot</span><span class="o">=</span><span class="n">clear_before_plot</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;alpha [</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;Cm&quot;</span>
+        <span class="p">)</span></div>
 
-        <span class="c1"># Show it if needed</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">hold_plot</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Momentum coefficient&quot;</span><span class="p">)</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Airfoil.get_rotated_selig_arrays">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_rotated_selig_arrays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_rotated_selig_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rotation_center</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the selig arrays of the airfoil rotated by a given angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        angle : float</span>
+<span class="sd">            Angle of rotation.</span>
+<span class="sd">        rotation_center : float</span>
+<span class="sd">            Center of rotation in fraction of the chord.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndarray,np.ndarray]</span>
+<span class="sd">            Tuple containing the selig arrays.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rotated_x_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_selig_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> <span class="n">rotation_center</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_selig_array</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> <span class="n">rotation_center</span>
+        <span class="n">rotated_z_array</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_selig_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> <span class="n">rotation_center</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_selig_array</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rotated_x_array</span><span class="p">,</span> <span class="n">rotated_z_array</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.compute_alpha_zero_lift">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_alpha_zero_lift">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_alpha_zero_lift</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
 </div>
 
 </pre></div>
