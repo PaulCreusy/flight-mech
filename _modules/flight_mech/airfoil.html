@@ -828,7 +828,23 @@
 <div class="viewcode-block" id="Airfoil.compute_alpha_zero_lift">
 <a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_alpha_zero_lift">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_alpha_zero_lift</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the angle of incidence for which the airfoil&#39;s lift is zero.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Angle of incidence at zero lift.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute coefficients if needed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_airfoil_fourrier_coefficients</span><span class="p">()</span>
+
+        <span class="c1"># Compute the angle</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_a0</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">alpha</span></div>
 </div>
 
 </pre></div>
