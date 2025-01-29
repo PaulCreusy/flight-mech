@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.wing module &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="flight_mech.airfoil module" href="flight_mech.airfoil.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.wing module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.wing.Wing"><code class="docutils literal notranslate"><span class="pre">Wing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.wing.check_pyvista_import"><code class="docutils literal notranslate"><span class="pre">check_pyvista_import()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing"><code class="docutils literal notranslate"><span class="pre">compute_chord_min_and_max_for_trapezoidal_wing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.wing.convert_theta_to_y"><code class="docutils literal notranslate"><span class="pre">convert_theta_to_y()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.wing.convert_y_to_theta"><code class="docutils literal notranslate"><span class="pre">convert_y_to_theta()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="flight_mech.html">flight_mech package</a></li>
+      <li class="breadcrumb-item active">flight_mech.wing module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/flight_mech.wing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-flight_mech.wing">
+<span id="flight-mech-wing-module"></span><h1>flight_mech.wing module<a class="headerlink" href="#module-flight_mech.wing" title="Link to this heading"></a></h1>
+<p>Module to analyse wing aerodynamic properties.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.wing.</span></span><span class="sig-name descname"><span class="pre">Wing</span></span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to define a wing and compute its characteristics.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.aspect_ratio">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">aspect_ratio</span></span><a class="headerlink" href="#flight_mech.wing.Wing.aspect_ratio" title="Link to this definition"></a></dt>
+<dd><p>Aspect ratio. It corresponds to the squared wing span over the reference surface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.base_airfoil">
+<span class="sig-name descname"><span class="pre">base_airfoil</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil" title="flight_mech.airfoil.Airfoil"><span class="pre">Airfoil</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.wing.Wing.base_airfoil" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.center_x_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center_x_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.wing.Wing.center_x_array" title="Link to this definition"></a></dt>
+<dd><p>Array of the x coordinates of the mean between leading and trailing edges coordinates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.check_initialization">
+<span class="sig-name descname"><span class="pre">check_initialization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.check_initialization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.check_initialization" title="Link to this definition"></a></dt>
+<dd><p>Check that the wing is correctly initialized.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.chord_length_array">
+<span class="sig-name descname"><span class="pre">chord_length_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.wing.Wing.chord_length_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.compute_fourrier_coefficients">
+<span class="sig-name descname"><span class="pre">compute_fourrier_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points_fourrier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.compute_fourrier_coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.compute_fourrier_coefficients" title="Link to this definition"></a></dt>
+<dd><p>Compute the fourrier coefficients used to determine the lift and induced drag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence of the wing.</p></li>
+<li><p><strong>nb_points_fourrier</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points for the fourrier decomposition, by default 10</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing the fourrier coefficients and their ids.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray,np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients">
+<span class="sig-name descname"><span class="pre">compute_lift_and_induced_drag_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points_fourrier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.compute_lift_and_induced_drag_coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients" title="Link to this definition"></a></dt>
+<dd><p>Compute the coefficients of lift and induced drag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence of the wing.</p></li>
+<li><p><strong>nb_points_fourrier</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points for the fourrier decomposition, by default 10</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing the lift and induced drag coefficients.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float,float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.create_3D_animation">
+<span class="sig-name descname"><span class="pre">create_3D_animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points_airfoil</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.create_3D_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.create_3D_animation" title="Link to this definition"></a></dt>
+<dd><p>Create a rotating 3D animation of the wing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> (<em>str</em>) – Path of the output gif.</p></li>
+<li><p><strong>nb_points_airfoil</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points to use for the airfoil, by default 50</p></li>
+<li><p><strong>nb_frames</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of frames in the animation, by default 60</p></li>
+<li><p><strong>time_step</strong> (<em>float</em><em>, </em><em>optional</em>) – Time step between each frame, by default 0.05</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.create_wing_3D_surface">
+<span class="sig-name descname"><span class="pre">create_wing_3D_surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_points_airfoil</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.create_wing_3D_surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.create_wing_3D_surface" title="Link to this definition"></a></dt>
+<dd><p>Create a wing surface PyVista object for 3D plotting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nb_points_airfoil</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points to use for the airfoil, by default 50</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pyvista 3D surface.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.PointSet</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize the wing by setting the undefined array to default values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Raise error if the y array is not defined.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.leading_edge_x_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">leading_edge_x_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.wing.Wing.leading_edge_x_array" title="Link to this definition"></a></dt>
+<dd><p>Array of x coordinates of the leading edge.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.wing.Wing.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.plot_2D">
+<span class="sig-name descname"><span class="pre">plot_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hold_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_before_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.plot_2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.plot_2D" title="Link to this definition"></a></dt>
+<dd><p>Plot the shape of the wing in 2D.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_path</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Path to save the figure, by default None</p></li>
+<li><p><strong>hold_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate wether to keep or plot the figure, by default False</p></li>
+<li><p><strong>clear_before_plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate wether to clear or not the plot before, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.plot_3D">
+<span class="sig-name descname"><span class="pre">plot_3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_points_airfoil</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_symmetric_wing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.plot_3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.plot_3D" title="Link to this definition"></a></dt>
+<dd><p>Plot the shape of the wing in 3D.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.re_interpolate">
+<span class="sig-name descname"><span class="pre">re_interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_y_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_y_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.re_interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.re_interpolate" title="Link to this definition"></a></dt>
+<dd><p>Re-interpolate the wing arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_y_array</strong> (<em>np.ndarray</em>) – New y array on which to interpolate.</p></li>
+<li><p><strong>update_y_array</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicate wether to update the y array, by default True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.reference_surface">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_surface</span></span><a class="headerlink" href="#flight_mech.wing.Wing.reference_surface" title="Link to this definition"></a></dt>
+<dd><p>Reference surface of the wings of the plane. Equal to 2 times the surface of a single wing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.save_3D_shape">
+<span class="sig-name descname"><span class="pre">save_3D_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points_airfoil</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#Wing.save_3D_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.Wing.save_3D_shape" title="Link to this definition"></a></dt>
+<dd><p>Save the wing shape as a 3D object. The format can be ‘.ply’, ‘.vtp’, ‘.stl’, ‘.vtk’, ‘.geo’, ‘.obj’ or ‘.iv’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> (<em>str</em>) – Path of the output file.</p></li>
+<li><p><strong>nb_points_airfoil</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points to use for the airfoil, by default 50</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.single_side_surface">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">single_side_surface</span></span><a class="headerlink" href="#flight_mech.wing.Wing.single_side_surface" title="Link to this definition"></a></dt>
+<dd><p>Surface of a single wing.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.sweep_angle_at_leading_edge">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sweep_angle_at_leading_edge</span></span><a class="headerlink" href="#flight_mech.wing.Wing.sweep_angle_at_leading_edge" title="Link to this definition"></a></dt>
+<dd><p>Sweep angle at the leading edge of the wing.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.sweep_angle_at_trailing_edge">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sweep_angle_at_trailing_edge</span></span><a class="headerlink" href="#flight_mech.wing.Wing.sweep_angle_at_trailing_edge" title="Link to this definition"></a></dt>
+<dd><p>Sweep angle at the trailing edge of the wing.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.taper_ratio">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">taper_ratio</span></span><a class="headerlink" href="#flight_mech.wing.Wing.taper_ratio" title="Link to this definition"></a></dt>
+<dd><p>Taper ratio. It corresponds to the ratio of the min chord and the max chord.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.trailing_edge_x_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trailing_edge_x_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.wing.Wing.trailing_edge_x_array" title="Link to this definition"></a></dt>
+<dd><p>Array of x coordinates of the trailing edge.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.twisting_angle_array">
+<span class="sig-name descname"><span class="pre">twisting_angle_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.wing.Wing.twisting_angle_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.wing_span">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wing_span</span></span><a class="headerlink" href="#flight_mech.wing.Wing.wing_span" title="Link to this definition"></a></dt>
+<dd><p>Wing span.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.x_center_offset_array">
+<span class="sig-name descname"><span class="pre">x_center_offset_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.wing.Wing.x_center_offset_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.wing.Wing.y_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.wing.Wing.y_array" title="Link to this definition"></a></dt>
+<dd><p>Array of y coordinates used for the wing definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.wing.check_pyvista_import">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.wing.</span></span><span class="sig-name descname"><span class="pre">check_pyvista_import</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#check_pyvista_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.check_pyvista_import" title="Link to this definition"></a></dt>
+<dd><p>Verify that pyvista is successfully imported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ImportError</strong> – Raise error if pyvista cannot be accessed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.wing.</span></span><span class="sig-name descname"><span class="pre">compute_chord_min_and_max_for_trapezoidal_wing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference_surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taper_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#compute_chord_min_and_max_for_trapezoidal_wing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing" title="Link to this definition"></a></dt>
+<dd><p>Compute the chord min and max values for a trapezoidal wing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference_surface</strong> (<em>float</em>) – Reference surface of the wing.</p></li>
+<li><p><strong>aspect_ratio</strong> (<em>float</em>) – Aspect ratio of the wing.</p></li>
+<li><p><strong>taper_ratio</strong> (<em>float</em>) – Taper ratio of the wing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing the chord min and max values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float,float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.wing.convert_theta_to_y">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.wing.</span></span><span class="sig-name descname"><span class="pre">convert_theta_to_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wing_span</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#convert_theta_to_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.convert_theta_to_y" title="Link to this definition"></a></dt>
+<dd><p>Convert a theta array to y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta_array</strong> (<em>np.ndarray</em>) – Values of theta coordinates.</p></li>
+<li><p><strong>wing_span</strong> (<em>float</em>) – Wing span.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Y coordinates array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.wing.convert_y_to_theta">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.wing.</span></span><span class="sig-name descname"><span class="pre">convert_y_to_theta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wing_span</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/wing.html#convert_y_to_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.wing.convert_y_to_theta" title="Link to this definition"></a></dt>
+<dd><p>Convert a y array to theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_array</strong> (<em>np.ndarray</em>) – Values of y coordinates.</p></li>
+<li><p><strong>wing_span</strong> (<em>float</em>) – Wing span.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Theta array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="flight_mech.airfoil.html" class="btn btn-neutral float-left" title="flight_mech.airfoil module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

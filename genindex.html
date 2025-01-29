@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul>
@@ -97,6 +98,7 @@
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
 </div>
@@ -107,13 +109,15 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil">Airfoil (class in flight_mech.airfoil)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_0">alpha_0 (flight_mech.plane.Plane attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_f_max">alpha_f_max (flight_mech.plane.Plane property)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_stall">alpha_stall (flight_mech.plane.Plane attribute)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.aspect_ratio">aspect_ratio (flight_mech.wing.Wing property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -122,6 +126,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.b">b (flight_mech.plane.Plane attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.base_airfoil">base_airfoil (flight_mech.wing.Wing attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -153,7 +161,15 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.camber_z_array">camber_z_array (flight_mech.airfoil.Airfoil property)</a>
 </li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.center_x_array">center_x_array (flight_mech.wing.Wing property)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.check_initialization">check_initialization() (flight_mech.wing.Wing method)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.check_pyvista_import">check_pyvista_import() (in module flight_mech.wing)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_length">chord_length (flight_mech.airfoil.Airfoil property)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.chord_length_array">chord_length_array (flight_mech.wing.Wing attribute)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_z_array">chord_z_array (flight_mech.airfoil.Airfoil property)</a>
 </li>
@@ -169,11 +185,15 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_ascension_slope">compute_ascension_slope() (flight_mech.plane.Plane method)</a>
 </li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing">compute_chord_min_and_max_for_trapezoidal_wing() (in module flight_mech.wing)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_drag">compute_drag() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_drag_with_ground_effect">compute_drag_with_ground_effect() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_endurance">compute_endurance() (flight_mech.plane.Plane method)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.compute_fourrier_coefficients">compute_fourrier_coefficients() (flight_mech.wing.Wing method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_gliding_speed">compute_gliding_speed() (flight_mech.plane.Plane method)</a>
 </li>
@@ -188,6 +208,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_lift">compute_lift() (flight_mech.plane.Plane method)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients">compute_lift_and_induced_drag_coefficients() (flight_mech.wing.Wing method)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_lift_coefficient">compute_lift_coefficient() (flight_mech.airfoil.Airfoil method)</a>
 </li>
@@ -245,6 +267,14 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.convert_float_or_none_to_string">convert_float_or_none_to_string() (in module flight_mech.airfoil)</a>
 </li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.convert_theta_to_y">convert_theta_to_y() (in module flight_mech.wing)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.convert_y_to_theta">convert_y_to_theta() (in module flight_mech.wing)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.create_3D_animation">create_3D_animation() (flight_mech.wing.Wing method)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.create_wing_3D_surface">create_wing_3D_surface() (flight_mech.wing.Wing method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -291,8 +321,6 @@
         <li><a href="flight_mech.airfoil.html#module-flight_mech.airfoil">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     flight_mech.atmosphere
 
@@ -300,11 +328,20 @@
         <li><a href="flight_mech.atmosphere.html#module-flight_mech.atmosphere">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     flight_mech.plane
 
       <ul>
         <li><a href="flight_mech.plane.html#module-flight_mech.plane">module</a>
+</li>
+      </ul></li>
+      <li>
+    flight_mech.wing
+
+      <ul>
+        <li><a href="flight_mech.wing.html#module-flight_mech.wing">module</a>
 </li>
       </ul></li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.fuel_specific_conso">fuel_specific_conso (flight_mech.plane.Plane attribute)</a>
@@ -331,9 +368,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_from_airfoiltools">import_from_airfoiltools() (flight_mech.airfoil.Airfoil method)</a>
 </li>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays">import_xz_selig_arrays() (flight_mech.airfoil.Airfoil method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays">import_xz_selig_arrays() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.initialize">initialize() (flight_mech.wing.Wing method)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.intrados_z_array">intrados_z_array (flight_mech.airfoil.Airfoil attribute)</a>
 </li>
@@ -351,12 +390,14 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">list_airfoils_in_database() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.leading_edge_x_array">leading_edge_x_array (flight_mech.wing.Wing property)</a>
 </li>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil">load_database_airfoil() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">list_airfoils_in_database() (flight_mech.airfoil.Airfoil method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil">load_database_airfoil() (flight_mech.airfoil.Airfoil method)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.load_plane_data">load_plane_data() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_selig_file">load_selig_file() (flight_mech.airfoil.Airfoil method)</a>
@@ -379,10 +420,10 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber_location">max_camber_location (flight_mech.airfoil.Airfoil property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness">max_thickness (flight_mech.airfoil.Airfoil property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness_location">max_thickness_location (flight_mech.airfoil.Airfoil property)</a>
 </li>
       <li>
@@ -397,6 +438,8 @@
 </li>
         <li><a href="flight_mech.plane.html#module-flight_mech.plane">flight_mech.plane</a>
 </li>
+        <li><a href="flight_mech.wing.html#module-flight_mech.wing">flight_mech.wing</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -406,10 +449,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.n">n() (flight_mech.plane.Plane method)</a>
 </li>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.name">name (flight_mech.airfoil.Airfoil attribute)</a>
+
+      <ul>
+        <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.name">(flight_mech.wing.Wing attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.name">name (flight_mech.airfoil.Airfoil attribute)</a>
-</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.nb_engines">nb_engines (flight_mech.plane.Plane attribute)</a>
 </li>
   </ul></td>
@@ -424,10 +471,14 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot">plot() (flight_mech.airfoil.Airfoil method)</a>
 </li>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph">plot_CL_graph() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.plot_2D">plot_2D() (flight_mech.wing.Wing method)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.plot_3D">plot_3D() (flight_mech.wing.Wing method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph">plot_CL_graph() (flight_mech.airfoil.Airfoil method)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_Cm_graph">plot_Cm_graph() (flight_mech.airfoil.Airfoil method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.plot_gliding_TV_graph">plot_gliding_TV_graph() (flight_mech.plane.Plane method)</a>
@@ -443,10 +494,16 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate">re_interpolate() (flight_mech.airfoil.Airfoil method)</a>
+
+      <ul>
+        <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.re_interpolate">(flight_mech.wing.Wing method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution">re_interpolate_with_cosine_distribution() (flight_mech.airfoil.Airfoil method)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.reference_surface">reference_surface (flight_mech.wing.Wing property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -456,13 +513,31 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.S">S (flight_mech.plane.Plane attribute)</a>
 </li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.save_3D_shape">save_3D_shape() (flight_mech.wing.Wing method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.single_side_surface">single_side_surface (flight_mech.wing.Wing property)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.sweep_angle_at_leading_edge">sweep_angle_at_leading_edge (flight_mech.wing.Wing property)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.sweep_angle_at_trailing_edge">sweep_angle_at_trailing_edge (flight_mech.wing.Wing property)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.taper_ratio">taper_ratio (flight_mech.wing.Wing property)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.thrust_per_engine">thrust_per_engine (flight_mech.plane.Plane attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.trailing_edge_x_array">trailing_edge_x_array (flight_mech.wing.Wing property)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.twisting_angle_array">twisting_angle_array (flight_mech.wing.Wing attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -496,10 +571,14 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing">Wing (class in flight_mech.wing)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.wing_shape_coefficient">wing_shape_coefficient (flight_mech.plane.Plane attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.wing_span">wing_span (flight_mech.wing.Wing property)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.wing_to_ground_height">wing_to_ground_height (flight_mech.plane.Plane attribute)</a>
 </li>
   </ul></td>
@@ -512,7 +591,17 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.x_center_offset_array">x_center_offset_array (flight_mech.wing.Wing attribute)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.x_selig_array">x_selig_array (flight_mech.airfoil.Airfoil property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.y_array">y_array (flight_mech.wing.Wing property)</a>
 </li>
   </ul></td>
 </tr></table>

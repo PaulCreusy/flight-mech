@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.wing &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wing_module.html">Wing module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flight_mech.wing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for flight_mech.wing</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to analyse wing aerodynamic properties.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Imports #</span>
+<span class="c1">###########</span>
+
+<span class="c1"># Python imports #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="c1"># Dependencies #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_interp_spline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Warning</span><span class="p">(</span>
+        <span class="s2">&quot;Pyvista is not detected, please install it before using the 3D visualization functions.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Local imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.airfoil</span><span class="w"> </span><span class="kn">import</span> <span class="n">Airfoil</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Constants #</span>
+<span class="c1">#############</span>
+
+<span class="c1"># Define a default plane database location</span>
+<span class="n">default_wing_database</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;wing_database&quot;</span><span class="p">)</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Functions #</span>
+<span class="c1">#############</span>
+
+<div class="viewcode-block" id="check_pyvista_import">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.check_pyvista_import">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_pyvista_import</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify that pyvista is successfully imported.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        Raise error if pyvista cannot be accessed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">__version__</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">&quot;You need to install pyvista before using 3D visualization functions. You can do it with: &#39;pip install pyvista&#39;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="convert_y_to_theta">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.convert_y_to_theta">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_y_to_theta</span><span class="p">(</span><span class="n">y_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wing_span</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a y array to theta.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_array : np.ndarray</span>
+<span class="sd">        Values of y coordinates.</span>
+<span class="sd">    wing_span : float</span>
+<span class="sd">        Wing span.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Theta array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">theta_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y_array</span> <span class="o">/</span> <span class="n">wing_span</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">theta_array</span></div>
+
+
+<div class="viewcode-block" id="convert_theta_to_y">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.convert_theta_to_y">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_theta_to_y</span><span class="p">(</span><span class="n">theta_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wing_span</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a theta array to y.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theta_array : np.ndarray</span>
+<span class="sd">        Values of theta coordinates.</span>
+<span class="sd">    wing_span : float</span>
+<span class="sd">        Wing span.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Y coordinates array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">y_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">wing_span</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_array</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">y_array</span></div>
+
+
+<div class="viewcode-block" id="compute_chord_min_and_max_for_trapezoidal_wing">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_chord_min_and_max_for_trapezoidal_wing</span><span class="p">(</span><span class="n">reference_surface</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aspect_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">taper_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the chord min and max values for a trapezoidal wing.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    reference_surface : float</span>
+<span class="sd">        Reference surface of the wing.</span>
+<span class="sd">    aspect_ratio : float</span>
+<span class="sd">        Aspect ratio of the wing.</span>
+<span class="sd">    taper_ratio : float</span>
+<span class="sd">        Taper ratio of the wing.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[float,float]</span>
+<span class="sd">        Tuple containing the chord min and max values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">wing_span</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">aspect_ratio</span> <span class="o">*</span> <span class="n">reference_surface</span><span class="p">)</span>
+    <span class="n">max_chord</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">reference_surface</span> <span class="o">/</span> <span class="p">(</span><span class="n">wing_span</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">taper_ratio</span><span class="p">))</span>
+    <span class="n">min_chord</span> <span class="o">=</span> <span class="n">max_chord</span> <span class="o">*</span> <span class="n">taper_ratio</span>
+
+    <span class="k">return</span> <span class="n">min_chord</span><span class="p">,</span> <span class="n">max_chord</span></div>
+
+
+<span class="c1">###########</span>
+<span class="c1"># Classes #</span>
+<span class="c1">###########</span>
+
+<div class="viewcode-block" id="Wing">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Wing</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to define a wing and compute its characteristics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_y_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">chord_length_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">twisting_angle_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">x_center_offset_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">base_airfoil</span><span class="p">:</span> <span class="n">Airfoil</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">y_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of y coordinates used for the wing definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_array</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leading_edge_x_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of x coordinates of the leading edge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">leading_edge_x_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="o">+</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">leading_edge_x_array</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trailing_edge_x_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of x coordinates of the trailing edge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trailing_edge_x_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="o">+</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">trailing_edge_x_array</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">center_x_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of the x coordinates of the mean between leading and trailing edges coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">center_x_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leading_edge_x_array</span> <span class="o">+</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">leading_edge_x_array</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">center_x_array</span>
+
+    <span class="nd">@y_array</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">y_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_array</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">re_interpolate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">update_y_array</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y_array</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y_array</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chord_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">single_side_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Surface of a single wing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">surface</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">surface</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reference surface of the wings of the plane. Equal to 2 times the surface of a single wing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reference_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_side_surface</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">reference_surface</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wing_span</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wing span.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wing_span</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">wing_span</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">aspect_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Aspect ratio. It corresponds to the squared wing span over the reference surface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_span</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_surface</span>
+        <span class="k">return</span> <span class="n">aspect_ratio</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sweep_angle_at_leading_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sweep angle at the leading edge of the wing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sweep_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leading_edge_x_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">leading_edge_x_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">sweep_angle</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sweep_angle_at_trailing_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sweep angle at the trailing edge of the wing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sweep_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trailing_edge_x_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">trailing_edge_x_array</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">sweep_angle</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">taper_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Taper ratio. It corresponds to the ratio of the min chord and the max chord.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">taper_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">)</span> <span class="o">/</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">taper_ratio</span>
+
+<div class="viewcode-block" id="Wing.initialize">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.initialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the wing by setting the undefined array to default values.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raise error if the y array is not defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Unable to initialize the wing, the y array is not defined.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_airfoil</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_airfoil</span> <span class="o">=</span> <span class="n">Airfoil</span><span class="p">(</span><span class="s2">&quot;naca4412&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Wing.check_initialization">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.check_initialization">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_initialization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that the wing is correctly initialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The y array is not defined, unable to proceed. Please define it first.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The chord length array is not defined, unable to proceed. Please define it first.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The twisting angle array is not defined, unable to proceed. Please initialize the wing with wing.initialize() or define it first.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The x center offset array is not defined, unable to proceed. Please initialize the wing with wing.initialize() or define it first.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_airfoil</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The base airfoil is not defined, unable to proceed. Please initialize the wing with wing.initialize() or define it first.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Wing.re_interpolate">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.re_interpolate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">re_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_y_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">update_y_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-interpolate the wing arrays.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_y_array : np.ndarray</span>
+<span class="sd">            New y array on which to interpolate.</span>
+<span class="sd">        update_y_array : bool, optional</span>
+<span class="sd">            Indicate wether to update the y array, by default True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create interpolation functions</span>
+        <span class="n">chord_length_function</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">)</span>
+        <span class="n">twisting_angle_function</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span><span class="p">)</span>
+        <span class="n">x_center_offset_function</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span><span class="p">)</span>
+
+        <span class="c1"># Interpolate on new points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span> <span class="o">=</span> <span class="n">chord_length_function</span><span class="p">(</span><span class="n">new_y_array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span> <span class="o">=</span> <span class="n">twisting_angle_function</span><span class="p">(</span><span class="n">new_y_array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span> <span class="o">=</span> <span class="n">x_center_offset_function</span><span class="p">(</span><span class="n">new_y_array</span><span class="p">)</span>
+
+        <span class="c1"># Update y array if needed</span>
+        <span class="k">if</span> <span class="n">update_y_array</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span> <span class="o">=</span> <span class="n">new_y_array</span></div>
+
+
+<div class="viewcode-block" id="Wing.plot_2D">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.plot_2D">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">hold_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">clear_before_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the shape of the wing in 2D.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        save_path : str | None, optional</span>
+<span class="sd">            Path to save the figure, by default None</span>
+<span class="sd">        hold_plot : bool, optional</span>
+<span class="sd">            Indicate wether to keep or plot the figure, by default False</span>
+<span class="sd">        clear_before_plot : bool, optional</span>
+<span class="sd">            Indicate wether to clear or not the plot before, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Group to create a contour</span>
+        <span class="n">x_contour_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leading_edge_x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trailing_edge_x_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">leading_edge_x_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_contour_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Plot the graph</span>
+        <span class="n">plot_graph</span><span class="p">(</span>
+            <span class="n">y_contour_array</span><span class="p">,</span>
+            <span class="n">x_contour_array</span><span class="p">,</span>
+            <span class="n">data_label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Wing visualization&quot;</span><span class="p">,</span>
+            <span class="n">use_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">hold_plot</span><span class="o">=</span><span class="n">hold_plot</span><span class="p">,</span>
+            <span class="n">clear_before_plot</span><span class="o">=</span><span class="n">clear_before_plot</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+            <span class="n">axis_type</span><span class="o">=</span><span class="s2">&quot;equal&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Wing.create_3D_animation">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.create_3D_animation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_3D_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">nb_frames</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a rotating 3D animation of the wing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_path : str</span>
+<span class="sd">            Path of the output gif.</span>
+<span class="sd">        nb_points_airfoil : int, optional</span>
+<span class="sd">            Number of points to use for the airfoil, by default 50</span>
+<span class="sd">        nb_frames : int, optional</span>
+<span class="sd">            Number of frames in the animation, by default 60</span>
+<span class="sd">        time_step : float, optional</span>
+<span class="sd">            Time step between each frame, by default 0.05</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check if pyvista is imported</span>
+        <span class="n">check_pyvista_import</span><span class="p">()</span>
+
+        <span class="c1"># Create the wing surface</span>
+        <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_wing_3D_surface</span><span class="p">(</span><span class="n">nb_points_airfoil</span><span class="p">)</span>
+
+        <span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_surface</span><span class="p">)</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">auto_close</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">generate_orbital_path</span><span class="p">(</span>
+            <span class="n">n_points</span><span class="o">=</span><span class="n">nb_frames</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">wing_surface</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">):</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">+</span> <span class="s2">&quot;.gif&quot;</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">open_gif</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">orbit_on_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">write_frames</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">time_step</span><span class="p">)</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Wing.create_wing_3D_surface">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.create_wing_3D_surface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_wing_3D_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a wing surface PyVista object for 3D plotting.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nb_points_airfoil : int, optional</span>
+<span class="sd">            Number of points to use for the airfoil, by default 50</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pv.PointSet</span>
+<span class="sd">            Pyvista 3D surface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check if pyvista is imported</span>
+        <span class="n">check_pyvista_import</span><span class="p">()</span>
+
+        <span class="c1"># Create a display airfoil with normalized chord and less points</span>
+        <span class="n">display_airfoil</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_airfoil</span><span class="p">)</span>
+        <span class="n">display_airfoil</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">display_airfoil</span><span class="o">.</span><span class="n">re_interpolate_with_cosine_distribution</span><span class="p">(</span>
+            <span class="n">nb_points_airfoil</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Create an array containing all the points</span>
+        <span class="n">points_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_points_airfoil</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">display_airfoil</span><span class="o">.</span><span class="n">chord_length</span>
+            <span class="n">airfoil_x_array</span><span class="p">,</span> <span class="n">airfoil_z_array</span> <span class="o">=</span> <span class="n">display_airfoil</span><span class="o">.</span><span class="n">get_rotated_selig_arrays</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">points_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nb_points_airfoil</span>
+            <span class="n">points_array</span><span class="p">[</span><span class="n">points_index</span><span class="p">:</span><span class="n">points_index</span> <span class="o">+</span> <span class="n">nb_points_airfoil</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span>\
+                <span class="n">airfoil_x_array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_center_offset_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">points_array</span><span class="p">[</span><span class="n">points_index</span><span class="p">:</span><span class="n">points_index</span> <span class="o">+</span>
+                         <span class="n">nb_points_airfoil</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">points_array</span><span class="p">[</span><span class="n">points_index</span><span class="p">:</span><span class="n">points_index</span> <span class="o">+</span> <span class="n">nb_points_airfoil</span><span class="p">,</span>
+                         <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">airfoil_z_array</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">ratio</span>
+
+        <span class="c1"># Create a mesh from the points</span>
+        <span class="n">point_cloud</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PolyData</span><span class="p">(</span><span class="n">points_array</span><span class="p">)</span>
+        <span class="n">wing_surface</span> <span class="o">=</span> <span class="n">point_cloud</span><span class="o">.</span><span class="n">delaunay_3d</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">wing_surface</span></div>
+
+
+<div class="viewcode-block" id="Wing.plot_3D">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.plot_3D">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">show_symmetric_wing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the shape of the wing in 3D.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create the 3D surface</span>
+        <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_wing_3D_surface</span><span class="p">(</span><span class="n">nb_points_airfoil</span><span class="p">)</span>
+
+        <span class="c1"># Create the plotter object</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+
+        <span class="c1"># Create a symmetry if needed</span>
+        <span class="k">if</span> <span class="n">show_symmetric_wing</span><span class="p">:</span>
+            <span class="n">wing_reflected</span> <span class="o">=</span> <span class="n">wing_surface</span><span class="o">.</span><span class="n">reflect</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_reflected</span><span class="p">)</span>
+
+        <span class="c1"># Plot</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_surface</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Wing.save_3D_shape">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.save_3D_shape">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_3D_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the wing shape as a 3D object. The format can be &#39;.ply&#39;, &#39;.vtp&#39;, &#39;.stl&#39;, &#39;.vtk&#39;, &#39;.geo&#39;, &#39;.obj&#39; or &#39;.iv&#39;.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_path : str</span>
+<span class="sd">            Path of the output file.</span>
+<span class="sd">        nb_points_airfoil : int, optional</span>
+<span class="sd">            Number of points to use for the airfoil, by default 50</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create the 3D surface</span>
+        <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_wing_3D_surface</span><span class="p">(</span><span class="n">nb_points_airfoil</span><span class="p">)</span>
+
+        <span class="c1"># Save the output file</span>
+        <span class="n">wing_surface</span><span class="o">.</span><span class="n">extract_geometry</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Wing.compute_fourrier_coefficients">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.compute_fourrier_coefficients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_fourrier_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the fourrier coefficients used to determine the lift and induced drag.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence of the wing.</span>
+<span class="sd">        nb_points_fourrier : int, optional</span>
+<span class="sd">            Number of points for the fourrier decomposition, by default 10</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[np.ndarray,np.ndarray]</span>
+<span class="sd">            Tuple containing the fourrier coefficients and their ids.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Change variable from y to theta</span>
+        <span class="n">theta_array</span> <span class="o">=</span> <span class="n">convert_y_to_theta</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_span</span><span class="p">)</span>
+
+        <span class="c1"># Create functions to be able to interpolate the arrays on new positions</span>
+        <span class="n">chord_length_on_theta_func</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="n">theta_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">twisting_angle_on_theta_func</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span>
+            <span class="n">theta_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">twisting_angle_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Create theta positions to interpolate</span>
+        <span class="n">theta_interpolation_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">nb_points_fourrier</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">)</span>
+        <span class="n">chord_length_on_theta</span> <span class="o">=</span> <span class="n">chord_length_on_theta_func</span><span class="p">(</span>
+            <span class="n">theta_interpolation_pos</span><span class="p">)</span>
+        <span class="n">twisting_angle_on_theta</span> <span class="o">=</span> <span class="n">twisting_angle_on_theta_func</span><span class="p">(</span>
+            <span class="n">theta_interpolation_pos</span><span class="p">)</span>
+
+        <span class="c1"># Compute the alpha at zero lift for the airfoil</span>
+        <span class="n">alpha_zero_lift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_airfoil</span><span class="o">.</span><span class="n">compute_alpha_zero_lift</span><span class="p">()</span>
+
+        <span class="c1"># Allocate variables to define the system to solve</span>
+        <span class="n">mat_A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_points_fourrier</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">))</span>
+        <span class="n">vec_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb_points_fourrier</span><span class="p">)</span>
+
+        <span class="c1"># Iterate to fill the system</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_points_fourrier</span><span class="p">):</span>
+            <span class="n">mu_loc</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">chord_length_on_theta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_span</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_points_fourrier</span><span class="p">):</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">mat_A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_interpolation_pos</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span>
+                               <span class="n">n</span> <span class="o">*</span> <span class="n">mu_loc</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">theta_interpolation_pos</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="n">vec_B</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_interpolation_pos</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> \
+                <span class="p">(</span><span class="o">-</span><span class="n">twisting_angle_on_theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>
+                 <span class="n">alpha</span> <span class="o">-</span> <span class="n">alpha_zero_lift</span><span class="p">)</span> <span class="o">*</span> <span class="n">mu_loc</span>
+
+        <span class="c1"># Solve the system</span>
+        <span class="n">An_vec_odd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">mat_A</span><span class="p">,</span> <span class="n">vec_B</span><span class="p">)</span>
+        <span class="n">n_vec_odd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points_fourrier</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">An_vec_odd</span><span class="p">,</span> <span class="n">n_vec_odd</span></div>
+
+
+<div class="viewcode-block" id="Wing.compute_lift_and_induced_drag_coefficients">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_lift_and_induced_drag_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the coefficients of lift and induced drag</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence of the wing.</span>
+<span class="sd">        nb_points_fourrier : int, optional</span>
+<span class="sd">            Number of points for the fourrier decomposition, by default 10</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float,float]</span>
+<span class="sd">            Tuple containing the lift and induced drag coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute the fourrier coefficients</span>
+        <span class="n">An_vec_odd</span><span class="p">,</span> <span class="n">n_vec_odd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_fourrier_coefficients</span><span class="p">(</span>
+            <span class="n">alpha</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">)</span>
+
+        <span class="c1"># Compute the lift and induced drag coefficients</span>
+        <span class="n">CL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">An_vec_odd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span>
+        <span class="n">CD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">n_vec_odd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">An_vec_odd</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">CL</span><span class="p">,</span> <span class="n">CD</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
