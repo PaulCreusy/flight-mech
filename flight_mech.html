@@ -95,9 +95,28 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_air_density_from_altitude"><code class="docutils literal notranslate"><span class="pre">compute_air_density_from_altitude()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_altitude_from_sigma"><code class="docutils literal notranslate"><span class="pre">compute_altitude_from_sigma()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_sigma_from_altitude"><code class="docutils literal notranslate"><span class="pre">compute_sigma_from_altitude()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.compute_altitude_from_sigma"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere.compute_altitude_from_sigma()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.compute_density_from_altitude"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere.compute_density_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.compute_sigma_from_altitude"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere.compute_sigma_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.rho_0"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere.rho_0</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_altitude_from_sigma"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_altitude_from_sigma()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_density_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_density_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_dynamic_viscosity_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_dynamic_viscosity_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_kinematic_viscosity_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_kinematic_viscosity_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_pressure_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_pressure_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_sigma_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_sigma_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_sound_speed_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_sound_speed_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_temperature_from_altitude"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.compute_temperature_from_altitude()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.gamma"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.gamma</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.mu_0"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.mu_0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.r"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.r</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.rho_0"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.rho_0</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a><ul>
@@ -118,6 +137,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_0"><code class="docutils literal notranslate"><span class="pre">Plane.alpha_0</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_f_max"><code class="docutils literal notranslate"><span class="pre">Plane.alpha_f_max</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_stall"><code class="docutils literal notranslate"><span class="pre">Plane.alpha_stall</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.atm_model"><code class="docutils literal notranslate"><span class="pre">Plane.atm_model</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.b"><code class="docutils literal notranslate"><span class="pre">Plane.b</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.c"><code class="docutils literal notranslate"><span class="pre">Plane.c</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html#flight_mech.plane.Plane.compute_alpha_and_delta_at_flight_point"><code class="docutils literal notranslate"><span class="pre">Plane.compute_alpha_and_delta_at_flight_point()</span></code></a></li>

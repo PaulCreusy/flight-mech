@@ -54,9 +54,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.atmosphere module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.compute_air_density_from_altitude"><code class="docutils literal notranslate"><span class="pre">compute_air_density_from_altitude()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.compute_altitude_from_sigma"><code class="docutils literal notranslate"><span class="pre">compute_altitude_from_sigma()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.compute_sigma_from_altitude"><code class="docutils literal notranslate"><span class="pre">compute_sigma_from_altitude()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.LinearAtmosphere"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.StandardAtmosphere"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
@@ -95,27 +94,15 @@
              
   <section id="module-flight_mech.atmosphere">
 <span id="flight-mech-atmosphere-module"></span><h1>flight_mech.atmosphere module<a class="headerlink" href="#module-flight_mech.atmosphere" title="Link to this heading"></a></h1>
-<p>Module providing a simple atmospheric model.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="flight_mech.atmosphere.compute_air_density_from_altitude">
-<span class="sig-prename descclassname"><span class="pre">flight_mech.atmosphere.</span></span><span class="sig-name descname"><span class="pre">compute_air_density_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#compute_air_density_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.compute_air_density_from_altitude" title="Link to this definition"></a></dt>
-<dd><p>Compute the air density.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Air density in kg.m-3</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="flight_mech.atmosphere.compute_altitude_from_sigma">
-<span class="sig-prename descclassname"><span class="pre">flight_mech.atmosphere.</span></span><span class="sig-name descname"><span class="pre">compute_altitude_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#compute_altitude_from_sigma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.compute_altitude_from_sigma" title="Link to this definition"></a></dt>
+<p>Module providing simple atmospheric models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.LinearAtmosphere">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.atmosphere.</span></span><span class="sig-name descname"><span class="pre">LinearAtmosphere</span></span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#LinearAtmosphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.LinearAtmosphere" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A very basic linear model for the atmosphere allowing to compute the density only.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.LinearAtmosphere.compute_altitude_from_sigma">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_altitude_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#LinearAtmosphere.compute_altitude_from_sigma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.LinearAtmosphere.compute_altitude_from_sigma" title="Link to this definition"></a></dt>
 <dd><p>Compute the altitude corresponding to the given density coefficient.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -130,9 +117,26 @@
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="flight_mech.atmosphere.compute_sigma_from_altitude">
-<span class="sig-prename descclassname"><span class="pre">flight_mech.atmosphere.</span></span><span class="sig-name descname"><span class="pre">compute_sigma_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#compute_sigma_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.compute_sigma_from_altitude" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.LinearAtmosphere.compute_density_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_density_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#LinearAtmosphere.compute_density_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.LinearAtmosphere.compute_density_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the air density.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Air density in kg.m-3</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.LinearAtmosphere.compute_sigma_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_sigma_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#LinearAtmosphere.compute_sigma_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.LinearAtmosphere.compute_sigma_from_altitude" title="Link to this definition"></a></dt>
 <dd><p>Compute the density coefficient sigma.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -145,6 +149,176 @@
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.LinearAtmosphere.rho_0">
+<span class="sig-name descname"><span class="pre">rho_0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.225</span></em><a class="headerlink" href="#flight_mech.atmosphere.LinearAtmosphere.rho_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.atmosphere.</span></span><span class="sig-name descname"><span class="pre">StandardAtmosphere</span></span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Standard atmosphere model to compute pressure, temperature and density with altitude.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_altitude_from_sigma">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_altitude_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_altitude_from_sigma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_altitude_from_sigma" title="Link to this definition"></a></dt>
+<dd><p>Compute the altitude from a given density ratio. This only works for altitude below 20km.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Density ratio.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Altitude in m.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_density_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_density_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_density_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_density_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the air density at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Air density in kg.m-3.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_dynamic_viscosity_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_dynamic_viscosity_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_dynamic_viscosity_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_dynamic_viscosity_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the dynamic viscosity at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dynamic viscosity in kg.m-1.s-1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_kinematic_viscosity_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_kinematic_viscosity_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_kinematic_viscosity_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_kinematic_viscosity_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the kinematic viscosity at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kinematic viscosity in m2.s-1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_pressure_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_pressure_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_pressure_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_pressure_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the pressure at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Air pressure in Pa.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_sigma_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_sigma_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_sigma_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_sigma_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the air density ratio at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Air density ratio.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_sound_speed_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_sound_speed_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_sound_speed_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_sound_speed_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the sound speed at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sound speed in m.s-1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.compute_temperature_from_altitude">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_temperature_from_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#StandardAtmosphere.compute_temperature_from_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.compute_temperature_from_altitude" title="Link to this definition"></a></dt>
+<dd><p>Compute the temperature at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Air temperature in K.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.4</span></em><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.gamma" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.mu_0">
+<span class="sig-name descname"><span class="pre">mu_0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.726e-05</span></em><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.mu_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.r">
+<span class="sig-name descname"><span class="pre">r</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">287.058</span></em><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.r" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.StandardAtmosphere.rho_0">
+<span class="sig-name descname"><span class="pre">rho_0</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.225</span></em><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.rho_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
