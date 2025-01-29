@@ -6,8 +6,16 @@ Example file for the landing computations.
 # Import #
 ##########
 
+import os
 import sys
 sys.path.append(".")
+import numpy as np
+import matplotlib.pyplot as plt
+
+# If running inside pytest subprocess, mock plt.show
+if os.getenv("PYTEST_RUNNING"):
+    plt.show = lambda: None
+
 from flight_mech.plane import Plane
 
 ###########
