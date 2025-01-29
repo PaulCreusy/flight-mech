@@ -325,14 +325,21 @@ class Airfoil:
         ----------
         new_x_array : np.ndarray
             New x array on which to interpolate.
+        update_x_array : bool, optional
+            Indicate wether to update the x array, by default True
         """
 
+        # Create interpolation functions
         extrados_function = make_interp_spline(
             self.x_array, self.extrados_z_array)
         intrados_function = make_interp_spline(
             self.x_array, self.intrados_z_array)
+
+        # Interpolate on new points
         self.extrados_z_array = extrados_function(new_x_array)
         self.intrados_z_array = intrados_function(new_x_array)
+
+        # Update x array if needed
         if update_x_array:
             self.x_array = new_x_array
 

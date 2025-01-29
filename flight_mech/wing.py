@@ -98,10 +98,29 @@ def convert_theta_to_y(theta_array: np.ndarray, wing_span: float):
 
     return y_array
 
-def compute_chord_min_and_max_for_trapezoidal_wing(reference_surface, aspect_ratio, taper_ratio):
+def compute_chord_min_and_max_for_trapezoidal_wing(reference_surface: float, aspect_ratio: float, taper_ratio: float):
+    """
+    Compute the chord min and max values for a trapezoidal wing.
+
+    Parameters
+    ----------
+    reference_surface : float
+        Reference surface of the wing.
+    aspect_ratio : float
+        Aspect ratio of the wing.
+    taper_ratio : float
+        Taper ratio of the wing.
+
+    Returns
+    -------
+    tuple[float,float]
+        Tuple containing the chord min and max values.
+    """
+
     wing_span = np.sqrt(aspect_ratio * reference_surface)
     max_chord = 2 * reference_surface / (wing_span * (1 + taper_ratio))
     min_chord = max_chord * taper_ratio
+
     return min_chord, max_chord
 
 ###########
@@ -109,6 +128,10 @@ def compute_chord_min_and_max_for_trapezoidal_wing(reference_surface, aspect_rat
 ###########
 
 class Wing:
+    """
+    Class to define a wing and compute its characteristics.
+    """
+
     name: str | None = None
     _y_array: np.ndarray | None = None
     chord_length_array: np.ndarray | None = None
@@ -122,6 +145,33 @@ class Wing:
         Array of y coordinates used for the wing definition.
         """
         return self._y_array
+
+    @property
+    def leading_edge_x_array(self) -> np.ndarray:
+        """
+        Array of x coordinates of the leading edge.
+        """
+        leading_edge_x_array = self.x_center_offset_array + (
+            self.chord_length_array[0] - self.chord_length_array) / 2
+        return leading_edge_x_array
+
+    @property
+    def trailing_edge_x_array(self) -> np.ndarray:
+        """
+        Array of x coordinates of the trailing edge.
+        """
+        trailing_edge_x_array = self.chord_length_array + self.x_center_offset_array + (
+            self.chord_length_array[0] - self.chord_length_array) / 2
+        return trailing_edge_x_array
+
+    @property
+    def center_x_array(self) -> np.ndarray:
+        """
+        Array of the x coordinates of the mean between leading and trailing edges coordinates.
+        """
+        center_x_array = (self.leading_edge_x_array +
+                          self.leading_edge_x_array) / 2
+        return center_x_array
 
     @y_array.setter
     def y_array(self, value: np.ndarray):
@@ -166,14 +216,22 @@ class Wing:
         return aspect_ratio
 
     @property
-    def sweep_angle_at_leading_edged(self):
-        # TODO
-        raise NotImplementedError
+    def sweep_angle_at_leading_edge(self):
+        """
+        Sweep angle at the leading edge of the wing.
+        """
+        sweep_angle = np.atan(
+            (self.leading_edge_x_array[1] - self.leading_edge_x_array[0]) / (self.y_array[1] - self.y_array[0]))
+        return sweep_angle
 
     @property
-    def sweep_angle_at_trailing_edged(self):
-        # TODO
-        raise NotImplementedError
+    def sweep_angle_at_trailing_edge(self):
+        """
+        Sweep angle at the trailing edge of the wing.
+        """
+        sweep_angle = np.atan(
+            (self.trailing_edge_x_array[0] - self.trailing_edge_x_array[1]) / (self.y_array[1] - self.y_array[0]))
+        return sweep_angle
 
     @property
     def taper_ratio(self):
@@ -185,6 +243,15 @@ class Wing:
         return taper_ratio
 
     def initialize(self):
+        """
+        Initialize the wing by setting the undefined array to default values.
+
+        Raises
+        ------
+        ValueError
+            Raise error if the y array is not defined.
+        """
+
         if self.y_array is None:
             raise ValueError(
                 "Unable to initialize the wing, the y array is not defined.")
@@ -196,6 +263,10 @@ class Wing:
             self.base_airfoil = Airfoil("naca4412")
 
     def check_initialization(self):
+        """
+        Check that the wing is correctly initialized.
+        """
+
         if self.y_array is None:
             raise ValueError(
                 "The y array is not defined, unable to proceed. Please define it first.")
@@ -213,7 +284,33 @@ class Wing:
                 "The base airfoil is not defined, unable to proceed. Please initialize the wing with wing.initialize() or define it first.")
 
     def re_interpolate(self, new_y_array: np.ndarray, update_y_array: bool = True):
-        pass
+        """
+        Re-interpolate the wing arrays.
+
+        Parameters
+        ----------
+        new_y_array : np.ndarray
+            New y array on which to interpolate.
+        update_y_array : bool, optional
+            Indicate wether to update the y array, by default True
+        """
+
+        # Create interpolation functions
+        chord_length_function = make_interp_spline(
+            self.y_array, self.chord_length_array)
+        twisting_angle_function = make_interp_spline(
+            self.y_array, self.twisting_angle_array)
+        x_center_offset_function = make_interp_spline(
+            self.y_array, self.x_center_offset_array)
+
+        # Interpolate on new points
+        self.chord_length_array = chord_length_function(new_y_array)
+        self.twisting_angle_array = twisting_angle_function(new_y_array)
+        self.x_center_offset_array = x_center_offset_function(new_y_array)
+
+        # Update y array if needed
+        if update_y_array:
+            self.y_array = new_y_array
 
     def plot_2D(self, save_path: str | None = None, hold_plot: bool = False, clear_before_plot: bool = False):
         """
@@ -229,15 +326,9 @@ class Wing:
             Indicate wether to clear or not the plot before, by default False
         """
 
-        # Allocate arrays to define the leading edge and trailing edge of the wing
-        leading_edge_x_array = self.x_center_offset_array + (
-            self.chord_length_array[0] - self.chord_length_array) / 2
-        trailing_edge_x_array = self.chord_length_array + self.x_center_offset_array + (
-            self.chord_length_array[0] - self.chord_length_array) / 2
-
         # Group to create a contour
         x_contour_array = np.concatenate(
-            (leading_edge_x_array, trailing_edge_x_array[::-1], [leading_edge_x_array[0]]), axis=0)
+            (self.leading_edge_x_array, self.trailing_edge_x_array[::-1], [self.leading_edge_x_array[0]]), axis=0)
         y_contour_array = np.concatenate(
             (self.y_array, self.y_array[::-1], [self.y_array[0]]), axis=0)
 
@@ -374,6 +465,21 @@ class Wing:
         wing_surface.extract_geometry().save(output_path)
 
     def compute_fourrier_coefficients(self, alpha: float, nb_points_fourrier: int = 10):
+        """
+        Compute the fourrier coefficients used to determine the lift and induced drag.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence of the wing.
+        nb_points_fourrier : int, optional
+            Number of points for the fourrier decomposition, by default 10
+
+        Returns
+        -------
+        tuple[np.ndarray,np.ndarray]
+            Tuple containing the fourrier coefficients and their ids.
+        """
 
         # Change variable from y to theta
         theta_array = convert_y_to_theta(self.y_array[::-1], self.wing_span)
@@ -420,6 +526,21 @@ class Wing:
         return An_vec_odd, n_vec_odd
 
     def compute_lift_and_induced_drag_coefficients(self, alpha: float, nb_points_fourrier: int = 10):
+        """
+        Compute the coefficients of lift and induced drag
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence of the wing.
+        nb_points_fourrier : int, optional
+            Number of points for the fourrier decomposition, by default 10
+
+        Returns
+        -------
+        tuple[float,float]
+            Tuple containing the lift and induced drag coefficients.
+        """
 
         # Compute the fourrier coefficients
         An_vec_odd, n_vec_odd = self.compute_fourrier_coefficients(
