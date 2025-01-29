@@ -95,6 +95,14 @@ class Airfoil:
         return slope * self.x_array + y_0
 
     @property
+    def thickness_array(self) -> np.ndarray:
+        """
+        Array of the thickness of the airfoil.
+        """
+        thickness_array = (self.extrados_z_array - self.camber_z_array) * 2
+        return thickness_array
+
+    @property
     def max_thickness(self) -> float:
         """
         Max thickness value.
@@ -102,6 +110,14 @@ class Airfoil:
         max_thickness = np.max(self.extrados_z_array -
                                self.intrados_z_array) / self.chord_length
         return max_thickness
+
+    @max_thickness.setter
+    def max_thickness(self, value: float):
+        ratio = value / self.max_thickness
+        half_thickness_array = self.thickness_array.copy() / 2
+        camber_array = self.camber_z_array.copy()
+        self.extrados_z_array = camber_array + half_thickness_array * ratio
+        self.intrados_z_array = camber_array - half_thickness_array * ratio
 
     @property
     def max_thickness_location(self) -> float:
@@ -121,6 +137,11 @@ class Airfoil:
         max_camber = np.max(np.abs(self.camber_z_array -
                             self.chord_z_array)) / self.chord_length
         return max_camber
+
+    @max_camber.setter
+    def max_camber(self):
+        # Define a new camber line closer to the chord
+        pass
 
     @property
     def max_camber_location(self) -> float:

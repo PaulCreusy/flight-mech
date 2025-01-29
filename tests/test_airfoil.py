@@ -114,3 +114,8 @@ def test_compute_alpha_zero_lift():
     alpha_zero_lift_airfoil_tools = -4.35 * np.pi / 180
     alpha_zero_lift = airfoil.compute_alpha_zero_lift()
     check_value(alpha_zero_lift_airfoil_tools, alpha_zero_lift)
+
+def test_change_thickness():
+    airfoil = Airfoil("naca4412")
+    airfoil.max_thickness = 0.07
+    assert airfoil.max_thickness == 0.07
