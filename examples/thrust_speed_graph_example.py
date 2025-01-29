@@ -6,9 +6,16 @@ Example file for the thrust-speed graph.
 # Import #
 ##########
 
+import os
 import sys
-import numpy as np
 sys.path.append(".")
+import numpy as np
+import matplotlib.pyplot as plt
+
+# If running inside pytest subprocess, mock plt.show
+if os.getenv("PYTEST_RUNNING"):
+    plt.show = lambda: None
+
 from flight_mech.plane import Plane
 
 ###########

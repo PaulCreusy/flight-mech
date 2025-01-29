@@ -17,9 +17,13 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["numpy", "matplotlib","scipy","bs4"]
+dependencies = ["numpy", "matplotlib", "scipy", "bs4"]
 keywords = ["flight", "airplane", "plane", "mechanics", "flight mechanics"]
 
 [project.urls]
 Homepage = "https://github.com/PaulCreusy/flight-mech"
 Issues = "https://github.com/PaulCreusy/flight-mech/issues"
+Documentation = "https://flight-mech.creusy.fr"
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "examples"]
