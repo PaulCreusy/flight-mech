@@ -10,18 +10,19 @@ Module to analyse wing aerodynamic properties.
 
 import os
 from typing import Literal
+from copy import deepcopy
 
 # Dependencies #
 
 import numpy as np
 from scipy.interpolate import make_interp_spline
 import matplotlib.pyplot as plt
-from copy import deepcopy
+
 try:
     import pyvista as pv
-except:
+except Exception as exc:
     raise Warning(
-        "Pyvista is not detected, please install it before using the 3D visualization functions.")
+        "Pyvista is not detected, please install it before using the 3D visualization functions.") from exc
 
 # Local imports #
 
@@ -52,9 +53,9 @@ def check_pyvista_import():
 
     try:
         pv.__version__
-    except:
+    except Exception as exc:
         raise ImportError(
-            "You need to install pyvista before using 3D visualization functions. You can do it with: 'pip install pyvista'")
+            "You need to install pyvista before using 3D visualization functions. You can do it with: 'pip install pyvista'") from exc
 
 def convert_y_to_theta(y_array: np.ndarray, wing_span: float):
     """

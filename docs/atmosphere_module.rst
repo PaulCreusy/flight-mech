@@ -26,7 +26,7 @@ The functions allow to compute the density:
 
 or directly the mass per cubic meter:
 
->>> compute_air_density_from_altitude(3e3)
+>>> compute_density_from_altitude(3e3)
 0.9054347826086957
 
 For a given sigma, it is also possible to compute the altitude:

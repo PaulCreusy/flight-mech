@@ -9,7 +9,7 @@ Example file for the gliding computations.
 import sys
 sys.path.append(".")
 import numpy as np
-from flight_mech import Plane
+from flight_mech.plane import Plane
 
 ###########
 # Process #

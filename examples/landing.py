@@ -8,7 +8,7 @@ Example file for the landing computations.
 
 import sys
 sys.path.append(".")
-from flight_mech import Plane
+from flight_mech.plane import Plane
 
 ###########
 # Process #
