@@ -55,6 +55,9 @@ def download_web_file(url, output_file):
 ###########
 
 class Airfoil:
+    """
+    Class to define an airfoil and compute its characteristics.
+    """
 
     extrados_z_array: np.ndarray | None = None
     intrados_z_array: np.ndarray | None = None

@@ -27,6 +27,34 @@ def plot_graph(
         axis_type: str | None = None,
         x_label: str | None = None,
         y_label: str | None = None):
+    """
+    Plot a graph with the selected arguments.
+
+    Parameters
+    ----------
+    x_array : np.ndarray
+        X data.
+    y_array : np.ndarray
+        Y data.
+    data_label : str | None, optional
+        Data label, by default None
+    title : str | None, optional
+        Title, by default None
+    use_grid : bool, optional
+        Indicate wether to use grid, by default False
+    save_path : str | None, optional
+        Path to save the figure, by default None
+    hold_plot : bool, optional
+        Indicate wether the graph is kept or plot, by default False
+    clear_before_plot : bool, optional
+        Indicate wether the graph is cleared before plotting, by default False
+    axis_type : str | None, optional
+        Type of axis, by default None
+    x_label : str | None, optional
+        X data label, by default None
+    y_label : str | None, optional
+        Y data label, by default None
+    """
 
     # Clear plot if needed
     if clear_before_plot:

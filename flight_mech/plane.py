@@ -21,9 +21,7 @@ import matplotlib.colors as mcolors
 # Local imports #
 
 from flight_mech.atmosphere import (
-    compute_air_density_from_altitude,
-    compute_altitude_from_sigma,
-    compute_sigma_from_altitude
+    StandardAtmosphere
 )
 
 #############
@@ -79,6 +77,9 @@ class Plane:
     alpha_stall: float = 15 * np.pi / 180  # rad
     ground_effect_coefficient: float | None = None
     C_L_max: float | None = None
+
+    # Type of atmosphere
+    atm_model = StandardAtmosphere
 
     def __init__(self,
                  plane_data_name: str | None = None,
@@ -296,7 +297,7 @@ class Plane:
             Velocity.
         """
 
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         v = np.sqrt(self.P / (.5 * rho * self.S * self.C_L(alpha)))
 
         return v
@@ -350,7 +351,7 @@ class Plane:
             Drag force.
         """
 
-        drag = .5 * compute_air_density_from_altitude(z) * \
+        drag = .5 * self.atm_model.compute_density_from_altitude(z) * \
             self.S * pow(v, 2) * self.C_D(alpha, C_L)
 
         return drag
@@ -382,7 +383,7 @@ class Plane:
 
         if C_L is None:
             C_L = self.C_L(alpha)
-        lift = .5 * compute_air_density_from_altitude(z) * \
+        lift = .5 * self.atm_model.compute_density_from_altitude(z) * \
             self.S * pow(v, 2) * C_L
 
         return lift
@@ -408,7 +409,7 @@ class Plane:
         """
 
         if self.engine_type == "turbo-reactor":
-            sigma = compute_sigma_from_altitude(z)
+            sigma = self.atm_model.compute_sigma_from_altitude(z)
             return self.thrust_per_engine * self.nb_engines * sigma
         else:
             raise NotImplementedError(
@@ -459,7 +460,7 @@ class Plane:
             if alpha_stall is None:
                 alpha_stall = self.alpha_stall
             C_L_max = self.C_L(alpha_stall)
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         stall_speed = np.sqrt((2 * self.P) / (rho * self.S * C_L_max))
 
         return stall_speed
@@ -481,7 +482,7 @@ class Plane:
             Gliding speed.
         """
 
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         v = np.sqrt((2 * self.P) / (rho * self.S * self.C_L(alpha)))
 
         return v
@@ -515,7 +516,7 @@ class Plane:
             Velocity associated to the minimum gliding vertical speed.
         """
 
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         v_at_v_z_min = np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(self.k / (3 * self.C_D_0), 1 / 4)
 
@@ -536,7 +537,7 @@ class Plane:
             Minimum gliding vertical speed.
         """
 
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         v_z_min = 4 * np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(pow(self.k, 3) * self.C_D_0 / 27, 1 / 4)
 
@@ -583,7 +584,7 @@ class Plane:
             Reference velocity.
         """
 
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         v_ref = np.sqrt((2 * self.P) / (rho * self.S)) * \
             pow(self.k / self.C_D_0, 1 / 4)
 
@@ -628,7 +629,7 @@ class Plane:
         """
 
         # Compute the air density
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
 
         # Compute the drag sources
         friction_drag = .5 * rho * self.S * self.v(alpha, z) * self.C_D_0
@@ -698,7 +699,7 @@ class Plane:
         sigma = thrust_needed_at_f_max / self.compute_thrust(0)
 
         # Compute the altitude from sigma
-        z_max = compute_altitude_from_sigma(sigma)
+        z_max = self.atm_model.compute_altitude_from_sigma(sigma)
 
         return z_max
 
@@ -731,7 +732,7 @@ class Plane:
         return n_z
 
     def compute_max_range_at_fixed_altitude(self, z: float):
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         optimal_C_L = self.C_L_f_max / np.sqrt(3)
         plane_range = (2 / (self.fuel_specific_conso_SI * g))\
             * (np.sqrt(optimal_C_L) / self.C_D(C_L=optimal_C_L)) * \
@@ -760,7 +761,7 @@ class Plane:
 
     def compute_take_off_distance_no_friction(self, z: float):
         T = self.compute_thrust(z)
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         d_take_off = (self.P / T) * (1.44 * self.P / self.S) / \
             (rho * g * self.C_L_max)
         return d_take_off
@@ -781,19 +782,19 @@ class Plane:
                                         alpha: float | None = None,
                                         C_L: float | None = None):
         ground_effect = self.compute_ground_effect(alpha=alpha, C_L=C_L)
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         drag_with_ground_effect = .5 * rho * self.S * \
             np.power(v, 2) * (self.C_D_0 + ground_effect)
         return drag_with_ground_effect
 
     def compute_take_off_speed(self, z: float):
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         take_off_speed = 1.2 * \
             np.sqrt(2 * self.P / (rho * self.S * self.C_L_max))
         return take_off_speed
 
     def compute_landing_speed(self, z: float):
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         take_off_speed = 1.3 * \
             np.sqrt(2 * self.P / (rho * self.S * self.C_L_max))
         return take_off_speed
@@ -809,7 +810,7 @@ class Plane:
         D = self.compute_drag_with_ground_effect(
             take_off_speed * 0.7, z, C_L=C_L_max)
         L = self.compute_lift(take_off_speed * 0.7, z, C_L=C_L_max)
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         d_take_off = (1.44 * (self.P / self.S)) / (rho * g *
                                                    C_L_max) * (self.P / (T - (D + mu * (self.P - L))))
         return d_take_off
@@ -828,7 +829,7 @@ class Plane:
         landing_speed = self.compute_landing_speed(z)
         D = self.compute_drag(landing_speed * 0.7, z, C_L=C_L)
         L = self.compute_lift(landing_speed * 0.7, z, C_L=C_L)
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         d_landing = (1.69 * (self.P / self.S)) / (rho * g * C_L_max) * \
             (self.P / (reverse_thrust + (D + mu * (self.P - L))))
 
@@ -837,7 +838,7 @@ class Plane:
     def compute_alpha_and_delta_at_flight_point(self,
                                                 z: float = 0,
                                                 v: float | None = None):
-        rho = compute_air_density_from_altitude(z)
+        rho = self.atm_model.compute_density_from_altitude(z)
         if v is None:
             v = self.compute_reference_speed(z)
         A = np.array([
