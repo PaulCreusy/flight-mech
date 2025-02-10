@@ -49,6 +49,37 @@ def download_web_file(url, output_file):
     with open(output_file, 'wb') as file:
         file.write(response.content)
 
+def rotate_arrays(x_array: np.ndarray, z_array: np.ndarray, angle: float, rotation_center: float = 0.25, x_length: float | None = None):
+    """
+    Rotate the given x and z arrays.
+
+    Parameters
+    ----------
+    x_array : np.ndarray
+        X array to rotate.
+    z_array : np.ndarray
+        Z array to rotate.
+    angle : float
+        Angle of rotation in rad.
+    rotation_center : float, optional
+        Center of rotation in % of the x array, by default 0.25
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Tuple containing the rotated arrays.
+    """
+
+    if x_length is None:
+        x_length = np.max(x_array)
+
+    rotated_x_array = (x_array - x_length * rotation_center) * \
+        np.cos(angle) + z_array * \
+        np.sin(angle) + x_length * rotation_center
+    rotated_z_array = -(x_array - x_length * rotation_center) * \
+        np.sin(angle) + z_array * np.cos(angle)
+
+    return rotated_x_array, rotated_z_array
 
 ###########
 # Classes #
@@ -59,9 +90,9 @@ class Airfoil:
     Class to define an airfoil and compute its characteristics.
     """
 
+    name: str | None = None
     extrados_z_array: np.ndarray | None = None
     intrados_z_array: np.ndarray | None = None
-    name: str | None = None
     _x_array: np.ndarray
     _chord_length: float
     _a0: float | None = None
@@ -83,14 +114,14 @@ class Airfoil:
         return camber_z_array
 
     @property
-    def chord_z_array(self):
+    def chord_z_array(self) -> np.ndarray:
         """
         Array of the chord line z coordinates.
         """
         x_0 = 0
         x_1 = self.chord_length
-        y_0 = self.extrados_z_array[0]
-        y_1 = self.extrados_z_array[-1]
+        y_0 = self.extrados_z_array[0] + self.intrados_z_array[0]
+        y_1 = self.extrados_z_array[-1] + self.intrados_z_array[-1]
         slope = (y_1 - y_0) / (x_1 - x_0)
         return slope * self.x_array + y_0
 
@@ -113,11 +144,14 @@ class Airfoil:
 
     @max_thickness.setter
     def max_thickness(self, value: float):
+        # Compute new values
         ratio = value / self.max_thickness
-        half_thickness_array = self.thickness_array.copy() / 2
-        camber_array = self.camber_z_array.copy()
-        self.extrados_z_array = camber_array + half_thickness_array * ratio
-        self.intrados_z_array = camber_array - half_thickness_array * ratio
+        new_extrados_z_array = self.camber_z_array + self.thickness_array * ratio / 2
+        new_intrados_z_array = self.camber_z_array - self.thickness_array * ratio / 2
+
+        # Modify the airfoil shape
+        self.extrados_z_array = new_extrados_z_array
+        self.intrados_z_array = new_intrados_z_array
 
     @property
     def max_thickness_location(self) -> float:
@@ -139,9 +173,21 @@ class Airfoil:
         return max_camber
 
     @max_camber.setter
-    def max_camber(self):
-        # Define a new camber line closer to the chord
-        pass
+    def max_camber(self, value):
+        # Compute new value
+        ratio = value / self.max_camber
+        prev_max_thickness = self.max_thickness
+        chord_to_extrados = self.extrados_z_array - self.chord_z_array
+        chord_to_intrados = self.intrados_z_array - self.chord_z_array
+        new_extrados_z_array = self.chord_z_array + chord_to_extrados * ratio
+        new_intrados_z_array = self.chord_z_array + chord_to_intrados * ratio
+
+        # Modify the shape
+        self.extrados_z_array = new_extrados_z_array
+        self.intrados_z_array = new_intrados_z_array
+
+        # Reset the thickness
+        self.max_thickness = prev_max_thickness
 
     @property
     def max_camber_location(self) -> float:
@@ -195,6 +241,27 @@ class Airfoil:
         z_selig_array = np.concatenate(
             (self.extrados_z_array, self.intrados_z_array[::-1], [self.extrados_z_array[0]]), axis=0)
         return z_selig_array
+
+    def get_chord_incidence(self):
+        angle_of_incidence = np.atan(
+            (self.chord_z_array[-1] - self.chord_z_array[0]) / (self.chord_length))
+        return angle_of_incidence
+
+    def set_chord_at_zero_incidence(self):
+        # Remove chord offset
+        chord_z_offset = -self.chord_z_array[0]
+        self.extrados_z_array += chord_z_offset
+        self.intrados_z_array += chord_z_offset
+
+        # Rotate chord
+        chord_incidence = self.get_chord_incidence()
+        new_x_array, new_extrados_z_array = rotate_arrays(
+            self.x_array, self.extrados_z_array, chord_incidence, 0)
+        new_x_array, new_intrados_z_array = rotate_arrays(
+            self.x_array, self.intrados_z_array, chord_incidence, 0)
+        self._x_array = new_x_array
+        self.extrados_z_array = new_extrados_z_array
+        self.intrados_z_array = new_intrados_z_array
 
     def list_airfoils_in_database(self, airfoil_data_folder: str = default_airfoil_database):
         """
@@ -301,6 +368,9 @@ class Airfoil:
             self.extrados_z_array = part_2_z_interpolated
             self.intrados_z_array = part_1_z_interpolated
 
+        # Rotate the chord to make sure it is at zero incidence
+        self.set_chord_at_zero_incidence()
+
     def plot(self, hold_plot=False, show_chord=False, show_camber_line=False):
         """
         Plot the geometry of the airfoil.
@@ -338,6 +408,7 @@ class Airfoil:
         # Display the plot if needed
         if hold_plot is False:
             plt.legend()
+            plt.grid()
             plt.title("Airfoil visualization")
             plt.show()
 
@@ -719,11 +790,9 @@ class Airfoil:
             Tuple containing the selig arrays.
         """
 
-        rotated_x_array = (self.x_selig_array - self.chord_length * rotation_center) * \
-            np.cos(-angle) + self.z_selig_array * \
-            np.sin(-angle) + self.chord_length * rotation_center
-        rotated_z_array = -(self.x_selig_array - self.chord_length * rotation_center) * \
-            np.sin(-angle) + self.z_selig_array * np.cos(-angle)
+        rotated_x_array, rotated_z_array = rotate_arrays(
+            self.x_selig_array, self.z_selig_array, angle, rotation_center, x_length=self.chord_length)
+
         return rotated_x_array, rotated_z_array
 
     def compute_alpha_zero_lift(self):
