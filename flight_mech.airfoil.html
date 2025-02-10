@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.Airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.convert_float_or_none_to_string"><code class="docutils literal notranslate"><span class="pre">convert_float_or_none_to_string()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.download_web_file"><code class="docutils literal notranslate"><span class="pre">download_web_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.rotate_arrays"><code class="docutils literal notranslate"><span class="pre">rotate_arrays()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
@@ -115,7 +116,7 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.chord_z_array">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chord_z_array</span></span><a class="headerlink" href="#flight_mech.airfoil.Airfoil.chord_z_array" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chord_z_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.chord_z_array" title="Link to this definition"></a></dt>
 <dd><p>Array of the chord line z coordinates.</p>
 </dd></dl>
 
@@ -204,6 +205,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.extrados_z_array">
 <span class="sig-name descname"><span class="pre">extrados_z_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.extrados_z_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.get_chord_incidence">
+<span class="sig-name descname"><span class="pre">get_chord_incidence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.get_chord_incidence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.get_chord_incidence" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -426,6 +432,17 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.set_chord_at_zero_incidence">
+<span class="sig-name descname"><span class="pre">set_chord_at_zero_incidence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#Airfoil.set_chord_at_zero_incidence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.Airfoil.set_chord_at_zero_incidence" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.thickness_array">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thickness_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.thickness_array" title="Link to this definition"></a></dt>
+<dd><p>Array of the thickness of the airfoil.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="flight_mech.airfoil.Airfoil.x_array">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#flight_mech.airfoil.Airfoil.x_array" title="Link to this definition"></a></dt>
@@ -453,6 +470,28 @@
 <dt class="sig sig-object py" id="flight_mech.airfoil.download_web_file">
 <span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">download_web_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#download_web_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.download_web_file" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.airfoil.rotate_arrays">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">rotate_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#rotate_arrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.rotate_arrays" title="Link to this definition"></a></dt>
+<dd><p>Rotate the given x and z arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_array</strong> (<em>np.ndarray</em>) – X array to rotate.</p></li>
+<li><p><strong>z_array</strong> (<em>np.ndarray</em>) – Z array to rotate.</p></li>
+<li><p><strong>angle</strong> (<em>float</em>) – Angle of rotation in rad.</p></li>
+<li><p><strong>rotation_center</strong> (<em>float</em><em>, </em><em>optional</em>) – Center of rotation in % of the x array, by default 0.25</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing the rotated arrays.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

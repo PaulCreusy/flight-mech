@@ -133,6 +133,40 @@
         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="rotate_arrays">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.rotate_arrays">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotate_arrays</span><span class="p">(</span><span class="n">x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rotation_center</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">x_length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rotate the given x and z arrays.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_array : np.ndarray</span>
+<span class="sd">        X array to rotate.</span>
+<span class="sd">    z_array : np.ndarray</span>
+<span class="sd">        Z array to rotate.</span>
+<span class="sd">    angle : float</span>
+<span class="sd">        Angle of rotation in rad.</span>
+<span class="sd">    rotation_center : float, optional</span>
+<span class="sd">        Center of rotation in % of the x array, by default 0.25</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        Tuple containing the rotated arrays.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">x_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x_array</span><span class="p">)</span>
+
+    <span class="n">rotated_x_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_array</span> <span class="o">-</span> <span class="n">x_length</span> <span class="o">*</span> <span class="n">rotation_center</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">z_array</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">x_length</span> <span class="o">*</span> <span class="n">rotation_center</span>
+    <span class="n">rotated_z_array</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">x_array</span> <span class="o">-</span> <span class="n">x_length</span> <span class="o">*</span> <span class="n">rotation_center</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">z_array</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rotated_x_array</span><span class="p">,</span> <span class="n">rotated_z_array</span></div>
+
 
 <span class="c1">###########</span>
 <span class="c1"># Classes #</span>
@@ -145,9 +179,9 @@
 <span class="sd">    Class to define an airfoil and compute its characteristics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">extrados_z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">intrados_z_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">_chord_length</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">_a0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -169,16 +203,24 @@
         <span class="k">return</span> <span class="n">camber_z_array</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">chord_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chord_z_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Array of the chord line z coordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x_0</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">x_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
-        <span class="n">y_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">y_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">y_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_1</span> <span class="o">-</span> <span class="n">y_0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x_1</span> <span class="o">-</span> <span class="n">x_0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span> <span class="o">+</span> <span class="n">y_0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thickness_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Array of the thickness of the airfoil.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thickness_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">thickness_array</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -188,6 +230,17 @@
         <span class="n">max_thickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
         <span class="k">return</span> <span class="n">max_thickness</span>
+
+    <span class="nd">@max_thickness</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="c1"># Compute new values</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_thickness</span>
+        <span class="n">new_extrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness_array</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">new_intrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickness_array</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="c1"># Modify the airfoil shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">new_extrados_z_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">new_intrados_z_array</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_thickness_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -207,6 +260,23 @@
         <span class="n">max_camber</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camber_z_array</span> <span class="o">-</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span>
         <span class="k">return</span> <span class="n">max_camber</span>
+
+    <span class="nd">@max_camber</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_camber</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># Compute new value</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_camber</span>
+        <span class="n">prev_max_thickness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_thickness</span>
+        <span class="n">chord_to_extrados</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span>
+        <span class="n">chord_to_intrados</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span>
+        <span class="n">new_extrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span> <span class="o">+</span> <span class="n">chord_to_extrados</span> <span class="o">*</span> <span class="n">ratio</span>
+        <span class="n">new_intrados_z_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span> <span class="o">+</span> <span class="n">chord_to_intrados</span> <span class="o">*</span> <span class="n">ratio</span>
+
+        <span class="c1"># Modify the shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">new_extrados_z_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">new_intrados_z_array</span>
+
+        <span class="c1"># Reset the thickness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_thickness</span> <span class="o">=</span> <span class="n">prev_max_thickness</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">max_camber_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -260,6 +330,33 @@
         <span class="n">z_selig_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">z_selig_array</span>
+
+<div class="viewcode-block" id="Airfoil.get_chord_incidence">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_chord_incidence">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_chord_incidence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">angle_of_incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">angle_of_incidence</span></div>
+
+
+<div class="viewcode-block" id="Airfoil.set_chord_at_zero_incidence">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.set_chord_at_zero_incidence">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_chord_at_zero_incidence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Remove chord offset</span>
+        <span class="n">chord_z_offset</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_z_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">+=</span> <span class="n">chord_z_offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">+=</span> <span class="n">chord_z_offset</span>
+
+        <span class="c1"># Rotate chord</span>
+        <span class="n">chord_incidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_chord_incidence</span><span class="p">()</span>
+        <span class="n">new_x_array</span><span class="p">,</span> <span class="n">new_extrados_z_array</span> <span class="o">=</span> <span class="n">rotate_arrays</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span><span class="p">,</span> <span class="n">chord_incidence</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">new_x_array</span><span class="p">,</span> <span class="n">new_intrados_z_array</span> <span class="o">=</span> <span class="n">rotate_arrays</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span><span class="p">,</span> <span class="n">chord_incidence</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_array</span> <span class="o">=</span> <span class="n">new_x_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">new_extrados_z_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">new_intrados_z_array</span></div>
+
 
 <div class="viewcode-block" id="Airfoil.list_airfoils_in_database">
 <a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">[docs]</a>
@@ -375,7 +472,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">part_2_z_interpolated</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">part_2_z_interpolated</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">part_1_z_interpolated</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">part_1_z_interpolated</span>
+
+        <span class="c1"># Rotate the chord to make sure it is at zero incidence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_chord_at_zero_incidence</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Airfoil.plot">
@@ -417,6 +517,7 @@
         <span class="c1"># Display the plot if needed</span>
         <span class="k">if</span> <span class="n">hold_plot</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Airfoil visualization&quot;</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
@@ -828,11 +929,9 @@
 <span class="sd">            Tuple containing the selig arrays.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">rotated_x_array</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_selig_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> <span class="n">rotation_center</span><span class="p">)</span> <span class="o">*</span> \
-            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_selig_array</span> <span class="o">*</span> \
-            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> <span class="n">rotation_center</span>
-        <span class="n">rotated_z_array</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_selig_array</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span> <span class="o">*</span> <span class="n">rotation_center</span><span class="p">)</span> <span class="o">*</span> \
-            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_selig_array</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">rotated_x_array</span><span class="p">,</span> <span class="n">rotated_z_array</span> <span class="o">=</span> <span class="n">rotate_arrays</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_selig_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_selig_array</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">rotation_center</span><span class="p">,</span> <span class="n">x_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chord_length</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">rotated_x_array</span><span class="p">,</span> <span class="n">rotated_z_array</span></div>
 
 
