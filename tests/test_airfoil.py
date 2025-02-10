@@ -114,3 +114,21 @@ def test_compute_alpha_zero_lift():
     alpha_zero_lift_airfoil_tools = -4.35 * np.pi / 180
     alpha_zero_lift = airfoil.compute_alpha_zero_lift()
     check_value(alpha_zero_lift_airfoil_tools, alpha_zero_lift)
+
+def test_change_thickness():
+    airfoil = Airfoil("naca4412")
+    prev_max_camber = airfoil.max_camber
+    prev_max_camber_location = airfoil.max_camber_location
+    airfoil.max_thickness = 0.07
+    assert airfoil.max_thickness == 0.07
+    assert np.isclose(airfoil.max_camber, prev_max_camber, rtol=0.0001).all()
+    assert np.isclose(airfoil.max_camber_location,
+                      prev_max_camber_location, rtol=0.0001).all()
+
+def test_change_camber():
+    airfoil = Airfoil("naca4412")
+    prev_max_thickness = airfoil.max_thickness
+    airfoil.max_camber = 0.01
+    assert np.isclose(airfoil.max_camber, 0.01, rtol=0.0001).all()
+    assert np.isclose(airfoil.max_thickness,
+                      prev_max_thickness, rtol=0.0001).all()
