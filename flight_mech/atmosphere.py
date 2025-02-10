@@ -10,20 +10,22 @@ Module providing simple atmospheric models.
 
 import numpy as np
 from scipy.optimize import minimize, Bounds
+from abc import ABC, abstractmethod
 
 ###########
 # Classes #
 ###########
 
-class LinearAtmosphere:
+class Atmosphere(ABC):
     """
-    A very basic linear model for the atmosphere allowing to compute the density only.
+    Atmosphere abstract class.
     """
 
-    rho_0 = 1.225  # kg.m-3
+    rho_0: float
 
     @staticmethod
-    def compute_sigma_from_altitude(z: float):
+    @abstractmethod
+    def compute_sigma_from_altitude(z: float) -> float:
         """
         Compute the density coefficient sigma.
 
@@ -37,13 +39,11 @@ class LinearAtmosphere:
         float
             Density coefficient.
         """
+        pass
 
-        sigma = (20 - z / 1e3) / (20 + z / 1e3)
-
-        return sigma
-
-    @staticmethod
-    def compute_density_from_altitude(z: float):
+    @classmethod
+    @abstractmethod
+    def compute_density_from_altitude(self, z: float) -> float:
         """
         Compute the air density.
 
@@ -57,14 +57,11 @@ class LinearAtmosphere:
         float
             Air density in kg.m-3
         """
-
-        sigma = LinearAtmosphere.compute_sigma_from_altitude(z)
-        rho = LinearAtmosphere.rho_0 * sigma
-
-        return rho
+        pass
 
     @staticmethod
-    def compute_altitude_from_sigma(sigma: float):
+    @abstractmethod
+    def compute_altitude_from_sigma(sigma: float) -> float:
         """
         Compute the altitude corresponding to the given density coefficient.
 
@@ -78,15 +75,59 @@ class LinearAtmosphere:
         float
             Altitude in meters.
         """
+        pass
 
+class ConstantAtmosphere(Atmosphere):
+    """
+    A constant atmosphere model. Used for test purposes only.
+    """
+
+    rho_0 = 1.225  # kg.m-3
+
+    @staticmethod
+    def compute_sigma_from_altitude(z: float):
+        return 1.
+
+    @staticmethod
+    def compute_altitude_from_sigma(sigma: float):
+        return 0.
+
+    @classmethod
+    def compute_density_from_altitude(self, z: float):
+        return self.rho_0
+
+
+class LinearAtmosphere(Atmosphere):
+    """
+    A very basic linear model for the atmosphere allowing to compute the density only.
+    """
+
+    rho_0 = 1.225  # kg.m-3
+
+    @staticmethod
+    def compute_sigma_from_altitude(z: float):
+        sigma = (20 - z / 1e3) / (20 + z / 1e3)
+        return sigma
+
+    @classmethod
+    def compute_density_from_altitude(self, z: float):
+        sigma = self.compute_sigma_from_altitude(z)
+        rho = self.rho_0 * sigma
+        return rho
+
+    @staticmethod
+    def compute_altitude_from_sigma(sigma: float):
         z = 20e3 * (1 - sigma) / (1 + sigma)
-
         return z
 
 
-class StandardAtmosphere:
+class StandardAtmosphere(Atmosphere):
     """
-    Standard atmosphere model to compute pressure, temperature and density with altitude.
+    International Standard Atmosphere model to compute pressure, temperature and density with altitude.
+
+    Notes
+    -----
+    For more details, see https://en.wikipedia.org/wiki/International_Standard_Atmosphere.
     """
 
     gamma = 1.4
@@ -142,54 +183,28 @@ class StandardAtmosphere:
 
         return pressure
 
-    @staticmethod
-    def compute_density_from_altitude(z: float):
-        """
-        Compute the air density at a given altitude.
-
-        Parameters
-        ----------
-        z : float
-            Altitude in meters.
-
-        Returns
-        -------
-        float
-            Air density in kg.m-3.
-        """
+    @classmethod
+    def compute_density_from_altitude(self, z: float):
 
         # Compute pressure and temperature
-        pressure = StandardAtmosphere.compute_pressure_from_altitude(z)
-        temperature = StandardAtmosphere.compute_temperature_from_altitude(z)
+        pressure = self.compute_pressure_from_altitude(z)
+        temperature = self.compute_temperature_from_altitude(z)
 
         # Use perfect gas law to find density
-        density = pressure / (StandardAtmosphere.r * temperature)
+        density = pressure / (self.r * temperature)
 
         return density
 
-    @staticmethod
-    def compute_sigma_from_altitude(z: float):
-        """
-        Compute the air density ratio at a given altitude.
+    @classmethod
+    def compute_sigma_from_altitude(self, z: float):
 
-        Parameters
-        ----------
-        z : float
-            Altitude in meters.
-
-        Returns
-        -------
-        float
-            Air density ratio.
-        """
-
-        density = StandardAtmosphere.compute_density_from_altitude(z)
-        sigma = density / StandardAtmosphere.rho_0
+        density = self.compute_density_from_altitude(z)
+        sigma = density / self.rho_0
 
         return sigma
 
-    @staticmethod
-    def compute_sound_speed_from_altitude(z: float):
+    @classmethod
+    def compute_sound_speed_from_altitude(self, z: float):
         """
         Compute the sound speed at a given altitude.
 
@@ -204,14 +219,14 @@ class StandardAtmosphere:
             Sound speed in m.s-1.
         """
 
-        temperature = StandardAtmosphere.compute_temperature_from_altitude(z)
-        sound_speed = np.sqrt(StandardAtmosphere.gamma *
-                              StandardAtmosphere.r * temperature)
+        temperature = self.compute_temperature_from_altitude(z)
+        sound_speed = np.sqrt(self.gamma *
+                              self.r * temperature)
 
         return sound_speed
 
-    @staticmethod
-    def compute_dynamic_viscosity_from_altitude(z: float):
+    @classmethod
+    def compute_dynamic_viscosity_from_altitude(self, z: float):
         """
         Compute the dynamic viscosity at a given altitude.
 
@@ -227,16 +242,16 @@ class StandardAtmosphere:
         """
 
         # Compute temperature
-        temperature = StandardAtmosphere.compute_temperature_from_altitude(z)
+        temperature = self.compute_temperature_from_altitude(z)
 
         # Compute mu
-        mu = StandardAtmosphere.mu_0 * 0.083 * \
+        mu = self.mu_0 * 0.083 * \
             np.power(temperature, 3 / 2) / (temperature + 110.4)
 
         return mu
 
-    @staticmethod
-    def compute_kinematic_viscosity_from_altitude(z: float):
+    @classmethod
+    def compute_kinematic_viscosity_from_altitude(self, z: float):
         """
         Compute the kinematic viscosity at a given altitude.
 
@@ -252,16 +267,16 @@ class StandardAtmosphere:
         """
 
         # Compute mu and rho
-        mu = StandardAtmosphere.compute_dynamic_viscosity_from_altitude(z)
-        rho = StandardAtmosphere.compute_density_from_altitude(z)
+        mu = self.compute_dynamic_viscosity_from_altitude(z)
+        rho = self.compute_density_from_altitude(z)
 
         # Compute nu
         nu = mu / rho
 
         return nu
 
-    @staticmethod
-    def compute_altitude_from_sigma(sigma: float):
+    @classmethod
+    def compute_altitude_from_sigma(self, sigma: float):
         """
         Compute the altitude from a given density ratio. This only works for altitude below 20km.
 
@@ -278,7 +293,7 @@ class StandardAtmosphere:
 
         # Define a cost function to minimize
         def cost_function(z):
-            return np.abs(StandardAtmosphere.compute_sigma_from_altitude(z) - sigma)
+            return np.abs(self.compute_sigma_from_altitude(z) - sigma)
 
         # Find solution with scipy
         altitude = minimize(cost_function, 0, bounds=Bounds(0, 20e3)).x[0]
