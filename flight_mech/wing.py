@@ -16,7 +16,6 @@ from copy import deepcopy
 
 import numpy as np
 from scipy.interpolate import make_interp_spline
-import matplotlib.pyplot as plt
 
 try:
     import pyvista as pv
