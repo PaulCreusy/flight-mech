@@ -81,6 +81,68 @@ def rotate_arrays(x_array: np.ndarray, z_array: np.ndarray, angle: float, rotati
 
     return rotated_x_array, rotated_z_array
 
+def naca_airfoil_generator(maximum_camber: float | None = None, maximum_camber_position: float | None = None, maximum_thickness: float | None = None, naca_name: str | None = None, nb_points: int = 200):
+    """
+    Generate a NACA airfoil.
+
+    Parameters
+    ----------
+    maximum_camber : float
+        Maximum camber value.
+    maximum_camber_position : float
+        Maximum camber position.
+    thickness : float
+        Maximum thickness value.
+    naca_name : str
+        Name of the NACA airfoil. If provided, the other geometry parameters will not be used.
+    nb_points : int, optional
+        Number of points, by default 200
+    """
+
+    if naca_name is not None:
+        naca_digits = naca_name.lower().replace("naca", "").replace("_", "")
+        maximum_camber = int(naca_digits[0]) / 100
+        maximum_camber_position = int(naca_digits[1]) / 10
+        maximum_thickness = int(naca_digits[2:]) / 100
+
+    def y_c(x):
+        """Camber line equation"""
+        res = (maximum_camber / maximum_camber_position**2) * (2 * maximum_camber_position * x - x**2) * (x < maximum_camber_position) \
+            + (maximum_camber / (1 - maximum_camber_position)**2) * (1 - 2 * maximum_camber_position +
+                                                                     2 * maximum_camber_position * x - x**2) * (x >= maximum_camber_position)
+
+        return res
+
+    def y_t(x):
+        """Thickness equation"""
+        a0 = 0.2969
+        a1 = -0.126
+        a2 = -0.3516
+        a3 = 0.2843
+        a4 = -0.1036
+        res = (maximum_thickness / 0.2) * (a0 * x**0.5 + a1 *
+                                           x + a2 * x**2 + a3 * x**3 + a4 * x ** 4)
+        return res
+
+    # Define x coordinates array
+    x_array = np.linspace(0, 1, nb_points)
+
+    # Compute camber and thickness
+    camber_z_array = y_c(x_array)
+    thickness_array = y_t(x_array)
+
+    # Compute intrados and extrados
+    intrados_z_array = camber_z_array - thickness_array
+    extrados_z_array = camber_z_array + thickness_array
+
+    # Create the airfoil
+    airfoil = Airfoil()
+    airfoil.x_array = x_array
+    airfoil.intrados_z_array = intrados_z_array
+    airfoil.extrados_z_array = extrados_z_array
+
+    return airfoil
+
 ###########
 # Classes #
 ###########
