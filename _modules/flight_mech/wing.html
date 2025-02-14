@@ -551,10 +551,11 @@
                 <span class="n">show_drag</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;blasius&quot;</span><span class="p">,</span>
                                           <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span> <span class="s2">&quot;simulation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">velocity_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;panels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
-                <span class="n">velocity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">rho</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">for_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">for_animation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the shape of the wing in 3D.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -578,6 +579,10 @@
             <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_reflected</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">show_drag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Drag&quot;</span>
+            <span class="n">pbr</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">metallic</span> <span class="o">=</span> <span class="mf">0.</span>
+
             <span class="c1"># Raise error if not enough parameters</span>
             <span class="k">if</span> <span class="n">velocity</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">rho</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">nu</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -598,9 +603,22 @@
             <span class="n">scalars</span><span class="p">[</span><span class="n">scalars</span> <span class="o">&gt;</span> <span class="mf">1e10</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_drag</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">scalars</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">metallic</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">pbr</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Plot</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_surface</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="n">scalars</span><span class="p">,</span> <span class="n">log_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span>
+            <span class="n">wing_surface</span><span class="p">,</span>
+            <span class="n">scalars</span><span class="o">=</span><span class="n">scalars</span><span class="p">,</span>
+            <span class="n">log_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">scalar_bar_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Wall shear stress [Pa]&quot;</span><span class="p">},</span>
+            <span class="n">pbr</span><span class="o">=</span><span class="n">pbr</span><span class="p">,</span>
+            <span class="n">metallic</span><span class="o">=</span><span class="n">metallic</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Set title</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">add_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
 
         <span class="c1"># Show if needed</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">for_animation</span><span class="p">:</span>
