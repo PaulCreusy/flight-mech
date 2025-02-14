@@ -439,10 +439,11 @@ class Wing:
                 show_drag: None | Literal["blasius",
                                           "polhausen", "simulation"] = None,
                 velocity_method: Literal["constant", "panels"] = "constant",
-                velocity=None,
-                rho=None,
-                nu=None,
-                for_animation=False):
+                velocity: float = None,
+                rho: float = None,
+                nu: float = None,
+                for_animation: bool = False,
+                title: str | None = None):
         """
         Plot the shape of the wing in 3D.
         """
@@ -466,6 +467,10 @@ class Wing:
             p.add_mesh(wing_reflected)
 
         if show_drag is not None:
+            title = "Drag"
+            pbr = False
+            metallic = 0.
+
             # Raise error if not enough parameters
             if velocity is None or rho is None or nu is None:
                 raise ValueError(
@@ -486,9 +491,22 @@ class Wing:
             scalars[scalars > 1e10] = max_drag
         else:
             scalars = None
+            metallic = 1.
+            pbr = True
 
         # Plot
-        p.add_mesh(wing_surface, scalars=scalars, log_scale=True)
+        p.add_mesh(
+            wing_surface,
+            scalars=scalars,
+            log_scale=True,
+            scalar_bar_args={"title": "Wall shear stress [Pa]"},
+            pbr=pbr,
+            metallic=metallic
+        )
+
+        # Set title
+        if title is not None:
+            p.add_title(title)
 
         # Show if needed
         if not for_animation:

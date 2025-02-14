@@ -45,6 +45,11 @@ def test_create_3D_animation():
     wing.x_center_offset_array = np.zeros(100)
     airfoil = Airfoil("naca4412")
     wing.base_airfoil = airfoil
+
+    # TEMP
+    # wing.plot_3D()
+
+    # Create animation
     wing.create_3D_animation(os.path.join(output_folder, "wing.gif"))
     wing.save_3D_shape(os.path.join(output_folder, "wing.stl"))
 
@@ -154,6 +159,3 @@ def test_create_3D_animation_with_drag():
     wing.create_3D_animation(os.path.join(
         output_folder, "wing_with_drag.gif"), nb_frames=120, time_step=1 / 60, velocity=1, rho=rho, nu=nu, show_drag="blasius")
     wing.save_3D_shape(os.path.join(output_folder, "wing.stl"))
-
-
-test_create_3D_animation_with_drag()
