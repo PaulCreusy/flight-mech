@@ -94,7 +94,6 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_interp_spline</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
@@ -105,6 +104,7 @@
 <span class="c1"># Local imports #</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.aerodynamics</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_linear_drag</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.airfoil</span><span class="w"> </span><span class="kn">import</span> <span class="n">Airfoil</span>
 
 <span class="c1">#############</span>
@@ -454,7 +454,7 @@
 
 <div class="viewcode-block" id="Wing.create_3D_animation">
 <a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.create_3D_animation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_3D_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">nb_frames</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_3D_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">nb_frames</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">time_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a rotating 3D animation of the wing.</span>
 
@@ -468,23 +468,29 @@
 <span class="sd">            Number of frames in the animation, by default 60</span>
 <span class="sd">        time_step : float, optional</span>
 <span class="sd">            Time step between each frame, by default 0.05</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Parameters to pass to the plot 3D function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># Check if pyvista is imported</span>
-        <span class="n">check_pyvista_import</span><span class="p">()</span>
-
         <span class="c1"># Create the wing surface</span>
-        <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_wing_3D_surface</span><span class="p">(</span><span class="n">nb_points_airfoil</span><span class="p">)</span>
+        <span class="c1"># wing_surface = self.create_wing_3D_surface(nb_points_airfoil)</span>
 
-        <span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_surface</span><span class="p">)</span>
+        <span class="c1"># pl = pv.Plotter(off_screen=True)</span>
+        <span class="c1"># pl.add_mesh(wing_surface)</span>
+
+        <span class="c1"># Prepare the pyvista scene</span>
+        <span class="n">pl</span><span class="p">,</span> <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_3D</span><span class="p">(</span>
+            <span class="n">nb_points_airfoil</span><span class="o">=</span><span class="n">nb_points_airfoil</span><span class="p">,</span> <span class="n">for_animation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Animate</span>
         <span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">auto_close</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">generate_orbital_path</span><span class="p">(</span>
             <span class="n">n_points</span><span class="o">=</span><span class="n">nb_frames</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">wing_surface</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">):</span>
             <span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">+</span> <span class="s2">&quot;.gif&quot;</span>
         <span class="n">pl</span><span class="o">.</span><span class="n">open_gif</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
-        <span class="n">pl</span><span class="o">.</span><span class="n">orbit_on_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">write_frames</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">time_step</span><span class="p">)</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">orbit_on_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">write_frames</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">step</span><span class="o">=</span><span class="n">time_step</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -515,7 +521,7 @@
             <span class="n">nb_points_airfoil</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># Create an array containing all the points</span>
-        <span class="n">points_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_points_airfoil</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">points_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_points_airfoil</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
             <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">display_airfoil</span><span class="o">.</span><span class="n">chord_length</span>
             <span class="n">airfoil_x_array</span><span class="p">,</span> <span class="n">airfoil_z_array</span> <span class="o">=</span> <span class="n">display_airfoil</span><span class="o">.</span><span class="n">get_rotated_selig_arrays</span><span class="p">(</span>
@@ -539,25 +545,68 @@
 
 <div class="viewcode-block" id="Wing.plot_3D">
 <a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.plot_3D">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">show_symmetric_wing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">nb_points_airfoil</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+                <span class="n">show_symmetric_wing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">show_drag</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;blasius&quot;</span><span class="p">,</span>
+                                          <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span> <span class="s2">&quot;simulation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">velocity_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;panels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+                <span class="n">velocity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">rho</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">for_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the shape of the wing in 3D.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="c1"># Prepare settings according to mode</span>
+        <span class="k">if</span> <span class="n">for_animation</span><span class="p">:</span>
+            <span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">off_screen</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="c1"># Create the 3D surface</span>
-        <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_wing_3D_surface</span><span class="p">(</span><span class="n">nb_points_airfoil</span><span class="p">)</span>
+        <span class="n">wing_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_wing_3D_surface</span><span class="p">(</span>
+            <span class="n">nb_points_airfoil</span><span class="p">)</span>
 
         <span class="c1"># Create the plotter object</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span><span class="o">=</span><span class="n">off_screen</span><span class="p">)</span>
 
         <span class="c1"># Create a symmetry if needed</span>
         <span class="k">if</span> <span class="n">show_symmetric_wing</span><span class="p">:</span>
             <span class="n">wing_reflected</span> <span class="o">=</span> <span class="n">wing_surface</span><span class="o">.</span><span class="n">reflect</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
             <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_reflected</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">show_drag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Raise error if not enough parameters</span>
+            <span class="k">if</span> <span class="n">velocity</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">rho</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">nu</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The values of velocity or rho or nu are not properly defined. Please provide them all to show the drag on the wing.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Allocate an array for the drag</span>
+            <span class="n">drag_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb_points_airfoil</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="n">points_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nb_points_airfoil</span>
+                <span class="n">drag_array</span><span class="p">[</span><span class="n">points_index</span><span class="p">:</span><span class="n">points_index</span> <span class="o">+</span> <span class="n">nb_points_airfoil</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_zero_lift_drag_on_wing_slice</span><span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">show_drag</span><span class="p">,</span> <span class="n">velocity_method</span><span class="p">,</span> <span class="n">nb_points_airfoil</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="s2">&quot;upper&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">drag_array</span><span class="p">[</span><span class="n">points_index</span> <span class="o">+</span> <span class="n">nb_points_airfoil</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span><span class="n">points_index</span> <span class="o">+</span> <span class="n">nb_points_airfoil</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_zero_lift_drag_on_wing_slice</span><span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">show_drag</span><span class="p">,</span> <span class="n">velocity_method</span><span class="p">,</span> <span class="n">nb_points_airfoil</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">scalars</span> <span class="o">=</span> <span class="n">drag_array</span>
+            <span class="n">max_drag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">drag_array</span><span class="p">[</span><span class="n">drag_array</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
+            <span class="n">scalars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="n">max_drag</span><span class="p">,</span> <span class="n">posinf</span><span class="o">=</span><span class="n">max_drag</span><span class="p">)</span>
+            <span class="n">scalars</span><span class="p">[</span><span class="n">scalars</span> <span class="o">&gt;</span> <span class="mf">1e10</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_drag</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">scalars</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="c1"># Plot</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_surface</span><span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">wing_surface</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="n">scalars</span><span class="p">,</span> <span class="n">log_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Show if needed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">for_animation</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">p</span><span class="p">,</span> <span class="n">wing_surface</span></div>
 
 
 <div class="viewcode-block" id="Wing.save_3D_shape">
@@ -649,7 +698,7 @@
 <a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_lift_and_induced_drag_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nb_points_fourrier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the coefficients of lift and induced drag</span>
+<span class="sd">        Compute the coefficients of lift and induced drag.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -674,6 +723,135 @@
             <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">n_vec_odd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">An_vec_odd</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">CL</span><span class="p">,</span> <span class="n">CD</span></div>
+
+
+<div class="viewcode-block" id="Wing.compute_zero_lift_drag_on_wing_slice">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.compute_zero_lift_drag_on_wing_slice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_zero_lift_drag_on_wing_slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                             <span class="n">y_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                             <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                             <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                             <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                             <span class="n">drag_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;blasius&quot;</span><span class="p">,</span>
+                                                                  <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span> <span class="s2">&quot;simulation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span>
+                                             <span class="n">velocity_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+                                                                      <span class="s2">&quot;panels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+                                             <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">return_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                                             <span class="n">face</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;upper&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the drag of the wing at zero lift.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y_index : int</span>
+<span class="sd">            Index of the slice.</span>
+<span class="sd">        velocity : float</span>
+<span class="sd">            Velocity of the external flow.</span>
+<span class="sd">        rho : float</span>
+<span class="sd">            Density of the fluid.</span>
+<span class="sd">        nu : float</span>
+<span class="sd">            Kinematic viscosity of the fluid.</span>
+<span class="sd">        drag_method : Literal[&quot;blasius&quot;, &quot;polhausen&quot;, &quot;simulation&quot;], optional</span>
+<span class="sd">            Method to use for the drag computation, by default &quot;polhausen&quot;</span>
+<span class="sd">        velocity_method : Literal[&quot;constant&quot;, &quot;panels&quot;], optional</span>
+<span class="sd">            Method to use for the velocity computation, by default &quot;constant&quot;</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points to use for the computation, by default 1000</span>
+<span class="sd">        face : Literal[&quot;upper&quot;, &quot;lower&quot;]</span>
+<span class="sd">            Indicate on which face to compute the drag.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Drag on the wing slice.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            Raise error if the given method is not defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create x array</span>
+        <span class="n">x_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chord_length_array</span><span class="p">[</span><span class="n">y_index</span><span class="p">],</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Create velocity array</span>
+        <span class="k">if</span> <span class="n">velocity_method</span> <span class="o">==</span> <span class="s2">&quot;constant&quot;</span><span class="p">:</span>
+            <span class="n">velocity_array</span> <span class="o">=</span> <span class="n">velocity</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nb_points</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">velocity_method</span> <span class="o">==</span> <span class="s2">&quot;panels&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+            <span class="k">if</span> <span class="n">face</span> <span class="o">==</span> <span class="s2">&quot;upper&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">face</span> <span class="o">==</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+            <span class="n">velocity_array</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The velocity method </span><span class="si">{</span><span class="n">velocity_method</span><span class="si">}</span><span class="s2"> is not implemented. Please use &#39;constant&#39; or &#39;panels&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the drag on the wing slice</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">compute_linear_drag</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">drag_method</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="n">return_array</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Wing.compute_zero_lift_drag">
+<a class="viewcode-back" href="../../flight_mech.wing.html#flight_mech.wing.Wing.compute_zero_lift_drag">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_zero_lift_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                               <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                               <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                               <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                               <span class="n">drag_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;blasius&quot;</span><span class="p">,</span>
+                                                    <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span> <span class="s2">&quot;simulation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span>
+                               <span class="n">velocity_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+                                                        <span class="s2">&quot;panels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+                               <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                               <span class="n">face</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the drag of the half-wing at zero lift.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        velocity : float</span>
+<span class="sd">            Velocity of the external flow.</span>
+<span class="sd">        rho : float</span>
+<span class="sd">            Density of the fluid.</span>
+<span class="sd">        nu : float</span>
+<span class="sd">            Kinematic viscosity of the fluid.</span>
+<span class="sd">        drag_method : Literal[&quot;blasius&quot;, &quot;polhausen&quot;, &quot;simulation&quot;], optional</span>
+<span class="sd">            Method to use for the drag computation, by default &quot;polhausen&quot;</span>
+<span class="sd">        velocity_method : Literal[&quot;constant&quot;, &quot;panels&quot;], optional</span>
+<span class="sd">            Method to use for the velocity computation, by default &quot;constant&quot;</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points to use for the computation, by default 1000</span>
+<span class="sd">        face : Literal[&quot;both&quot;, &quot;upper&quot;, &quot;lower&quot;]</span>
+<span class="sd">            Indicate on which face to compute the drag.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Drag at zero lift</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">face</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+            <span class="n">zero_lift_drag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_zero_lift_drag</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">drag_method</span><span class="p">,</span> <span class="n">velocity_method</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="s2">&quot;upper&quot;</span><span class="p">)</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">compute_zero_lift_drag</span><span class="p">(</span>
+                    <span class="n">velocity</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">drag_method</span><span class="p">,</span> <span class="n">velocity_method</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Compute linear drag on the wing</span>
+            <span class="n">linear_drag_on_wing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="n">linear_drag_on_wing</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_zero_lift_drag_on_wing_slice</span><span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">drag_method</span><span class="p">,</span> <span class="n">velocity_method</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">,</span> <span class="n">face</span><span class="o">=</span><span class="n">face</span><span class="p">)</span>
+
+            <span class="c1"># Integrate the drag over y</span>
+            <span class="n">zero_lift_drag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">linear_drag_on_wing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_array</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">zero_lift_drag</span></div>
 </div>
 
 </pre></div>
