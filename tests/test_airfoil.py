@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 # Local imports #
 
 # Import objects to test
-from flight_mech.airfoil import Airfoil
+from flight_mech.airfoil import Airfoil, naca_airfoil_generator
 
 # Import test tools
 from tests._common import check_value, output_folder, data_folder
@@ -132,3 +132,14 @@ def test_change_camber():
     assert np.isclose(airfoil.max_camber, 0.01, rtol=0.0001).all()
     assert np.isclose(airfoil.max_thickness,
                       prev_max_thickness, rtol=0.0001).all()
+
+def test_naca_airfoil_generator():
+    airfoil_1 = naca_airfoil_generator(4 / 100, 4 / 10, 12 / 100)
+    assert np.isclose(airfoil_1.max_camber, 0.04, rtol=0.01)
+    assert np.isclose(airfoil_1.max_thickness, 0.12, rtol=0.01)
+    assert np.isclose(airfoil_1.max_camber_location, 0.4, rtol=0.01)
+
+    airfoil_2 = naca_airfoil_generator(naca_name="naca2412")
+    assert np.isclose(airfoil_2.max_camber, 0.02, rtol=0.01)
+    assert np.isclose(airfoil_2.max_thickness, 0.12, rtol=0.01)
+    assert np.isclose(airfoil_2.max_camber_location, 0.4, rtol=0.01)
