@@ -813,3 +813,27 @@ class Airfoil:
         alpha = (self._a0 * 2 - self._a1) / 2
 
         return alpha
+
+    def compute_panels_method_results(self, alpha: float, rho: float, velocity: float):
+        """
+        Compute the results of the panels method at the given angle of incidence, density and velocity.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence in radians.
+        rho : float
+            Density of the fluid.
+        velocity : float
+            Velocity of the external flow.
+        """
+
+        # Define the number of panels
+        nb_panels = self.x_array.size - 1
+
+        # Allocate array to store the panels data
+        normal_vector_array = np.zeros((nb_panels, 2))
+        tangential_vector_array = np.zeros((nb_panels, 2))
+        panel_length_array = np.zeros(nb_panels)
+        panel_x_array = np.zeros(nb_panels)
+        panel_y_array = np.zeros(nb_panels)
