@@ -6,6 +6,10 @@ Module to define functions to compute aerodynamic effects.
 # Imports #
 ###########
 
+# Python imports #
+
+from typing import Literal
+
 # Dependencies #
 
 import numpy as np
@@ -13,11 +17,44 @@ from scipy.integrate import solve_ivp, simpson
 import matplotlib.pyplot as plt
 
 #############
+# Constants #
+#############
+
+# Define the transition Reynolds number
+turbulent_reynolds = 5e5
+
+#############
 # Functions #
 #############
 
+def check_turbulent_transition(x: float | np.ndarray, velocity: float | np.ndarray, nu: float):
+    """
+    Check if a velocity distribution along a plate has a turbulent transition.
 
-def compute_blasius_linear_drag(x_array: np.ndarray, velocity_array: np.ndarray, rho: float, nu: float):
+    Parameters
+    ----------
+    x : float | np.ndarray
+        Array of coordinates along the plate.
+    velocity : float | np.ndarray
+        Array of velocity values.
+    nu : float
+        Kinematic viscosity.
+
+    Raises
+    ------
+    ValueError
+        Raise error if turbulent transition.
+    """
+
+    # Compute the reynolds number
+    reynolds = np.array(x * velocity / nu)
+
+    # Check transition
+    if (reynolds > turbulent_reynolds).any():
+        raise ValueError(
+            f"The boundary layer becomes turbulent. The Reynolds number at the end of the plate is {'{:3e}'.format(reynolds)}.")
+
+def compute_blasius_linear_drag(x_array: np.ndarray, velocity_array: np.ndarray, rho: float, nu: float, return_array: bool = False):
     """
     Compute the linear drag under the flat rectangle, uniform velocity hypothesis with Blasius' equation.
 
@@ -44,14 +81,22 @@ def compute_blasius_linear_drag(x_array: np.ndarray, velocity_array: np.ndarray,
     # Assume the external velocity is uniform
     velocity = np.mean(velocity_array)
 
+    # Check turbulent transition
+    check_turbulent_transition(length, velocity, nu)
+
     # Compute the drag
     linear_drag = 2 * 0.332 * rho * \
         np.power(velocity, 3 / 2) * np.sqrt(nu) * \
         np.sqrt(length)
 
+    if return_array:
+        tau_w_array = 0.332 * rho * \
+            np.power(velocity_array, 2) * \
+            np.sqrt(nu / (velocity_array * x_array))
+        return linear_drag, tau_w_array
     return linear_drag
 
-def compute_polhausen_linear_drag(x_array: np.ndarray, velocity_array: np.ndarray, rho: float, nu: float):
+def compute_polhausen_linear_drag(x_array: np.ndarray, velocity_array: np.ndarray, rho: float, nu: float, return_array: bool = False):
     """
     Compute the linear drag using the Von-Karman Polhausen's method.
 
@@ -153,6 +198,9 @@ def compute_polhausen_linear_drag(x_array: np.ndarray, velocity_array: np.ndarra
         raise ValueError(
             f"Excess velocity detected, unable to compute the drag. Please use a more precise model.")
 
+    # Check turbulent transition
+    check_turbulent_transition(x_array, velocity_array, nu)
+
     # Compute the wall shear stress
     tau_w_array = (2 + boundary_progress_array / 6) * \
         rho * nu * velocity_array / delta_array
@@ -160,10 +208,28 @@ def compute_polhausen_linear_drag(x_array: np.ndarray, velocity_array: np.ndarra
     # Integrate to determine the drag
     linear_drag = simpson(tau_w_array, solution.t)
 
+    if return_array:
+        return linear_drag, tau_w_array
     return linear_drag
 
-def compute_simulation_drag():
+def compute_simulation_linear_drag():
     raise NotImplementedError
+
+def compute_linear_drag(x_array: np.ndarray, velocity_array: np.ndarray, rho: float, nu: float, method: Literal["blasius", "polhausen", "simulation"], return_array: bool = False):
+    if method == "blasius":
+        linear_drag = compute_blasius_linear_drag(
+            x_array, velocity_array, rho, nu, return_array=return_array)
+    elif method == "polhausen":
+        linear_drag = compute_polhausen_linear_drag(
+            x_array, velocity_array, rho, nu, return_array=return_array)
+    elif method == "simulation":
+        linear_drag = compute_simulation_linear_drag(
+            x_array, velocity_array, rho, nu, return_array=return_array)
+    else:
+        raise NotImplementedError(
+            f"The method {method} is not implemented. Please use 'blasius', 'polhausen' or 'simulation'.")
+
+    return linear_drag
 
 def compute_blasius_rectangle_drag(width: float, length: float, velocity: float, rho: float, nu: float):
     """
