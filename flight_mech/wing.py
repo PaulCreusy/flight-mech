@@ -26,6 +26,7 @@ except Exception as exc:
 # Local imports #
 
 from flight_mech._common import plot_graph
+from flight_mech.aerodynamics import compute_linear_drag
 from flight_mech.airfoil import Airfoil
 
 #############
@@ -347,7 +348,7 @@ class Wing:
             axis_type="equal"
         )
 
-    def create_3D_animation(self, output_path: str, nb_points_airfoil: int = 50, nb_frames: int = 60, time_step: float = 0.05):
+    def create_3D_animation(self, output_path: str, nb_points_airfoil: int = 50, nb_frames: int = 60, time_step: float = 0.05, **kwargs):
         """
         Create a rotating 3D animation of the wing.
 
@@ -361,23 +362,29 @@ class Wing:
             Number of frames in the animation, by default 60
         time_step : float, optional
             Time step between each frame, by default 0.05
+        kwargs : dict
+            Parameters to pass to the plot 3D function.
         """
 
-        # Check if pyvista is imported
-        check_pyvista_import()
-
         # Create the wing surface
-        wing_surface = self.create_wing_3D_surface(nb_points_airfoil)
+        # wing_surface = self.create_wing_3D_surface(nb_points_airfoil)
 
-        pl = pv.Plotter(off_screen=True)
-        pl.add_mesh(wing_surface)
+        # pl = pv.Plotter(off_screen=True)
+        # pl.add_mesh(wing_surface)
+
+        # Prepare the pyvista scene
+        pl, wing_surface = self.plot_3D(
+            nb_points_airfoil=nb_points_airfoil, for_animation=True, **kwargs)
+
+        # Animate
         pl.show(auto_close=False)
         path = pl.generate_orbital_path(
             n_points=nb_frames, shift=wing_surface.length, factor=3.0)
         if not output_path.endswith(".gif"):
             output_path = output_path + ".gif"
         pl.open_gif(output_path)
-        pl.orbit_on_path(path, write_frames=True, step=time_step)
+        pl.orbit_on_path(path, write_frames=True,
+                         step=time_step, progress_bar=True)
         pl.close()
 
     def create_wing_3D_surface(self, nb_points_airfoil: int = 50):
@@ -405,7 +412,7 @@ class Wing:
             nb_points_airfoil // 2)
 
         # Create an array containing all the points
-        points_array = np.zeros((nb_points_airfoil * self.y_array.size * 2, 3))
+        points_array = np.zeros((nb_points_airfoil * self.y_array.size, 3))
         for i in range(self.y_array.size):
             ratio = self.chord_length_array[i] / display_airfoil.chord_length
             airfoil_x_array, airfoil_z_array = display_airfoil.get_rotated_selig_arrays(
@@ -426,25 +433,68 @@ class Wing:
 
         return wing_surface
 
-    def plot_3D(self, nb_points_airfoil: int = 50, show_symmetric_wing: bool = False):
+    def plot_3D(self,
+                nb_points_airfoil: int = 50,
+                show_symmetric_wing: bool = False,
+                show_drag: None | Literal["blasius",
+                                          "polhausen", "simulation"] = None,
+                velocity_method: Literal["constant", "panels"] = "constant",
+                velocity=None,
+                rho=None,
+                nu=None,
+                for_animation=False):
         """
         Plot the shape of the wing in 3D.
         """
 
+        # Prepare settings according to mode
+        if for_animation:
+            off_screen = True
+        else:
+            off_screen = False
+
         # Create the 3D surface
-        wing_surface = self.create_wing_3D_surface(nb_points_airfoil)
+        wing_surface = self.create_wing_3D_surface(
+            nb_points_airfoil)
 
         # Create the plotter object
-        p = pv.Plotter()
+        p = pv.Plotter(off_screen=off_screen)
 
         # Create a symmetry if needed
         if show_symmetric_wing:
             wing_reflected = wing_surface.reflect((0, 1, 0))
             p.add_mesh(wing_reflected)
 
+        if show_drag is not None:
+            # Raise error if not enough parameters
+            if velocity is None or rho is None or nu is None:
+                raise ValueError(
+                    f"The values of velocity or rho or nu are not properly defined. Please provide them all to show the drag on the wing.")
+
+            # Allocate an array for the drag
+            drag_array = np.zeros(nb_points_airfoil * self.y_array.size)
+            for i in range(self.y_array.size):
+                points_index = i * nb_points_airfoil
+                drag_array[points_index:points_index + nb_points_airfoil // 2] = self.compute_zero_lift_drag_on_wing_slice(
+                    i, velocity, rho, nu, show_drag, velocity_method, nb_points_airfoil // 2, return_array=True, face="upper")[1]
+                drag_array[points_index + nb_points_airfoil // 2:points_index + nb_points_airfoil] = self.compute_zero_lift_drag_on_wing_slice(
+                    i, velocity, rho, nu, show_drag, velocity_method, nb_points_airfoil // 2, return_array=True, face="lower")[1][::-1]
+
+            scalars = drag_array
+            max_drag = np.max(drag_array[drag_array != np.inf])
+            scalars = np.nan_to_num(scalars, nan=max_drag, posinf=max_drag)
+            scalars[scalars > 1e10] = max_drag
+        else:
+            scalars = None
+
         # Plot
-        p.add_mesh(wing_surface)
-        p.show()
+        p.add_mesh(wing_surface, scalars=scalars, log_scale=True)
+
+        # Show if needed
+        if not for_animation:
+            p.show()
+        else:
+            return p, wing_surface
 
     def save_3D_shape(self, output_path: str, nb_points_airfoil: int = 50):
         """
@@ -527,7 +577,7 @@ class Wing:
 
     def compute_lift_and_induced_drag_coefficients(self, alpha: float, nb_points_fourrier: int = 10):
         """
-        Compute the coefficients of lift and induced drag
+        Compute the coefficients of lift and induced drag.
 
         Parameters
         ----------
@@ -552,3 +602,126 @@ class Wing:
             np.sum(n_vec_odd * np.power(An_vec_odd, 2))
 
         return CL, CD
+
+    def compute_zero_lift_drag_on_wing_slice(self,
+                                             y_index: int,
+                                             velocity: float,
+                                             rho: float,
+                                             nu: float,
+                                             drag_method: Literal["blasius",
+                                                                  "polhausen", "simulation"] = "polhausen",
+                                             velocity_method: Literal["constant",
+                                                                      "panels"] = "constant",
+                                             nb_points: int = 1000,
+                                             return_array: bool = False,
+                                             face: Literal["upper", "lower"] = "upper"):
+        """
+        Compute the drag of the wing at zero lift.
+
+        Parameters
+        ----------
+        y_index : int
+            Index of the slice.
+        velocity : float
+            Velocity of the external flow.
+        rho : float
+            Density of the fluid.
+        nu : float
+            Kinematic viscosity of the fluid.
+        drag_method : Literal["blasius", "polhausen", "simulation"], optional
+            Method to use for the drag computation, by default "polhausen"
+        velocity_method : Literal["constant", "panels"], optional
+            Method to use for the velocity computation, by default "constant"
+        nb_points : int, optional
+            Number of points to use for the computation, by default 1000
+        face : Literal["upper", "lower"]
+            Indicate on which face to compute the drag.
+
+        Returns
+        -------
+        float
+            Drag on the wing slice.
+
+        Raises
+        ------
+        NotImplementedError
+            Raise error if the given method is not defined.
+        """
+
+        # Create x array
+        x_array = np.linspace(
+            0, self.chord_length_array[y_index], nb_points)
+
+        # Create velocity array
+        if velocity_method == "constant":
+            velocity_array = velocity * np.ones(nb_points)
+        elif velocity_method == "panels":
+            raise NotImplementedError
+            if face == "upper":
+                pass
+            elif face == "lower":
+                pass
+            else:
+                raise ValueError
+            velocity_array = ...
+        else:
+            raise NotImplementedError(
+                f"The velocity method {velocity_method} is not implemented. Please use 'constant' or 'panels'.")
+
+        # Compute the drag on the wing slice
+        result = compute_linear_drag(
+            x_array, velocity_array, rho, nu, drag_method, return_array=return_array)
+
+        return result
+
+    def compute_zero_lift_drag(self,
+                               velocity: float,
+                               rho: float,
+                               nu: float,
+                               drag_method: Literal["blasius",
+                                                    "polhausen", "simulation"] = "polhausen",
+                               velocity_method: Literal["constant",
+                                                        "panels"] = "constant",
+                               nb_points: int = 1000,
+                               face: Literal["both", "upper", "lower"] = "both"):
+        """
+        Compute the drag of the half-wing at zero lift.
+
+        Parameters
+        ----------
+        velocity : float
+            Velocity of the external flow.
+        rho : float
+            Density of the fluid.
+        nu : float
+            Kinematic viscosity of the fluid.
+        drag_method : Literal["blasius", "polhausen", "simulation"], optional
+            Method to use for the drag computation, by default "polhausen"
+        velocity_method : Literal["constant", "panels"], optional
+            Method to use for the velocity computation, by default "constant"
+        nb_points : int, optional
+            Number of points to use for the computation, by default 1000
+        face : Literal["both", "upper", "lower"]
+            Indicate on which face to compute the drag.
+
+        Returns
+        -------
+        float
+            Drag at zero lift
+        """
+
+        if face == "both":
+            zero_lift_drag = self.compute_zero_lift_drag(velocity, rho, nu, drag_method, velocity_method, nb_points, face="upper") + \
+                self.compute_zero_lift_drag(
+                    velocity, rho, nu, drag_method, velocity_method, nb_points, face="lower")
+        else:
+            # Compute linear drag on the wing
+            linear_drag_on_wing = np.zeros(self.y_array.shape)
+            for i in range(self.y_array.size):
+                linear_drag_on_wing[i] = self.compute_zero_lift_drag_on_wing_slice(
+                    i, velocity, rho, nu, drag_method, velocity_method, nb_points, face=face)
+
+            # Integrate the drag over y
+            zero_lift_drag = np.trapezoid(linear_drag_on_wing, self.y_array)
+
+        return zero_lift_drag
