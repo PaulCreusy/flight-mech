@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.Airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.convert_float_or_none_to_string"><code class="docutils literal notranslate"><span class="pre">convert_float_or_none_to_string()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.download_web_file"><code class="docutils literal notranslate"><span class="pre">download_web_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.naca_airfoil_generator"><code class="docutils literal notranslate"><span class="pre">naca_airfoil_generator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.airfoil.rotate_arrays"><code class="docutils literal notranslate"><span class="pre">rotate_arrays()</span></code></a></li>
 </ul>
 </li>
@@ -470,6 +471,23 @@
 <dt class="sig sig-object py" id="flight_mech.airfoil.download_web_file">
 <span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">download_web_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#download_web_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.download_web_file" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.airfoil.naca_airfoil_generator">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.airfoil.</span></span><span class="sig-name descname"><span class="pre">naca_airfoil_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maximum_camber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_camber_position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naca_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/airfoil.html#naca_airfoil_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.airfoil.naca_airfoil_generator" title="Link to this definition"></a></dt>
+<dd><p>Generate a NACA airfoil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maximum_camber</strong> (<em>float</em>) – Maximum camber value.</p></li>
+<li><p><strong>maximum_camber_position</strong> (<em>float</em>) – Maximum camber position.</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – Maximum thickness value.</p></li>
+<li><p><strong>naca_name</strong> (<em>str</em>) – Name of the NACA airfoil. If provided, the other geometry parameters will not be used.</p></li>
+<li><p><strong>nb_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points, by default 200</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="flight_mech.airfoil.rotate_arrays">

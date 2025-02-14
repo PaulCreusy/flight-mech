@@ -168,6 +168,71 @@
     <span class="k">return</span> <span class="n">rotated_x_array</span><span class="p">,</span> <span class="n">rotated_z_array</span></div>
 
 
+<div class="viewcode-block" id="naca_airfoil_generator">
+<a class="viewcode-back" href="../../flight_mech.airfoil.html#flight_mech.airfoil.naca_airfoil_generator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">naca_airfoil_generator</span><span class="p">(</span><span class="n">maximum_camber</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maximum_camber_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maximum_thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">naca_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a NACA airfoil.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    maximum_camber : float</span>
+<span class="sd">        Maximum camber value.</span>
+<span class="sd">    maximum_camber_position : float</span>
+<span class="sd">        Maximum camber position.</span>
+<span class="sd">    thickness : float</span>
+<span class="sd">        Maximum thickness value.</span>
+<span class="sd">    naca_name : str</span>
+<span class="sd">        Name of the NACA airfoil. If provided, the other geometry parameters will not be used.</span>
+<span class="sd">    nb_points : int, optional</span>
+<span class="sd">        Number of points, by default 200</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">naca_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">naca_digits</span> <span class="o">=</span> <span class="n">naca_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;naca&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">maximum_camber</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">naca_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">maximum_camber_position</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">naca_digits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="n">maximum_thickness</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">naca_digits</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span> <span class="o">/</span> <span class="mi">100</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">y_c</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Camber line equation&quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">maximum_camber</span> <span class="o">/</span> <span class="n">maximum_camber_position</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">maximum_camber_position</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">maximum_camber_position</span><span class="p">)</span> \
+            <span class="o">+</span> <span class="p">(</span><span class="n">maximum_camber</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">maximum_camber_position</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">maximum_camber_position</span> <span class="o">+</span>
+                                                                     <span class="mi">2</span> <span class="o">*</span> <span class="n">maximum_camber_position</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">maximum_camber_position</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">y_t</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Thickness equation&quot;&quot;&quot;</span>
+        <span class="n">a0</span> <span class="o">=</span> <span class="mf">0.2969</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.126</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3516</span>
+        <span class="n">a3</span> <span class="o">=</span> <span class="mf">0.2843</span>
+        <span class="n">a4</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1036</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">maximum_thickness</span> <span class="o">/</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a0</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">a1</span> <span class="o">*</span>
+                                           <span class="n">x</span> <span class="o">+</span> <span class="n">a2</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">a4</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="c1"># Define x coordinates array</span>
+    <span class="n">x_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+    <span class="c1"># Compute camber and thickness</span>
+    <span class="n">camber_z_array</span> <span class="o">=</span> <span class="n">y_c</span><span class="p">(</span><span class="n">x_array</span><span class="p">)</span>
+    <span class="n">thickness_array</span> <span class="o">=</span> <span class="n">y_t</span><span class="p">(</span><span class="n">x_array</span><span class="p">)</span>
+
+    <span class="c1"># Compute intrados and extrados</span>
+    <span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">camber_z_array</span> <span class="o">-</span> <span class="n">thickness_array</span>
+    <span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">camber_z_array</span> <span class="o">+</span> <span class="n">thickness_array</span>
+
+    <span class="c1"># Create the airfoil</span>
+    <span class="n">airfoil</span> <span class="o">=</span> <span class="n">Airfoil</span><span class="p">()</span>
+    <span class="n">airfoil</span><span class="o">.</span><span class="n">x_array</span> <span class="o">=</span> <span class="n">x_array</span>
+    <span class="n">airfoil</span><span class="o">.</span><span class="n">intrados_z_array</span> <span class="o">=</span> <span class="n">intrados_z_array</span>
+    <span class="n">airfoil</span><span class="o">.</span><span class="n">extrados_z_array</span> <span class="o">=</span> <span class="n">extrados_z_array</span>
+
+    <span class="k">return</span> <span class="n">airfoil</span></div>
+
+
 <span class="c1">###########</span>
 <span class="c1"># Classes #</span>
 <span class="c1">###########</span>
