@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 
 # Import objects to test
 from flight_mech.wing import Wing, compute_chord_min_and_max_for_trapezoidal_wing
+from flight_mech.atmosphere import StandardAtmosphere
 from flight_mech.airfoil import Airfoil
 
 # Import test tools
@@ -113,3 +114,46 @@ def test_compute_lift_and_induced_drag_coefficients_2():
         0, 4)
     check_value(0.1593, CL)
     check_value(0.00166, CD)
+
+def test_compute_zero_lift_drag():
+    # TODO : change wing geometry to avoid transition
+    wing = Wing()
+    wing.y_array = np.linspace(0, 10, 100)
+    wing.chord_length_array = np.linspace(3, 1, 100)
+    wing.twisting_angle_array = np.linspace(0, 0.1, 100)
+    wing.x_center_offset_array = np.zeros(100)
+    airfoil = Airfoil("naca4412")
+    wing.base_airfoil = airfoil
+
+    rho = StandardAtmosphere.compute_density_from_altitude(0)
+    nu = StandardAtmosphere.compute_kinematic_viscosity_from_altitude(0)
+    drag = wing.compute_zero_lift_drag(
+        velocity=1, rho=rho, nu=nu, drag_method="blasius", velocity_method="constant")
+
+    # TODO : add drag value check
+    print(drag)
+
+
+def test_create_3D_animation_with_drag():
+    # Create wing
+    wing = Wing()
+    wing.y_array = np.linspace(0, 10, 100)
+    wing.chord_length_array = np.linspace(3, 1, 100)
+    wing.twisting_angle_array = np.linspace(0, 0.1, 100)
+    wing.x_center_offset_array = np.zeros(100)
+    airfoil = Airfoil("naca4412")
+    wing.base_airfoil = airfoil
+
+    # Define drag parameters
+    rho = StandardAtmosphere.compute_density_from_altitude(0)
+    nu = StandardAtmosphere.compute_kinematic_viscosity_from_altitude(0)
+
+    # TEMP
+    # wing.plot_3D(velocity=1, rho=rho, nu=nu, show_drag="blasius")
+
+    wing.create_3D_animation(os.path.join(
+        output_folder, "wing_with_drag.gif"), nb_frames=120, time_step=1 / 60, velocity=1, rho=rho, nu=nu, show_drag="blasius")
+    wing.save_3D_shape(os.path.join(output_folder, "wing.stl"))
+
+
+test_create_3D_animation_with_drag()

@@ -3,3 +3,4 @@ matplotlib
 pandas
 bs4
 scipy
+tqdm
