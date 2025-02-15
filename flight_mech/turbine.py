@@ -82,6 +82,10 @@ class TurbojetSingleBody:
         return T0
 
     @property
+    def W0(self):
+        return self.W3
+
+    @property
     def P1(self):
         return self.P0
 
@@ -90,12 +94,20 @@ class TurbojetSingleBody:
         return self.T0
 
     @property
+    def W1(self):
+        return self.W3
+
+    @property
     def P2(self):
         return self.P0
 
     @property
     def T2(self):
         return self.T0
+
+    @property
+    def W2(self):
+        return self.W3
 
     @property
     def P3(self):
@@ -243,9 +255,14 @@ class TurbojetSingleBody:
         id_list = []
 
         # Extract the values
-        for i in range(1, 9):
-            id_list.append(i)
-            values_list.append(self.__getattribute__(code + str(i)))
+        for i in range(1, 10):
+            if i == 9:
+                current_code = code + "s8"
+            else:
+                current_code = code + str(i)
+            if current_code in self.__dir__():
+                id_list.append(i)
+                values_list.append(self.__getattribute__(current_code))
 
         # Plot
         plot_graph(
