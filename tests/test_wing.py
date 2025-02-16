@@ -28,10 +28,6 @@ from flight_mech.airfoil import Airfoil
 # Import test tools
 from tests._common import check_value, output_folder
 
-#############
-# Constants #
-#############
-
 
 #########
 # Tests #

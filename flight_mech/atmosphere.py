@@ -12,6 +12,30 @@ import numpy as np
 from scipy.optimize import minimize, Bounds
 from abc import ABC, abstractmethod
 
+#############
+# Functions #
+#############
+
+def compute_air_sound_speed(temperature: float):
+    """
+    Compute the air sound speed at the given temperature, assuming it is a perfect gas.
+
+    Parameters
+    ----------
+    temperature : float
+        Temperature of the air in K.
+
+    Returns
+    -------
+    float
+        Sound speed in m.s-1.
+    """
+
+    sound_speed = np.sqrt(StandardAtmosphere.gamma *
+                          StandardAtmosphere.r * temperature)
+
+    return sound_speed
+
 ###########
 # Classes #
 ###########
@@ -220,8 +244,7 @@ class StandardAtmosphere(Atmosphere):
         """
 
         temperature = self.compute_temperature_from_altitude(z)
-        sound_speed = np.sqrt(self.gamma *
-                              self.r * temperature)
+        sound_speed = compute_air_sound_speed(temperature)
 
         return sound_speed
 
