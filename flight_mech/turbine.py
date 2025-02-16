@@ -13,11 +13,12 @@ from typing import Literal
 # Dependencies #
 
 import numpy as np
-from scipy.optimize import brute
+from scipy.optimize import brute, minimize
 
 # Local imports #
 
 from flight_mech.atmosphere import (
+    Atmosphere,
     StandardAtmosphere,
     compute_air_sound_speed
 )
@@ -51,22 +52,109 @@ VARIABLE_TO_UNIT = {
 # Classes #
 ###########
 
-class TurbojetSingleBody:
+class Turbojet:
+    """
+    Base class to define turbojets.
+    """
+
+    M0: float = 0
+    _ambient_pressure: float = 101325  # Pa
+    _ambient_temperature: float = 285  # K
+    _altitude: float | None = None
+    _ambient_conditions_from_altitude: bool = False
+
+    atmosphere_model = StandardAtmosphere
+
+    mode: Literal["design", "operation"] = "design"
+    fuel = FuelTypes.KEROSENE
+
+    @property
+    def ambient_pressure(self):
+        return self._ambient_pressure
+
+    @ambient_pressure.setter
+    def ambient_pressure(self, value):
+        self._ambient_pressure = value
+        self._ambient_conditions_from_altitude = False
+        self._altitude = None
+
+    @property
+    def ambient_temperature(self):
+        return self._ambient_temperature
+
+    @ambient_temperature.setter
+    def ambient_temperature(self, value):
+        self._ambient_temperature = value
+        self._ambient_conditions_from_altitude = False
+        self._altitude = None
+
+    @property
+    def altitude(self):
+        return self._altitude
+
+    @altitude.setter
+    def altitude(self, value: float):
+        self._altitude = value
+        self._ambient_temperature = self.atmosphere_model.compute_temperature_from_altitude(
+            value)
+        self._ambient_pressure = self.atmosphere_model.compute_pressure_from_altitude(
+            value)
+        self._ambient_conditions_from_altitude = True
+
+    def plot_graph(self, variable: Literal["pressure", "temperature", "mass_flow"], **kwargs):
+        """
+        Plot the graph of evolution of the given variable in the turbojet.
+
+        Parameters
+        ----------
+        variable : Literal["pressure", "temperature", "mass_flow"]
+            Name of the variable to plot.
+        """
+
+        # Extract code of the variable
+        code = VARIABLE_TO_CODE[variable]
+
+        # Allocate list for the x and y values
+        values_list = []
+        id_list = []
+
+        # Extract the values
+        for i in range(1, 10):
+            if i == 9:
+                current_code = code + "s8"
+            else:
+                current_code = code + str(i)
+            if current_code in self.__dir__():
+                id_list.append(i)
+                values_list.append(self.__getattribute__(current_code))
+
+        # Plot
+        plot_graph(
+            x_array=id_list,
+            y_array=values_list,
+            title=f"{variable.capitalize()} graph",
+            x_label="Section id",
+            y_label=f"{variable.capitalize()} [{VARIABLE_TO_UNIT[variable]}]",
+            **kwargs
+        )
+
+
+class TurbojetSingleBody(Turbojet):
     """
     Class to define a turbojet with single flux, single body with a constant Cp coefficient.
     """
 
-    ambient_pressure = 101325  # Pa
-    ambient_temperature = 285  # K
-    T4_max = 1700  # K
     compressor_efficiency = 0.86
     turbine_efficiency = 0.9
-    M0 = 0
+
+    T4_max = 1700  # K
     OPR_design = 10
     max_reference_surface_mass_flow_rate_4_star = 241.261  # kg.s-1.m-2
     A4_star = 1e-2  # m-2
-    mode: Literal["design", "operation"] = "design"
-    fuel = FuelTypes.KEROSENE
+
+    # Define operation variables
+    T4_instruction = T4_max
+    current_OPR = OPR_design
 
     @property
     def P0(self):
@@ -111,7 +199,10 @@ class TurbojetSingleBody:
 
     @property
     def P3(self):
-        return self.P2 * self.OPR_design
+        if self.mode == "design":
+            return self.P2 * self.OPR_design
+        elif self.mode == "operation":
+            return self.P2 * self.current_OPR
 
     @property
     def T3(self):
@@ -131,7 +222,10 @@ class TurbojetSingleBody:
 
     @property
     def T4(self):
-        return self.T4_max
+        if self.mode == "design":
+            return self.T4_max
+        elif self.mode == "operation":
+            return self.T4_instruction
 
     @property
     def W4R(self):
@@ -143,6 +237,12 @@ class TurbojetSingleBody:
         W4 = self.W4R * (self.P4 / REFERENCE_PRESSURE) / \
             np.sqrt(self.T4 / REFERENCE_TEMPERATURE)
         return W4
+
+    @property
+    def Wf(self):
+        Wf = (1 / self.fuel.lower_heating_value) * \
+            self.W4 * cp * (self.T4 - self.T3)
+        return Wf
 
     @property
     def P5(self):
@@ -173,9 +273,13 @@ class TurbojetSingleBody:
 
     @property
     def M8(self):
-        M8 = np.sqrt(
-            (np.power(self.P8 / self.Ps8, (GAMMA - 1) / GAMMA) - 1) * (2 / (GAMMA - 1)))
-        return M8
+        if self.mode == "design":
+            M8 = np.sqrt(
+                (np.power(self.P8 / self.Ps8, (GAMMA - 1) / GAMMA) - 1) * (2 / (GAMMA - 1)))
+            return M8
+        elif self.mode == "operation":
+            # Use this property because all the computations need to be performed in design mode
+            return self._get_design_variable("M8")
 
     @property
     def Ts8(self):
@@ -195,14 +299,22 @@ class TurbojetSingleBody:
 
     @property
     def A8_star(self):
-        A8_star = self.W8R / self.max_reference_surface_mass_flow_rate_4_star
-        return A8_star
+        if self.mode == "design":
+            A8_star = self.W8R / self.max_reference_surface_mass_flow_rate_4_star
+            return A8_star
+        elif self.mode == "operation":
+            # Use this property because all the computations need to be performed in design mode
+            return self._get_design_variable("A8_star")
 
     @property
     def A8(self):
-        A8 = self.A8_star * (1 / self.M8) * np.power((2 / (GAMMA + 1)) * (
-            1 + (GAMMA - 1) / 2 * np.power(self.M8, 2)), (GAMMA + 1) / (2 * (GAMMA - 1)))
-        return A8
+        if self.mode == "design":
+            A8 = self.A8_star * (1 / self.M8) * np.power((2 / (GAMMA + 1)) * (
+                1 + (GAMMA - 1) / 2 * np.power(self.M8, 2)), (GAMMA + 1) / (2 * (GAMMA - 1)))
+            return A8
+        elif self.mode == "operation":
+            # Use this property because all the computations need to be performed in design mode
+            return self._get_design_variable("A8")
 
     @property
     def v8(self):
@@ -211,14 +323,29 @@ class TurbojetSingleBody:
 
     @property
     def thrust(self):
-        thrust = self.v8 * self.W8
+        thrust = self.v8 * self.W8 + self.A8 * \
+            (self.Ps8 - self.ambient_pressure)
         return thrust
 
-    @property
-    def Wf(self):
-        Wf = (1 / self.fuel.lower_heating_value) * \
-            self.W4 * cp * (self.T4 - self.T3)
-        return Wf
+    def _get_design_variable(self, variable: str) -> float:
+        # Raise error if already in design mode
+        if self.mode == "design":
+            raise ValueError(
+                f"You are currently in design mode. Please use the property directly instead.")
+
+        # Store the previous mode
+        previous_mode = self.mode
+
+        # Switch to design mode
+        self.mode = "design"
+
+        # Compute M8
+        value = self.__getattribute__(variable)
+
+        # Switch back to previous mode
+        self.mode = previous_mode
+
+        return value
 
     def tune_A4_star_for_desired_thrust(self, desired_thrust: float, min_A4_star: float = 1e-4, max_A4_star: float = 5e-1):
         """
@@ -245,31 +372,30 @@ class TurbojetSingleBody:
         # Update A4*
         self.A4_star = res[0]
 
-    def plot_graph(self, variable: Literal["pressure", "temperature", "mass_flow"], **kwargs):
+    def tune_current_OPR(self):
+        """
+        Tune the current OPR value to the T4 instruction and operating conditions.
 
-        # Extract code of the variable
-        code = VARIABLE_TO_CODE[variable]
+        Raises
+        ------
+        ValueError
+            Raise error if not in operation mode.
+        """
 
-        # Allocate list for the x and y values
-        values_list = []
-        id_list = []
+        # Raise error if not in operation mode
+        if self.mode != "operation":
+            raise ValueError(
+                "The OPR convergence process can only be used in operating mode. In design mode, the current OPR is always considered to be the design OPR.")
 
-        # Extract the values
-        for i in range(1, 10):
-            if i == 9:
-                current_code = code + "s8"
-            else:
-                current_code = code + str(i)
-            if current_code in self.__dir__():
-                id_list.append(i)
-                values_list.append(self.__getattribute__(current_code))
+        # Define a cost function
+        def cost_function(current_OPR):
+            self.current_OPR = current_OPR
+            cost = np.abs((self.W8R / self.A8_star) -
+                          (self.W4R / self.A4_star))
+            return cost
 
-        # Plot
-        plot_graph(
-            x_array=id_list,
-            y_array=values_list,
-            title=f"{variable.capitalize()} graph",
-            x_label="Section id",
-            y_label=f"{variable.capitalize()} [{VARIABLE_TO_UNIT[variable]}]",
-            **kwargs
-        )
+        # Solve by brute force
+        res = brute(cost_function, [(0, self.OPR_design)])
+
+        # Update OPR
+        self.current_OPR = res[0]
