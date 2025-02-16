@@ -13,12 +13,11 @@ from typing import Literal
 # Dependencies #
 
 import numpy as np
-from scipy.optimize import brute, minimize
+from scipy.optimize import brute
 
 # Local imports #
 
 from flight_mech.atmosphere import (
-    Atmosphere,
     StandardAtmosphere,
     compute_air_sound_speed
 )
@@ -153,8 +152,19 @@ class TurbojetSingleBody(_Turbojet):
     A4_star = 1e-2  # m-2
 
     # Define operation variables
-    T4_instruction = T4_max
+    _T4_instruction = T4_max
     current_OPR = OPR_design
+
+    @property
+    def T4_instruction(self):
+        return self._T4_instruction
+
+    @T4_instruction.setter
+    def T4_instruction(self, value):
+        if value < 0:
+            raise ValueError(
+                f"T4 cannot accept negative values ({value}), please provide only positive values.")
+        self._T4_instruction = value
 
     @property
     def P0(self):
@@ -323,9 +333,24 @@ class TurbojetSingleBody(_Turbojet):
 
     @property
     def thrust(self):
+        self._check_temperatures_positivity()
         thrust = self.v8 * self.W8 + self.A8 * \
             (self.Ps8 - self.ambient_pressure)
         return thrust
+
+    @property
+    def fuel_consumption(self):
+        return self.Wf
+
+    def _check_temperatures_positivity(self):
+        for i in range(1, 9):
+            current_code = f"T{i}"
+            if current_code not in self.__dir__():
+                continue
+            current_value = self.__getattribute__(current_code)
+            if current_value < 0:
+                raise ValueError(
+                    f"{current_code} is negative ({current_value}), the domain is outside its domain of validity.")
 
     def _get_design_variable(self, variable: str) -> float:
         # Raise error if already in design mode

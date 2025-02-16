@@ -28,7 +28,6 @@ cruise_mach = 0.78
 max_mach = 0.82
 max_altitude = 12500  # m
 
-
 # Define the turbojet
 turbojet = TurbojetSingleBody()
 
@@ -61,6 +60,7 @@ turbojet.mode = "operation"
 # Set the number of points for the plots
 nb_points = 100
 
+
 # T4 influence #
 
 # Compute thrust evolution with T4 instruction
@@ -68,8 +68,12 @@ T4_array = np.linspace(0, turbojet.T4_max, nb_points)
 thrust_array = np.zeros(nb_points)
 for i, T4 in enumerate(T4_array):
     turbojet.T4_instruction = T4
-    turbojet.tune_current_OPR()
-    thrust_array[i] = turbojet.thrust
+    # Use try block to avoid crash if temperatures become negative
+    try:
+        turbojet.tune_current_OPR()
+        thrust_array[i] = turbojet.thrust
+    except Exception as e:
+        print(e)
 
 # Plot thrust evolution with velocity
 plt.plot(T4_array, thrust_array)
@@ -77,6 +81,7 @@ plt.xlabel("T4 [K]")
 plt.ylabel("Thrust [N]")
 plt.title("Thrust evolution with T4")
 plt.show()
+
 
 # Cruise #
 
@@ -89,6 +94,7 @@ turbojet.M0 = cruise_mach
 # Compute thrust in cruise
 turbojet.tune_current_OPR()
 print("cruise thrust [N]:", turbojet.thrust)
+
 
 # Velocity influence #
 
@@ -106,6 +112,7 @@ plt.xlabel("M0")
 plt.ylabel("Thrust [N]")
 plt.title("Thrust evolution with Mach")
 plt.show()
+
 
 # Altitude influence #
 

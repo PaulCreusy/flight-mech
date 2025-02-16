@@ -17,7 +17,7 @@ from enum import Enum
 
 class FuelType:
     density: float  # kg.m-3
-    lower_heating_value: float  # J
+    lower_heating_value: float  # J.kg-1
 
     def __init__(self, density: float, lower_heating_value: float):
         self.density = density
