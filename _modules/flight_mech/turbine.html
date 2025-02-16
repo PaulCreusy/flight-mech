@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.turbine &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../turbine_module.html">Turbine module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flight_mech.turbine</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for flight_mech.turbine</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to define turbo-reactors models and compute their characteristics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Imports #</span>
+<span class="c1">###########</span>
+
+<span class="c1"># Python imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="c1"># Dependencies #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">brute</span>
+
+<span class="c1"># Local imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.atmosphere</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">StandardAtmosphere</span><span class="p">,</span>
+    <span class="n">compute_air_sound_speed</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.fuel</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuelTypes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Constants #</span>
+<span class="c1">#############</span>
+
+<span class="c1"># Define reference quantities for computations</span>
+<span class="n">REFERENCE_PRESSURE</span> <span class="o">=</span> <span class="mi">101325</span>  <span class="c1"># Pa</span>
+<span class="n">REFERENCE_TEMPERATURE</span> <span class="o">=</span> <span class="mf">288.15</span>  <span class="c1"># K</span>
+<span class="n">GAMMA</span> <span class="o">=</span> <span class="n">StandardAtmosphere</span><span class="o">.</span><span class="n">gamma</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">*</span> <span class="n">StandardAtmosphere</span><span class="o">.</span><span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">VARIABLE_TO_CODE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mass_flow&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span>
+<span class="p">}</span>
+
+<span class="n">VARIABLE_TO_UNIT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="s2">&quot;Pa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mass_flow&quot;</span><span class="p">:</span> <span class="s2">&quot;kg.s-1&quot;</span>
+<span class="p">}</span>
+
+
+<span class="c1">###########</span>
+<span class="c1"># Classes #</span>
+<span class="c1">###########</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_Turbojet</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class to define turbojets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">M0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">_ambient_pressure</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">101325</span>  <span class="c1"># Pa</span>
+    <span class="n">_ambient_temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">285</span>  <span class="c1"># K</span>
+    <span class="n">_altitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_ambient_conditions_from_altitude</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">atmosphere_model</span> <span class="o">=</span> <span class="n">StandardAtmosphere</span>
+
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;design&quot;</span><span class="p">,</span> <span class="s2">&quot;operation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;design&quot;</span>
+    <span class="n">fuel</span> <span class="o">=</span> <span class="n">FuelTypes</span><span class="o">.</span><span class="n">KEROSENE</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ambient_pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_pressure</span>
+
+    <span class="nd">@ambient_pressure</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ambient_pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_pressure</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_conditions_from_altitude</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_altitude</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ambient_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_temperature</span>
+
+    <span class="nd">@ambient_temperature</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ambient_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_temperature</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_conditions_from_altitude</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_altitude</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_altitude</span>
+
+    <span class="nd">@altitude</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_altitude</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_model</span><span class="o">.</span><span class="n">compute_temperature_from_altitude</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_pressure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_model</span><span class="o">.</span><span class="n">compute_pressure_from_altitude</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ambient_conditions_from_altitude</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;mass_flow&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the graph of evolution of the given variable in the turbojet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable : Literal[&quot;pressure&quot;, &quot;temperature&quot;, &quot;mass_flow&quot;]</span>
+<span class="sd">            Name of the variable to plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Extract code of the variable</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">VARIABLE_TO_CODE</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
+
+        <span class="c1"># Allocate list for the x and y values</span>
+        <span class="n">values_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">id_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Extract the values</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+                <span class="n">current_code</span> <span class="o">=</span> <span class="n">code</span> <span class="o">+</span> <span class="s2">&quot;s8&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">current_code</span> <span class="o">=</span> <span class="n">code</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current_code</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">():</span>
+                <span class="n">id_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">values_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">current_code</span><span class="p">))</span>
+
+        <span class="c1"># Plot</span>
+        <span class="n">plot_graph</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="o">=</span><span class="n">id_list</span><span class="p">,</span>
+            <span class="n">y_array</span><span class="o">=</span><span class="n">values_list</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> graph&quot;</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;Section id&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">VARIABLE_TO_UNIT</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+
+<div class="viewcode-block" id="TurbojetSingleBody">
+<a class="viewcode-back" href="../../flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TurbojetSingleBody</span><span class="p">(</span><span class="n">_Turbojet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to define a turbojet with single flux, single body with a constant Cp coefficient.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">compressor_efficiency</span> <span class="o">=</span> <span class="mf">0.86</span>
+    <span class="n">turbine_efficiency</span> <span class="o">=</span> <span class="mf">0.9</span>
+
+    <span class="n">T4_max</span> <span class="o">=</span> <span class="mi">1700</span>  <span class="c1"># K</span>
+    <span class="n">OPR_design</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">max_reference_surface_mass_flow_rate_4_star</span> <span class="o">=</span> <span class="mf">241.261</span>  <span class="c1"># kg.s-1.m-2</span>
+    <span class="n">A4_star</span> <span class="o">=</span> <span class="mf">1e-2</span>  <span class="c1"># m-2</span>
+
+    <span class="c1"># Define operation variables</span>
+    <span class="n">_T4_instruction</span> <span class="o">=</span> <span class="n">T4_max</span>
+    <span class="n">current_OPR</span> <span class="o">=</span> <span class="n">OPR_design</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T4_instruction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T4_instruction</span>
+
+    <span class="nd">@T4_instruction</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T4_instruction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;T4 cannot accept negative values (</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">), please provide only positive values.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T4_instruction</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">P0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambient_pressure</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                     <span class="n">GAMMA</span> <span class="o">/</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">P0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">T0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambient_temperature</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">T0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;design&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">OPR_design</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_OPR</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">T3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">compressor_efficiency</span><span class="p">)</span> <span class="o">*</span>
+                        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">P2</span><span class="p">,</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">GAMMA</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">T3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">W3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W4</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Wf</span>
+        <span class="k">return</span> <span class="n">W3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">P4</span> <span class="o">=</span> <span class="mf">0.95</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">P3</span>
+        <span class="k">return</span> <span class="n">P4</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;design&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T4_max</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T4_instruction</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W4R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">W4R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_reference_surface_mass_flow_rate_4_star</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">A4_star</span>
+        <span class="k">return</span> <span class="n">W4R</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">W4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W4R</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P4</span> <span class="o">/</span> <span class="n">REFERENCE_PRESSURE</span><span class="p">)</span> <span class="o">/</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T4</span> <span class="o">/</span> <span class="n">REFERENCE_TEMPERATURE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">W4</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Wf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Wf</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel</span><span class="o">.</span><span class="n">lower_heating_value</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">W4</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T4</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">T3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Wf</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">P5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">turbine_efficiency</span><span class="p">)</span>
+                                <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T5</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T4</span><span class="p">)),</span> <span class="n">GAMMA</span> <span class="o">/</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">P5</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">T5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T4</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T3</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">T2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">T5</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W4</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">P5</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">T8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">T5</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Ps8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambient_pressure</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">M8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;design&quot;</span><span class="p">:</span>
+            <span class="n">M8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P8</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ps8</span><span class="p">,</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">GAMMA</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">M8</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span>
+            <span class="c1"># Use this property because all the computations need to be performed in design mode</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_design_variable</span><span class="p">(</span><span class="s2">&quot;M8&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Ts8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Ts8</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span>
+                                 <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M8</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Ts8</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W5</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">W8R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">W8R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T8</span> <span class="o">/</span> <span class="n">REFERENCE_TEMPERATURE</span><span class="p">)</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P8</span> <span class="o">/</span> <span class="n">REFERENCE_PRESSURE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">W8R</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">A8_star</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;design&quot;</span><span class="p">:</span>
+            <span class="n">A8_star</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W8R</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_reference_surface_mass_flow_rate_4_star</span>
+            <span class="k">return</span> <span class="n">A8_star</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span>
+            <span class="c1"># Use this property because all the computations need to be performed in design mode</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_design_variable</span><span class="p">(</span><span class="s2">&quot;A8_star&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">A8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;design&quot;</span><span class="p">:</span>
+            <span class="n">A8</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A8_star</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">M8</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">A8</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span>
+            <span class="c1"># Use this property because all the computations need to be performed in design mode</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_design_variable</span><span class="p">(</span><span class="s2">&quot;A8&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">v8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">v8</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">M8</span> <span class="o">*</span> <span class="n">compute_air_sound_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ts8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v8</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thrust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_temperatures_positivity</span><span class="p">()</span>
+        <span class="n">thrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v8</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W8</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">A8</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ps8</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambient_pressure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">thrust</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fuel_consumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Wf</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_temperatures_positivity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+            <span class="n">current_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;T</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">current_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">current_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">current_code</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current_value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_code</span><span class="si">}</span><span class="s2"> is negative (</span><span class="si">{</span><span class="n">current_value</span><span class="si">}</span><span class="s2">), the domain is outside its domain of validity.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_design_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="c1"># Raise error if already in design mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;design&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;You are currently in design mode. Please use the property directly instead.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Store the previous mode</span>
+        <span class="n">previous_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span>
+
+        <span class="c1"># Switch to design mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;design&quot;</span>
+
+        <span class="c1"># Compute M8</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+
+        <span class="c1"># Switch back to previous mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">previous_mode</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="TurbojetSingleBody.tune_A4_star_for_desired_thrust">
+<a class="viewcode-back" href="../../flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.tune_A4_star_for_desired_thrust">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tune_A4_star_for_desired_thrust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desired_thrust</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_A4_star</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_A4_star</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5e-1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tune the value of A4* to obtain the desired thrust in the operating conditions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        desired_thrust : float</span>
+<span class="sd">            Desired thrust in N.</span>
+<span class="sd">        min_A4_star : float, optional</span>
+<span class="sd">            Minimal value for A4*, by default 1e-4</span>
+<span class="sd">        max_A4_star : float, optional</span>
+<span class="sd">            Maximum value for A4*, by default 5e-1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Define a cost function</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">cost_function</span><span class="p">(</span><span class="n">A4_star</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">A4_star</span> <span class="o">=</span> <span class="n">A4_star</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">desired_thrust</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrust</span><span class="p">)</span>
+
+        <span class="c1"># Solve by brute force</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">brute</span><span class="p">(</span><span class="n">cost_function</span><span class="p">,</span> <span class="p">[(</span><span class="n">min_A4_star</span><span class="p">,</span> <span class="n">max_A4_star</span><span class="p">)])</span>
+
+        <span class="c1"># Update A4*</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A4_star</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TurbojetSingleBody.tune_current_OPR">
+<a class="viewcode-back" href="../../flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.tune_current_OPR">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tune_current_OPR</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tune the current OPR value to the T4 instruction and operating conditions.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raise error if not in operation mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Raise error if not in operation mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The OPR convergence process can only be used in operating mode. In design mode, the current OPR is always considered to be the design OPR.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Define a cost function</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">cost_function</span><span class="p">(</span><span class="n">current_OPR</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_OPR</span> <span class="o">=</span> <span class="n">current_OPR</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">W8R</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">A8_star</span><span class="p">)</span> <span class="o">-</span>
+                          <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W4R</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">A4_star</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">cost</span>
+
+        <span class="c1"># Solve by brute force</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">brute</span><span class="p">(</span><span class="n">cost_function</span><span class="p">,</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OPR_design</span><span class="p">)])</span>
+
+        <span class="c1"># Update OPR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_OPR</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

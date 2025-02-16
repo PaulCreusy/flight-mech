@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.turbine module &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="flight_mech.wing module" href="flight_mech.wing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.turbine module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.turbine.TurbojetSingleBody"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="flight_mech.html">flight_mech package</a></li>
+      <li class="breadcrumb-item active">flight_mech.turbine module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/flight_mech.turbine.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-flight_mech.turbine">
+<span id="flight-mech-turbine-module"></span><h1>flight_mech.turbine module<a class="headerlink" href="#module-flight_mech.turbine" title="Link to this heading"></a></h1>
+<p>Module to define turbo-reactors models and compute their characteristics.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.turbine.</span></span><span class="sig-name descname"><span class="pre">TurbojetSingleBody</span></span><a class="reference internal" href="_modules/flight_mech/turbine.html#TurbojetSingleBody"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Turbojet</span></code></p>
+<p>Class to define a turbojet with single flux, single body with a constant Cp coefficient.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.A4_star">
+<span class="sig-name descname"><span class="pre">A4_star</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.01</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.A4_star" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.A8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">A8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.A8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.A8_star">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">A8_star</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.A8_star" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.M8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">M8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.M8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.OPR_design">
+<span class="sig-name descname"><span class="pre">OPR_design</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.OPR_design" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P0</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P1</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P2</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P3">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P3</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P4">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P4</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P5">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P5</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.P8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">P8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.P8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.Ps8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Ps8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.Ps8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T0</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T1</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T2</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T3">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T3</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T4">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T4</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T4_instruction">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T4_instruction</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T4_instruction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T4_max">
+<span class="sig-name descname"><span class="pre">T4_max</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1700</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T4_max" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T5">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T5</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.T8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.T8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.Ts8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Ts8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.Ts8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W0</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W1</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W2</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W3">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W3</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W4">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W4</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W4R">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W4R</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W4R" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W5">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W5</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.W8R">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W8R</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.W8R" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.Wf">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Wf</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.Wf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.compressor_efficiency">
+<span class="sig-name descname"><span class="pre">compressor_efficiency</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.86</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.compressor_efficiency" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.current_OPR">
+<span class="sig-name descname"><span class="pre">current_OPR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.current_OPR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.fuel_consumption">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fuel_consumption</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.fuel_consumption" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.max_reference_surface_mass_flow_rate_4_star">
+<span class="sig-name descname"><span class="pre">max_reference_surface_mass_flow_rate_4_star</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">241.261</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.max_reference_surface_mass_flow_rate_4_star" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.thrust">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thrust</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.thrust" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.tune_A4_star_for_desired_thrust">
+<span class="sig-name descname"><span class="pre">tune_A4_star_for_desired_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired_thrust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_A4_star</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_A4_star</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/turbine.html#TurbojetSingleBody.tune_A4_star_for_desired_thrust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.tune_A4_star_for_desired_thrust" title="Link to this definition"></a></dt>
+<dd><p>Tune the value of A4* to obtain the desired thrust in the operating conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>desired_thrust</strong> (<em>float</em>) – Desired thrust in N.</p></li>
+<li><p><strong>min_A4_star</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimal value for A4*, by default 1e-4</p></li>
+<li><p><strong>max_A4_star</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum value for A4*, by default 5e-1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.tune_current_OPR">
+<span class="sig-name descname"><span class="pre">tune_current_OPR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/turbine.html#TurbojetSingleBody.tune_current_OPR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.tune_current_OPR" title="Link to this definition"></a></dt>
+<dd><p>Tune the current OPR value to the T4 instruction and operating conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Raise error if not in operation mode.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.turbine_efficiency">
+<span class="sig-name descname"><span class="pre">turbine_efficiency</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.9</span></em><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.turbine_efficiency" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.turbine.TurbojetSingleBody.v8">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">v8</span></span><a class="headerlink" href="#flight_mech.turbine.TurbojetSingleBody.v8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="flight_mech.wing.html" class="btn btn-neutral float-left" title="flight_mech.wing module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

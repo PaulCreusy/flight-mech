@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul>
@@ -90,6 +91,7 @@
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -107,14 +109,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.a">a (flight_mech.plane.Plane attribute)</a>
 </li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A4_star">A4_star (flight_mech.turbine.TurbojetSingleBody attribute)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A8">A8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A8_star">A8_star (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil">Airfoil (class in flight_mech.airfoil)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_0">alpha_0 (flight_mech.plane.Plane attribute)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_f_max">alpha_f_max (flight_mech.plane.Plane property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.alpha_stall">alpha_stall (flight_mech.plane.Plane attribute)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.aspect_ratio">aspect_ratio (flight_mech.wing.Wing property)</a>
@@ -176,6 +184,10 @@
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.chord_length_array">chord_length_array (flight_mech.wing.Wing attribute)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_z_array">chord_z_array (flight_mech.airfoil.Airfoil property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.compressor_efficiency">compressor_efficiency (flight_mech.turbine.TurbojetSingleBody attribute)</a>
+</li>
+      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_air_sound_speed">compute_air_sound_speed() (in module flight_mech.atmosphere)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients">compute_airfoil_fourrier_coefficients() (flight_mech.airfoil.Airfoil method)</a>
 </li>
@@ -319,6 +331,8 @@
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.create_wing_3D_surface">create_wing_3D_surface() (flight_mech.wing.Wing method)</a>
 </li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.current_OPR">current_OPR (flight_mech.turbine.TurbojetSingleBody attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -382,12 +396,21 @@
 </li>
       </ul></li>
       <li>
+    flight_mech.turbine
+
+      <ul>
+        <li><a href="flight_mech.turbine.html#module-flight_mech.turbine">module</a>
+</li>
+      </ul></li>
+      <li>
     flight_mech.wing
 
       <ul>
         <li><a href="flight_mech.wing.html#module-flight_mech.wing">module</a>
 </li>
       </ul></li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.fuel_consumption">fuel_consumption (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.fuel_specific_conso">fuel_specific_conso (flight_mech.plane.Plane attribute)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.fuel_specific_conso_SI">fuel_specific_conso_SI (flight_mech.plane.Plane property)</a>
@@ -460,6 +483,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.m">m (flight_mech.plane.Plane property)</a>
 </li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.M8">M8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.m_empty">m_empty (flight_mech.plane.Plane attribute)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.m_fuel">m_fuel (flight_mech.plane.Plane attribute)</a>
@@ -469,6 +494,8 @@
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber">max_camber (flight_mech.airfoil.Airfoil property)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber_location">max_camber_location (flight_mech.airfoil.Airfoil property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.max_reference_surface_mass_flow_rate_4_star">max_reference_surface_mass_flow_rate_4_star (flight_mech.turbine.TurbojetSingleBody attribute)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness">max_thickness (flight_mech.airfoil.Airfoil property)</a>
 </li>
@@ -487,6 +514,8 @@
         <li><a href="flight_mech.atmosphere.html#module-flight_mech.atmosphere">flight_mech.atmosphere</a>
 </li>
         <li><a href="flight_mech.plane.html#module-flight_mech.plane">flight_mech.plane</a>
+</li>
+        <li><a href="flight_mech.turbine.html#module-flight_mech.turbine">flight_mech.turbine</a>
 </li>
         <li><a href="flight_mech.wing.html#module-flight_mech.wing">flight_mech.wing</a>
 </li>
@@ -516,21 +545,43 @@
   </ul></td>
 </tr></table>
 
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.OPR_design">OPR_design (flight_mech.turbine.TurbojetSingleBody attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.P">P (flight_mech.plane.Plane attribute)</a>
 </li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P0">P0 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P1">P1 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P2">P2 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P3">P3 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P4">P4 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P5">P5 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P8">P8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane">Plane (class in flight_mech.plane)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot">plot() (flight_mech.airfoil.Airfoil method)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.plot_2D">plot_2D() (flight_mech.wing.Wing method)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.plot_3D">plot_3D() (flight_mech.wing.Wing method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph">plot_CL_graph() (flight_mech.airfoil.Airfoil method)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_Cm_graph">plot_Cm_graph() (flight_mech.airfoil.Airfoil method)</a>
@@ -540,6 +591,8 @@
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.plot_gliding_WV_graph">plot_gliding_WV_graph() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.plot_polar_graph">plot_polar_graph() (flight_mech.plane.Plane method)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Ps8">Ps8 (flight_mech.turbine.TurbojetSingleBody property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -601,15 +654,45 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.taper_ratio">taper_ratio (flight_mech.wing.Wing property)</a>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T0">T0 (flight_mech.turbine.TurbojetSingleBody property)</a>
 </li>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.thickness_array">thickness_array (flight_mech.airfoil.Airfoil property)</a>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T1">T1 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T2">T2 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T3">T3 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T4">T4 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T4_instruction">T4_instruction (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T4_max">T4_max (flight_mech.turbine.TurbojetSingleBody attribute)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T5">T5 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T8">T8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.taper_ratio">taper_ratio (flight_mech.wing.Wing property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.thickness_array">thickness_array (flight_mech.airfoil.Airfoil property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.thrust">thrust (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.thrust_per_engine">thrust_per_engine (flight_mech.plane.Plane attribute)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.trailing_edge_x_array">trailing_edge_x_array (flight_mech.wing.Wing property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Ts8">Ts8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.tune_A4_star_for_desired_thrust">tune_A4_star_for_desired_thrust() (flight_mech.turbine.TurbojetSingleBody method)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.tune_current_OPR">tune_current_OPR() (flight_mech.turbine.TurbojetSingleBody method)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.turbine_efficiency">turbine_efficiency (flight_mech.turbine.TurbojetSingleBody attribute)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody">TurbojetSingleBody (class in flight_mech.turbine)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.twisting_angle_array">twisting_angle_array (flight_mech.wing.Wing attribute)</a>
 </li>
@@ -640,17 +723,41 @@
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.v">v() (flight_mech.plane.Plane method)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.v8">v8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W0">W0 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W1">W1 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W2">W2 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W3">W3 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W4">W4 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W4R">W4R (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W5">W5 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W8">W8 (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W8R">W8R (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
+      <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Wf">Wf (flight_mech.turbine.TurbojetSingleBody property)</a>
+</li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing">Wing (class in flight_mech.wing)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.wing_shape_coefficient">wing_shape_coefficient (flight_mech.plane.Plane attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.wing_span">wing_span (flight_mech.wing.Wing property)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.wing_to_ground_height">wing_to_ground_height (flight_mech.plane.Plane attribute)</a>

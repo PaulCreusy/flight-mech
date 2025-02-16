@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="flight_mech.atmosphere module" href="flight_mech.atmosphere.html" />
-    <link rel="prev" title="Wing module" href="wing_module.html" /> 
+    <link rel="prev" title="Turbine module" href="turbine_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul class="current">
@@ -57,6 +58,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html">flight_mech.turbine module</a></li>
 </ul>
 </li>
 </ul>
@@ -131,6 +133,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.rho_0"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere.rho_0</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_air_sound_speed"><code class="docutils literal notranslate"><span class="pre">compute_air_sound_speed()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a><ul>
@@ -299,6 +302,54 @@
 <li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.convert_y_to_theta"><code class="docutils literal notranslate"><span class="pre">convert_y_to_theta()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="flight_mech.turbine.html">flight_mech.turbine module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A4_star"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.A4_star</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.A8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A8_star"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.A8_star</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.M8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.M8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.OPR_design"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.OPR_design</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P0"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P1"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P2"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P3"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P4"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P5"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.P8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.P8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Ps8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.Ps8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T0"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T1"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T2"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T3"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T4"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T4_instruction"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T4_instruction</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T4_max"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T4_max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T5"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.T8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.T8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Ts8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.Ts8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W0"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W1"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W2"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W3"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W4"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W4R"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W4R</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W5"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.W8R"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.W8R</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Wf"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.Wf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.compressor_efficiency"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.compressor_efficiency</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.current_OPR"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.current_OPR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.fuel_consumption"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.fuel_consumption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.max_reference_surface_mass_flow_rate_4_star"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.max_reference_surface_mass_flow_rate_4_star</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.thrust"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.thrust</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.tune_A4_star_for_desired_thrust"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.tune_A4_star_for_desired_thrust()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.tune_current_OPR"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.tune_current_OPR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.turbine_efficiency"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.turbine_efficiency</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.v8"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.v8</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -308,7 +359,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="wing_module.html" class="btn btn-neutral float-left" title="Wing module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="turbine_module.html" class="btn btn-neutral float-left" title="Turbine module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="flight_mech.atmosphere.html" class="btn btn-neutral float-right" title="flight_mech.atmosphere module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

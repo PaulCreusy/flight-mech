@@ -19,6 +19,7 @@ The source code is available on Github at this `link <https://github.com/PaulCre
    plane_module
    airfoil_module
    wing_module
+   turbine_module
 
 .. toctree::
    :maxdepth: 3

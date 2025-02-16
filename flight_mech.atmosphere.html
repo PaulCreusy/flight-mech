@@ -48,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
 <ul class="current">
@@ -58,11 +59,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.ConstantAtmosphere"><code class="docutils literal notranslate"><span class="pre">ConstantAtmosphere</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.LinearAtmosphere"><code class="docutils literal notranslate"><span class="pre">LinearAtmosphere</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.StandardAtmosphere"><code class="docutils literal notranslate"><span class="pre">StandardAtmosphere</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.atmosphere.compute_air_sound_speed"><code class="docutils literal notranslate"><span class="pre">compute_air_sound_speed()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html">flight_mech.turbine module</a></li>
 </ul>
 </li>
 </ul>
@@ -449,6 +452,23 @@
 <span class="sig-name descname"><span class="pre">rho_0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.225</span></em><a class="headerlink" href="#flight_mech.atmosphere.StandardAtmosphere.rho_0" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flight_mech.atmosphere.compute_air_sound_speed">
+<span class="sig-prename descclassname"><span class="pre">flight_mech.atmosphere.</span></span><span class="sig-name descname"><span class="pre">compute_air_sound_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/atmosphere.html#compute_air_sound_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.atmosphere.compute_air_sound_speed" title="Link to this definition"></a></dt>
+<dd><p>Compute the air sound speed at the given temperature, assuming it is a perfect gas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<em>float</em>) – Temperature of the air in K.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sound speed in m.s-1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
