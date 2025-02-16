@@ -52,7 +52,7 @@ VARIABLE_TO_UNIT = {
 # Classes #
 ###########
 
-class Turbojet:
+class _Turbojet:
     """
     Base class to define turbojets.
     """
@@ -139,7 +139,7 @@ class Turbojet:
         )
 
 
-class TurbojetSingleBody(Turbojet):
+class TurbojetSingleBody(_Turbojet):
     """
     Class to define a turbojet with single flux, single body with a constant Cp coefficient.
     """
