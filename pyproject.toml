@@ -17,8 +17,18 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["numpy", "matplotlib", "scipy", "bs4"]
-keywords = ["flight", "airplane", "plane", "mechanics", "flight mechanics"]
+dependencies = ["numpy>=2.0.0", "matplotlib", "scipy", "bs4", "pandas", "tqdm"]
+keywords = [
+    "flight",
+    "airplane",
+    "plane",
+    "mechanics",
+    "flight mechanics",
+    "airfoil",
+    "wing",
+    "turbojet",
+    "airfoil-analysis",
+]
 
 [project.urls]
 Homepage = "https://github.com/PaulCreusy/flight-mech"
