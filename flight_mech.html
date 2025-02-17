@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="flight_mech.atmosphere module" href="flight_mech.atmosphere.html" />
+    <link rel="next" title="flight_mech.aerodynamics module" href="flight_mech.aerodynamics.html" />
     <link rel="prev" title="Turbine module" href="turbine_module.html" /> 
 </head>
 
@@ -42,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
@@ -50,15 +50,17 @@
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">flight_mech package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.aerodynamics.html">flight_mech.aerodynamics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html">flight_mech.fuel module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html">flight_mech.turbine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
 </ul>
 </li>
 </ul>
@@ -96,6 +98,57 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="flight_mech.aerodynamics.html">flight_mech.aerodynamics module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.check_turbulent_transition"><code class="docutils literal notranslate"><span class="pre">check_turbulent_transition()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_blasius_linear_drag"><code class="docutils literal notranslate"><span class="pre">compute_blasius_linear_drag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_blasius_rectangle_drag"><code class="docutils literal notranslate"><span class="pre">compute_blasius_rectangle_drag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_linear_drag"><code class="docutils literal notranslate"><span class="pre">compute_linear_drag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_polhausen_linear_drag"><code class="docutils literal notranslate"><span class="pre">compute_polhausen_linear_drag()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_simulation_linear_drag"><code class="docutils literal notranslate"><span class="pre">compute_simulation_linear_drag()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.camber_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.camber_z_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_length"><code class="docutils literal notranslate"><span class="pre">Airfoil.chord_length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.chord_z_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_airfoil_fourrier_coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_alpha_zero_lift"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_alpha_zero_lift()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_lift_coefficient"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_lift_coefficient()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_aero_center"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_momentum_coefficient_at_aero_center()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_leading_edge"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_momentum_coefficient_at_leading_edge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.extrados_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.extrados_z_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_chord_incidence"><code class="docutils literal notranslate"><span class="pre">Airfoil.get_chord_incidence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_rotated_selig_arrays"><code class="docutils literal notranslate"><span class="pre">Airfoil.get_rotated_selig_arrays()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_from_airfoiltools"><code class="docutils literal notranslate"><span class="pre">Airfoil.import_from_airfoiltools()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays"><code class="docutils literal notranslate"><span class="pre">Airfoil.import_xz_selig_arrays()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.intrados_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.intrados_z_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database"><code class="docutils literal notranslate"><span class="pre">Airfoil.list_airfoils_in_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil.load_database_airfoil()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_selig_file"><code class="docutils literal notranslate"><span class="pre">Airfoil.load_selig_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_camber</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber_location"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_camber_location</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_thickness</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness_location"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_thickness_location</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.name"><code class="docutils literal notranslate"><span class="pre">Airfoil.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot"><code class="docutils literal notranslate"><span class="pre">Airfoil.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph"><code class="docutils literal notranslate"><span class="pre">Airfoil.plot_CL_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_Cm_graph"><code class="docutils literal notranslate"><span class="pre">Airfoil.plot_Cm_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate"><code class="docutils literal notranslate"><span class="pre">Airfoil.re_interpolate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution"><code class="docutils literal notranslate"><span class="pre">Airfoil.re_interpolate_with_cosine_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.set_chord_at_zero_incidence"><code class="docutils literal notranslate"><span class="pre">Airfoil.set_chord_at_zero_incidence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.thickness_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.thickness_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.x_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.x_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.x_selig_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.x_selig_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.z_selig_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.z_selig_array</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.convert_float_or_none_to_string"><code class="docutils literal notranslate"><span class="pre">convert_float_or_none_to_string()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.download_web_file"><code class="docutils literal notranslate"><span class="pre">download_web_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.naca_airfoil_generator"><code class="docutils literal notranslate"><span class="pre">naca_airfoil_generator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.rotate_arrays"><code class="docutils literal notranslate"><span class="pre">rotate_arrays()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.Atmosphere"><code class="docutils literal notranslate"><span class="pre">Atmosphere</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.Atmosphere.compute_altitude_from_sigma"><code class="docutils literal notranslate"><span class="pre">Atmosphere.compute_altitude_from_sigma()</span></code></a></li>
@@ -134,6 +187,25 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_air_sound_speed"><code class="docutils literal notranslate"><span class="pre">compute_air_sound_speed()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="flight_mech.fuel.html">flight_mech.fuel module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelType"><code class="docutils literal notranslate"><span class="pre">FuelType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelType.density"><code class="docutils literal notranslate"><span class="pre">FuelType.density</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelType.lower_heating_value"><code class="docutils literal notranslate"><span class="pre">FuelType.lower_heating_value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes"><code class="docutils literal notranslate"><span class="pre">FuelTypes</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.DIESEL"><code class="docutils literal notranslate"><span class="pre">FuelTypes.DIESEL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.GASOLINE"><code class="docutils literal notranslate"><span class="pre">FuelTypes.GASOLINE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.H2"><code class="docutils literal notranslate"><span class="pre">FuelTypes.H2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.JET_A"><code class="docutils literal notranslate"><span class="pre">FuelTypes.JET_A</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.JP_4"><code class="docutils literal notranslate"><span class="pre">FuelTypes.JP_4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.JP_5"><code class="docutils literal notranslate"><span class="pre">FuelTypes.JP_5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.KEROSENE"><code class="docutils literal notranslate"><span class="pre">FuelTypes.KEROSENE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.METHANE"><code class="docutils literal notranslate"><span class="pre">FuelTypes.METHANE</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a><ul>
@@ -222,86 +294,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.camber_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.camber_z_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_length"><code class="docutils literal notranslate"><span class="pre">Airfoil.chord_length</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.chord_z_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_airfoil_fourrier_coefficients()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_alpha_zero_lift"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_alpha_zero_lift()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_lift_coefficient"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_lift_coefficient()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_aero_center"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_momentum_coefficient_at_aero_center()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_momentum_coefficient_at_leading_edge"><code class="docutils literal notranslate"><span class="pre">Airfoil.compute_momentum_coefficient_at_leading_edge()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.extrados_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.extrados_z_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_chord_incidence"><code class="docutils literal notranslate"><span class="pre">Airfoil.get_chord_incidence()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_rotated_selig_arrays"><code class="docutils literal notranslate"><span class="pre">Airfoil.get_rotated_selig_arrays()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_from_airfoiltools"><code class="docutils literal notranslate"><span class="pre">Airfoil.import_from_airfoiltools()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays"><code class="docutils literal notranslate"><span class="pre">Airfoil.import_xz_selig_arrays()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.intrados_z_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.intrados_z_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database"><code class="docutils literal notranslate"><span class="pre">Airfoil.list_airfoils_in_database()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil"><code class="docutils literal notranslate"><span class="pre">Airfoil.load_database_airfoil()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_selig_file"><code class="docutils literal notranslate"><span class="pre">Airfoil.load_selig_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_camber</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber_location"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_camber_location</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_thickness</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness_location"><code class="docutils literal notranslate"><span class="pre">Airfoil.max_thickness_location</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.name"><code class="docutils literal notranslate"><span class="pre">Airfoil.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot"><code class="docutils literal notranslate"><span class="pre">Airfoil.plot()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_CL_graph"><code class="docutils literal notranslate"><span class="pre">Airfoil.plot_CL_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot_Cm_graph"><code class="docutils literal notranslate"><span class="pre">Airfoil.plot_Cm_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate"><code class="docutils literal notranslate"><span class="pre">Airfoil.re_interpolate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution"><code class="docutils literal notranslate"><span class="pre">Airfoil.re_interpolate_with_cosine_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.set_chord_at_zero_incidence"><code class="docutils literal notranslate"><span class="pre">Airfoil.set_chord_at_zero_incidence()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.thickness_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.thickness_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.x_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.x_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.x_selig_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.x_selig_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.z_selig_array"><code class="docutils literal notranslate"><span class="pre">Airfoil.z_selig_array</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.convert_float_or_none_to_string"><code class="docutils literal notranslate"><span class="pre">convert_float_or_none_to_string()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.download_web_file"><code class="docutils literal notranslate"><span class="pre">download_web_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.naca_airfoil_generator"><code class="docutils literal notranslate"><span class="pre">naca_airfoil_generator()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.airfoil.html#flight_mech.airfoil.rotate_arrays"><code class="docutils literal notranslate"><span class="pre">rotate_arrays()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing"><code class="docutils literal notranslate"><span class="pre">Wing</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.aspect_ratio"><code class="docutils literal notranslate"><span class="pre">Wing.aspect_ratio</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.base_airfoil"><code class="docutils literal notranslate"><span class="pre">Wing.base_airfoil</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.center_x_array"><code class="docutils literal notranslate"><span class="pre">Wing.center_x_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.check_initialization"><code class="docutils literal notranslate"><span class="pre">Wing.check_initialization()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.chord_length_array"><code class="docutils literal notranslate"><span class="pre">Wing.chord_length_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_fourrier_coefficients"><code class="docutils literal notranslate"><span class="pre">Wing.compute_fourrier_coefficients()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients"><code class="docutils literal notranslate"><span class="pre">Wing.compute_lift_and_induced_drag_coefficients()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_zero_lift_drag"><code class="docutils literal notranslate"><span class="pre">Wing.compute_zero_lift_drag()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_zero_lift_drag_on_wing_slice"><code class="docutils literal notranslate"><span class="pre">Wing.compute_zero_lift_drag_on_wing_slice()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.create_3D_animation"><code class="docutils literal notranslate"><span class="pre">Wing.create_3D_animation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.create_wing_3D_surface"><code class="docutils literal notranslate"><span class="pre">Wing.create_wing_3D_surface()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.initialize"><code class="docutils literal notranslate"><span class="pre">Wing.initialize()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.leading_edge_x_array"><code class="docutils literal notranslate"><span class="pre">Wing.leading_edge_x_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.name"><code class="docutils literal notranslate"><span class="pre">Wing.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.plot_2D"><code class="docutils literal notranslate"><span class="pre">Wing.plot_2D()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.plot_3D"><code class="docutils literal notranslate"><span class="pre">Wing.plot_3D()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.re_interpolate"><code class="docutils literal notranslate"><span class="pre">Wing.re_interpolate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.reference_surface"><code class="docutils literal notranslate"><span class="pre">Wing.reference_surface</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.save_3D_shape"><code class="docutils literal notranslate"><span class="pre">Wing.save_3D_shape()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.single_side_surface"><code class="docutils literal notranslate"><span class="pre">Wing.single_side_surface</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.sweep_angle_at_leading_edge"><code class="docutils literal notranslate"><span class="pre">Wing.sweep_angle_at_leading_edge</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.sweep_angle_at_trailing_edge"><code class="docutils literal notranslate"><span class="pre">Wing.sweep_angle_at_trailing_edge</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.taper_ratio"><code class="docutils literal notranslate"><span class="pre">Wing.taper_ratio</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.trailing_edge_x_array"><code class="docutils literal notranslate"><span class="pre">Wing.trailing_edge_x_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.twisting_angle_array"><code class="docutils literal notranslate"><span class="pre">Wing.twisting_angle_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.wing_span"><code class="docutils literal notranslate"><span class="pre">Wing.wing_span</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.x_center_offset_array"><code class="docutils literal notranslate"><span class="pre">Wing.x_center_offset_array</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.y_array"><code class="docutils literal notranslate"><span class="pre">Wing.y_array</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.check_pyvista_import"><code class="docutils literal notranslate"><span class="pre">check_pyvista_import()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing"><code class="docutils literal notranslate"><span class="pre">compute_chord_min_and_max_for_trapezoidal_wing()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.convert_theta_to_y"><code class="docutils literal notranslate"><span class="pre">convert_theta_to_y()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.convert_y_to_theta"><code class="docutils literal notranslate"><span class="pre">convert_y_to_theta()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.turbine.html">flight_mech.turbine module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.A4_star"><code class="docutils literal notranslate"><span class="pre">TurbojetSingleBody.A4_star</span></code></a></li>
@@ -350,6 +342,44 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing"><code class="docutils literal notranslate"><span class="pre">Wing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.aspect_ratio"><code class="docutils literal notranslate"><span class="pre">Wing.aspect_ratio</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.base_airfoil"><code class="docutils literal notranslate"><span class="pre">Wing.base_airfoil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.center_x_array"><code class="docutils literal notranslate"><span class="pre">Wing.center_x_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.check_initialization"><code class="docutils literal notranslate"><span class="pre">Wing.check_initialization()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.chord_length_array"><code class="docutils literal notranslate"><span class="pre">Wing.chord_length_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_fourrier_coefficients"><code class="docutils literal notranslate"><span class="pre">Wing.compute_fourrier_coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients"><code class="docutils literal notranslate"><span class="pre">Wing.compute_lift_and_induced_drag_coefficients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_zero_lift_drag"><code class="docutils literal notranslate"><span class="pre">Wing.compute_zero_lift_drag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.compute_zero_lift_drag_on_wing_slice"><code class="docutils literal notranslate"><span class="pre">Wing.compute_zero_lift_drag_on_wing_slice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.create_3D_animation"><code class="docutils literal notranslate"><span class="pre">Wing.create_3D_animation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.create_wing_3D_surface"><code class="docutils literal notranslate"><span class="pre">Wing.create_wing_3D_surface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.initialize"><code class="docutils literal notranslate"><span class="pre">Wing.initialize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.leading_edge_x_array"><code class="docutils literal notranslate"><span class="pre">Wing.leading_edge_x_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.name"><code class="docutils literal notranslate"><span class="pre">Wing.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.plot_2D"><code class="docutils literal notranslate"><span class="pre">Wing.plot_2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.plot_3D"><code class="docutils literal notranslate"><span class="pre">Wing.plot_3D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.re_interpolate"><code class="docutils literal notranslate"><span class="pre">Wing.re_interpolate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.reference_surface"><code class="docutils literal notranslate"><span class="pre">Wing.reference_surface</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.save_3D_shape"><code class="docutils literal notranslate"><span class="pre">Wing.save_3D_shape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.single_side_surface"><code class="docutils literal notranslate"><span class="pre">Wing.single_side_surface</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.sweep_angle_at_leading_edge"><code class="docutils literal notranslate"><span class="pre">Wing.sweep_angle_at_leading_edge</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.sweep_angle_at_trailing_edge"><code class="docutils literal notranslate"><span class="pre">Wing.sweep_angle_at_trailing_edge</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.taper_ratio"><code class="docutils literal notranslate"><span class="pre">Wing.taper_ratio</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.trailing_edge_x_array"><code class="docutils literal notranslate"><span class="pre">Wing.trailing_edge_x_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.twisting_angle_array"><code class="docutils literal notranslate"><span class="pre">Wing.twisting_angle_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.wing_span"><code class="docutils literal notranslate"><span class="pre">Wing.wing_span</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.x_center_offset_array"><code class="docutils literal notranslate"><span class="pre">Wing.x_center_offset_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.Wing.y_array"><code class="docutils literal notranslate"><span class="pre">Wing.y_array</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.check_pyvista_import"><code class="docutils literal notranslate"><span class="pre">check_pyvista_import()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing"><code class="docutils literal notranslate"><span class="pre">compute_chord_min_and_max_for_trapezoidal_wing()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.convert_theta_to_y"><code class="docutils literal notranslate"><span class="pre">convert_theta_to_y()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="flight_mech.wing.html#flight_mech.wing.convert_y_to_theta"><code class="docutils literal notranslate"><span class="pre">convert_y_to_theta()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -360,7 +390,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="turbine_module.html" class="btn btn-neutral float-left" title="Turbine module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="flight_mech.atmosphere.html" class="btn btn-neutral float-right" title="flight_mech.atmosphere module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="flight_mech.aerodynamics.html" class="btn btn-neutral float-right" title="flight_mech.aerodynamics module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

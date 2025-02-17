@@ -42,15 +42,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Plane module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plane module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functionalities">Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hypotheses">Hypotheses</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.html">flight_mech package</a></li>
 </ul>
@@ -81,7 +86,102 @@
              
   <section id="plane-module">
 <h1>Plane module<a class="headerlink" href="#plane-module" title="Link to this heading"></a></h1>
-<p>Todo</p>
+<p>This module includes a set of flight mechanics equations allowing to compute the plane characteristics.</p>
+<p><strong>Please note that all equations and variables are defined in the international unit system.</strong></p>
+<section id="functionalities">
+<h2>Functionalities<a class="headerlink" href="#functionalities" title="Link to this heading"></a></h2>
+<p>The plane model allows to compute the following quantities:</p>
+<ul class="simple">
+<li><p>max glide ratio</p></li>
+<li><p>speed at specific angle of incidence and altitude</p></li>
+<li><p>drag</p></li>
+<li><p>lift</p></li>
+<li><p>thrust</p></li>
+<li><p>stall speed</p></li>
+<li><p>reference speed</p></li>
+<li><p>minimum descent gliding slope</p></li>
+<li><p>gliding speed</p></li>
+<li><p>maximum gliding time</p></li>
+<li><p>maximum gliding range</p></li>
+<li><p>authorized velocity interval at fixed thrust for flight at constant altitude</p></li>
+<li><p>thrust needed at fixed altitude and angle of incidence</p></li>
+<li><p>minimum thrust needed at fixed altitude</p></li>
+<li><p>speed at minimum thrust</p></li>
+<li><p>maximum flight altitude</p></li>
+<li><p>speed for maximum ascension speed</p></li>
+<li><p>ascension slope for a specific angle of incidence and altitude</p></li>
+<li><p>load factor in turn</p></li>
+<li><p>maximum range at fixed altitude</p></li>
+<li><p>maximum range at fixed speed</p></li>
+<li><p>endurance</p></li>
+<li><p>take off distance without friction</p></li>
+<li><p>take off distance with friction</p></li>
+<li><p>landing distance</p></li>
+<li><p>take off speed</p></li>
+<li><p>landing speed</p></li>
+<li><p>alpha and delta coefficient at a flight point</p></li>
+</ul>
+<p>Additionally, the following graphs can be generated:</p>
+<ul class="simple">
+<li><p>polar graph</p></li>
+<li><p>thrust-speed graph</p></li>
+<li><p>power-speed graph</p></li>
+</ul>
+<p>Some examples are provided in the <cite>examples</cite> folder (please note that they do not cover all the use cases) as well with a few plane models in the <cite>plane_database</cite> folder.</p>
+</section>
+<section id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<p>When loading a plane from the database, you can directly compute its basic characteristics like the glide ratio for instance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">(</span><span class="s2">&quot;cessna_172&quot;</span><span class="p">,</span> <span class="s2">&quot;./plane_database&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">C_L_f_max</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">f_max</span><span class="p">)</span>
+<span class="go">0.7745966692414834, 12.909944487358056</span>
+</pre></div>
+</div>
+<p>If some information are missing, you can set them yourself.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">m_fuel</span> <span class="o">=</span> <span class="mf">136.26</span>  <span class="c1"># kg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">update_variables</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The module also includes functions to compute quantities at a specific flight point:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="mi">8000</span><span class="p">)</span> <span class="c1"># m.s-1</span>
+<span class="go">56.214394963985406</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">compute_velocity_interval_for_fixed_thrust</span><span class="p">(</span><span class="mi">8000</span><span class="p">)</span> <span class="c1"># m.s-1</span>
+<span class="go">(22.544275306567194, 140.17120347383343)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">compute_stall_speed</span><span class="p">(</span><span class="mi">8000</span><span class="p">,</span> <span class="n">C_L_max</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span> <span class="c1"># m.s-1</span>
+<span class="go">41.80281924283373</span>
+</pre></div>
+</div>
+<p>Here is another example with the ascension speed and slop at sea level for an almost empty tank:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">m_fuel</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># kg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">update_variables</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">compute_max_ascension_speed</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># m.s-1</span>
+<span class="go">32.89763560421959</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># m.s-1</span>
+<span class="go">34.523934888646956</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plane</span><span class="o">.</span><span class="n">compute_max_ascension_slope</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">0.5695896796157822</span>
+</pre></div>
+</div>
+</section>
+<section id="hypotheses">
+<h2>Hypotheses<a class="headerlink" href="#hypotheses" title="Link to this heading"></a></h2>
+<p>All the computations performed in the model rely on some hypotheses. Here is the list of the main ones:</p>
+<ol class="arabic simple">
+<li><p>The flight is considered to be symmetric (no yaw angle). The aerodynamic forces therefore have only two components, the drag along the <cite>x</cite> axis and the lift along the <cite>z</cite> one.</p></li>
+<li><p>The aerodynamic forces are functions of the surrounding flow velocity.</p></li>
+<li><p>No wind effect is considered.</p></li>
+<li><p>The thrust is parallel to the velocity vector and does not participate in the lift.</p></li>
+</ol>
+<p>Please consult the documentation of each functions if needed for more details.</p>
+</section>
 </section>
 
 

@@ -43,11 +43,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Atmosphere module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#physical-background">Physical background</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constant-atmosphere">Constant atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linear-atmosphere">Linear atmosphere</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physical-background">Physical background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#standard-atmosphere">Standard atmosphere</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Physical background</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
@@ -55,7 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.html">flight_mech package</a></li>
 </ul>
@@ -86,9 +94,21 @@
              
   <section id="atmosphere-module">
 <h1>Atmosphere module<a class="headerlink" href="#atmosphere-module" title="Link to this heading"></a></h1>
-<p>This module defines a simple atmospheric model that is mostly used to compute air density. The atmospheric model used is a simplification of the standard atmosphere and it is valid between 0 and 11km of altitude.</p>
+<p>This module defines several atmosphere models to compute density, pressure, temperature and other useful quantities at the altitude of interest for the other modules. Here is the list of the atmosphere models implemented:</p>
+<ul class="simple">
+<li><p>Constant atmosphere</p></li>
+<li><p>Linear atmosphere</p></li>
+<li><p>Standard atmosphere</p></li>
+</ul>
+<section id="constant-atmosphere">
+<h2>Constant atmosphere<a class="headerlink" href="#constant-atmosphere" title="Link to this heading"></a></h2>
+<p>This is a debug atmosphere model. The density is considered constant equal to the sea level at any altitude.</p>
+</section>
+<section id="linear-atmosphere">
+<h2>Linear atmosphere<a class="headerlink" href="#linear-atmosphere" title="Link to this heading"></a></h2>
+<p>This is a simple atmospheric model that is mostly used to compute air density. The atmospheric model used is a simplification of the standard atmosphere and it is valid between 0 and 11km of altitude.</p>
 <section id="physical-background">
-<h2>Physical background<a class="headerlink" href="#physical-background" title="Link to this heading"></a></h2>
+<h3>Physical background<a class="headerlink" href="#physical-background" title="Link to this heading"></a></h3>
 <p>The model is based here on a single formula:</p>
 <div class="math notranslate nohighlight" id="equation-sigma-formula">
 <span class="eqno">(1)<a class="headerlink" href="#equation-sigma-formula" title="Link to this equation"></a></span>\[\sigma = \frac{20-z}{20+z}\]</div>
@@ -97,7 +117,7 @@
 <span class="eqno">(2)<a class="headerlink" href="#equation-sigma-def" title="Link to this equation"></a></span>\[\sigma = \frac{\rho}{\rho_0}\]</div>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
 <p>The functions allow to compute the density:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_sigma_from_altitude</span><span class="p">(</span><span class="mf">4.2e3</span><span class="p">)</span>
 <span class="go">0.6528925619834711</span>
@@ -113,6 +133,40 @@
 <span class="go">2357.609971494047</span>
 </pre></div>
 </div>
+</section>
+</section>
+<section id="standard-atmosphere">
+<h2>Standard atmosphere<a class="headerlink" href="#standard-atmosphere" title="Link to this heading"></a></h2>
+<p>This is the International Standard Atmosphere model and it allows to compute the following quantities:</p>
+<ul class="simple">
+<li><p>temperature</p></li>
+<li><p>pressure</p></li>
+<li><p>density</p></li>
+<li><p>sound speed</p></li>
+<li><p>dynamic viscosity</p></li>
+<li><p>kinematic viscosity</p></li>
+</ul>
+<section id="id1">
+<h3>Physical background<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Here is the list of hypotheses of the model:</p>
+<ol class="arabic">
+<li><p>The air is considered to be a perfect gas with <span class="math notranslate nohighlight">\(r = 287 J.kg^{-1}.K\)</span>.</p></li>
+<li><p>The air is dry.</p></li>
+<li><p>The gravity force is uniform.</p></li>
+<li><p>The atmosphere is at equilibrium. Therefore <span class="math notranslate nohighlight">\(dp = -\rho g_0 dh\)</span></p></li>
+<li><p>The temperature changes with altitude following these relations:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Between 0 and 11km: <span class="math notranslate nohighlight">\(T(h) = 288.15 + h (216.65 - 288.15)/11000\)</span></p></li>
+<li><p>Between 11 and 20km: <span class="math notranslate nohighlight">\(T(h) = 216.65\)</span></p></li>
+<li><p>Between 20 and 32km: <span class="math notranslate nohighlight">\(T(h) = 216.65 + (h - 20000) (228.65 - 216.65)/12000\)</span></p></li>
+<li><p>Between 32 and 47km: <span class="math notranslate nohighlight">\(T(h) = 228.65 + (h - 32000) (270.65 - 228.65)/12000\)</span></p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<p>The formulas of the other quantities directly derive from theses hypotheses.</p>
+</section>
 </section>
 </section>
 

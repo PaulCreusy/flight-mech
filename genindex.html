@@ -39,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
@@ -47,7 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Package documentation:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.html">flight_mech package</a></li>
 </ul>
@@ -86,7 +86,9 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -179,6 +181,8 @@
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.check_pyvista_import">check_pyvista_import() (in module flight_mech.wing)</a>
 </li>
+      <li><a href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.check_turbulent_transition">check_turbulent_transition() (in module flight_mech.aerodynamics)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.chord_length">chord_length (flight_mech.airfoil.Airfoil property)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.chord_length_array">chord_length_array (flight_mech.wing.Wing attribute)</a>
@@ -206,6 +210,10 @@
 </li>
       </ul></li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_ascension_slope">compute_ascension_slope() (flight_mech.plane.Plane method)</a>
+</li>
+      <li><a href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_blasius_linear_drag">compute_blasius_linear_drag() (in module flight_mech.aerodynamics)</a>
+</li>
+      <li><a href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_blasius_rectangle_drag">compute_blasius_rectangle_drag() (in module flight_mech.aerodynamics)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.compute_chord_min_and_max_for_trapezoidal_wing">compute_chord_min_and_max_for_trapezoidal_wing() (in module flight_mech.wing)</a>
 </li>
@@ -249,6 +257,8 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_lift_coefficient">compute_lift_coefficient() (flight_mech.airfoil.Airfoil method)</a>
 </li>
+      <li><a href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_linear_drag">compute_linear_drag() (in module flight_mech.aerodynamics)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_load_factor_from_roll_angle">compute_load_factor_from_roll_angle() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_max_altitude">compute_max_altitude() (flight_mech.plane.Plane method)</a>
@@ -273,6 +283,8 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_normalized_thrust">compute_normalized_thrust() (flight_mech.plane.Plane method)</a>
 </li>
+      <li><a href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_polhausen_linear_drag">compute_polhausen_linear_drag() (in module flight_mech.aerodynamics)</a>
+</li>
       <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_pressure_from_altitude">compute_pressure_from_altitude() (flight_mech.atmosphere.StandardAtmosphere static method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_range_at_fixed_speed">compute_range_at_fixed_speed() (flight_mech.plane.Plane method)</a>
@@ -289,6 +301,8 @@
         <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_sigma_from_altitude">(flight_mech.atmosphere.StandardAtmosphere class method)</a>
 </li>
       </ul></li>
+      <li><a href="flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_simulation_linear_drag">compute_simulation_linear_drag() (in module flight_mech.aerodynamics)</a>
+</li>
       <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_sound_speed_from_altitude">compute_sound_speed_from_altitude() (flight_mech.atmosphere.StandardAtmosphere class method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_speed_for_max_ascension_speed">compute_speed_for_max_ascension_speed() (flight_mech.plane.Plane method)</a>
@@ -339,6 +353,12 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelType.density">density (flight_mech.fuel.FuelType attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.DIESEL">DIESEL (flight_mech.fuel.FuelTypes attribute)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.download_web_file">download_web_file() (in module flight_mech.airfoil)</a>
 </li>
   </ul></td>
@@ -373,6 +393,13 @@
 </li>
       </ul></li>
       <li>
+    flight_mech.aerodynamics
+
+      <ul>
+        <li><a href="flight_mech.aerodynamics.html#module-flight_mech.aerodynamics">module</a>
+</li>
+      </ul></li>
+      <li>
     flight_mech.airfoil
 
       <ul>
@@ -384,6 +411,13 @@
 
       <ul>
         <li><a href="flight_mech.atmosphere.html#module-flight_mech.atmosphere">module</a>
+</li>
+      </ul></li>
+      <li>
+    flight_mech.fuel
+
+      <ul>
+        <li><a href="flight_mech.fuel.html#module-flight_mech.fuel">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -415,6 +449,10 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.fuel_specific_conso_SI">fuel_specific_conso_SI (flight_mech.plane.Plane property)</a>
 </li>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelType">FuelType (class in flight_mech.fuel)</a>
+</li>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes">FuelTypes (class in flight_mech.fuel)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -423,13 +461,23 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.gamma">gamma (flight_mech.atmosphere.StandardAtmosphere attribute)</a>
 </li>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_chord_incidence">get_chord_incidence() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.GASOLINE">GASOLINE (flight_mech.fuel.FuelTypes attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_chord_incidence">get_chord_incidence() (flight_mech.airfoil.Airfoil method)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_rotated_selig_arrays">get_rotated_selig_arrays() (flight_mech.airfoil.Airfoil method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.ground_effect_coefficient">ground_effect_coefficient (flight_mech.plane.Plane attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.H2">H2 (flight_mech.fuel.FuelTypes attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -450,10 +498,28 @@
   </ul></td>
 </tr></table>
 
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.JET_A">JET_A (flight_mech.fuel.FuelTypes attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.JP_4">JP_4 (flight_mech.fuel.FuelTypes attribute)</a>
+</li>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.JP_5">JP_5 (flight_mech.fuel.FuelTypes attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.k">k (flight_mech.plane.Plane attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.KEROSENE">KEROSENE (flight_mech.fuel.FuelTypes attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -474,6 +540,8 @@
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.load_plane_data">load_plane_data() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_selig_file">load_selig_file() (flight_mech.airfoil.Airfoil method)</a>
+</li>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelType.lower_heating_value">lower_heating_value (flight_mech.fuel.FuelType attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -499,9 +567,11 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness">max_thickness (flight_mech.airfoil.Airfoil property)</a>
 </li>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness_location">max_thickness_location (flight_mech.airfoil.Airfoil property)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_thickness_location">max_thickness_location (flight_mech.airfoil.Airfoil property)</a>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.METHANE">METHANE (flight_mech.fuel.FuelTypes attribute)</a>
 </li>
       <li>
     module
@@ -509,9 +579,13 @@
       <ul>
         <li><a href="flight_mech.html#module-flight_mech">flight_mech</a>
 </li>
+        <li><a href="flight_mech.aerodynamics.html#module-flight_mech.aerodynamics">flight_mech.aerodynamics</a>
+</li>
         <li><a href="flight_mech.airfoil.html#module-flight_mech.airfoil">flight_mech.airfoil</a>
 </li>
         <li><a href="flight_mech.atmosphere.html#module-flight_mech.atmosphere">flight_mech.atmosphere</a>
+</li>
+        <li><a href="flight_mech.fuel.html#module-flight_mech.fuel">flight_mech.fuel</a>
 </li>
         <li><a href="flight_mech.plane.html#module-flight_mech.plane">flight_mech.plane</a>
 </li>

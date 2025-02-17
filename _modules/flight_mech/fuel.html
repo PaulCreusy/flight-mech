@@ -1,0 +1,149 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.fuel &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../turbine_module.html">Turbine module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flight_mech.fuel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for flight_mech.fuel</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to define fuel characteristics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Imports #</span>
+<span class="c1">###########</span>
+
+<span class="c1"># Python imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+
+<span class="c1">###########</span>
+<span class="c1"># Classes #</span>
+<span class="c1">###########</span>
+
+<div class="viewcode-block" id="FuelType">
+<a class="viewcode-back" href="../../flight_mech.fuel.html#flight_mech.fuel.FuelType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FuelType</span><span class="p">:</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># kg.m-3</span>
+    <span class="n">lower_heating_value</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># J.kg-1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lower_heating_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="n">density</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_heating_value</span> <span class="o">=</span> <span class="n">lower_heating_value</span></div>
+
+
+<div class="viewcode-block" id="FuelTypes">
+<a class="viewcode-back" href="../../flight_mech.fuel.html#flight_mech.fuel.FuelTypes">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FuelTypes</span><span class="p">(</span><span class="n">FuelType</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="n">METHANE</span> <span class="o">=</span> <span class="mf">0.670</span><span class="p">,</span> <span class="mf">50.1e6</span>
+    <span class="n">DIESEL</span> <span class="o">=</span> <span class="mf">0.91e3</span><span class="p">,</span> <span class="mf">43e6</span>
+    <span class="n">H2</span> <span class="o">=</span> <span class="mf">0.088</span><span class="p">,</span> <span class="mf">120.1e6</span>
+    <span class="n">GASOLINE</span> <span class="o">=</span> <span class="mf">0.75e3</span><span class="p">,</span> <span class="mf">41e6</span>
+    <span class="n">KEROSENE</span> <span class="o">=</span> <span class="mf">0.8e3</span><span class="p">,</span> <span class="mf">44e6</span>
+    <span class="n">JET_A</span> <span class="o">=</span> <span class="mf">807.5</span><span class="p">,</span> <span class="mf">42.8e6</span>
+    <span class="n">JP_4</span> <span class="o">=</span> <span class="mf">776.5</span><span class="p">,</span> <span class="mf">42.8e6</span>
+    <span class="n">JP_5</span> <span class="o">=</span> <span class="mf">816.5</span><span class="p">,</span> <span class="mf">42.8e6</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

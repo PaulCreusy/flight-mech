@@ -1,0 +1,392 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.aerodynamics &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../turbine_module.html">Turbine module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flight_mech.aerodynamics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for flight_mech.aerodynamics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to define functions to compute aerodynamic effects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Imports #</span>
+<span class="c1">###########</span>
+
+<span class="c1"># Python imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="c1"># Dependencies #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span><span class="p">,</span> <span class="n">simpson</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Constants #</span>
+<span class="c1">#############</span>
+
+<span class="c1"># Define the transition Reynolds number</span>
+<span class="n">turbulent_reynolds</span> <span class="o">=</span> <span class="mf">5e5</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Functions #</span>
+<span class="c1">#############</span>
+
+<div class="viewcode-block" id="check_turbulent_transition">
+<a class="viewcode-back" href="../../flight_mech.aerodynamics.html#flight_mech.aerodynamics.check_turbulent_transition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_turbulent_transition</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a velocity distribution along a plate has a turbulent transition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : float | np.ndarray</span>
+<span class="sd">        Array of coordinates along the plate.</span>
+<span class="sd">    velocity : float | np.ndarray</span>
+<span class="sd">        Array of velocity values.</span>
+<span class="sd">    nu : float</span>
+<span class="sd">        Kinematic viscosity.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raise error if turbulent transition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the reynolds number</span>
+    <span class="n">reynolds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">velocity</span> <span class="o">/</span> <span class="n">nu</span><span class="p">)</span>
+
+    <span class="c1"># Check transition</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">reynolds</span> <span class="o">&gt;</span> <span class="n">turbulent_reynolds</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The boundary layer becomes turbulent. The Reynolds number at the end of the plate is </span><span class="si">{</span><span class="s1">&#39;</span><span class="si">{:3e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reynolds</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compute_blasius_linear_drag">
+<a class="viewcode-back" href="../../flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_blasius_linear_drag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_blasius_linear_drag</span><span class="p">(</span><span class="n">x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">return_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the linear drag under the flat rectangle, uniform velocity hypothesis with Blasius&#39; equation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_array : np.ndarray</span>
+<span class="sd">        Array of x coordinates along the airfoil.</span>
+<span class="sd">    velocity_array : np.ndarray</span>
+<span class="sd">        Array of external velocity along the airfoil.</span>
+<span class="sd">    rho : float</span>
+<span class="sd">        Density of the fluid.</span>
+<span class="sd">    nu : float</span>
+<span class="sd">        Kinematic viscosity of the fluid.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Linear drag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the length of the airfoil</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">x_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Assume the external velocity is uniform</span>
+    <span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">velocity_array</span><span class="p">)</span>
+
+    <span class="c1"># Check turbulent transition</span>
+    <span class="n">check_turbulent_transition</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+
+    <span class="c1"># Compute the drag</span>
+    <span class="n">linear_drag</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">0.332</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_array</span><span class="p">:</span>
+        <span class="n">tau_w_array</span> <span class="o">=</span> <span class="mf">0.332</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">velocity_array</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nu</span> <span class="o">/</span> <span class="p">(</span><span class="n">velocity_array</span> <span class="o">*</span> <span class="n">x_array</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">linear_drag</span><span class="p">,</span> <span class="n">tau_w_array</span>
+    <span class="k">return</span> <span class="n">linear_drag</span></div>
+
+
+<div class="viewcode-block" id="compute_polhausen_linear_drag">
+<a class="viewcode-back" href="../../flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_polhausen_linear_drag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_polhausen_linear_drag</span><span class="p">(</span><span class="n">x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">return_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the linear drag using the Von-Karman Polhausen&#39;s method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_array : np.ndarray</span>
+<span class="sd">        Array of x coordinates along the airfoil.</span>
+<span class="sd">    velocity_array : np.ndarray</span>
+<span class="sd">        Array of external velocity along the airfoil.</span>
+<span class="sd">    rho : float</span>
+<span class="sd">        Density of the fluid.</span>
+<span class="sd">    nu : float</span>
+<span class="sd">        Kinematic viscosity of the fluid.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    This method is explained in details in the &quot;Aerodynamics for Engineering Students 6th edition&quot; page 567.</span>
+
+<span class="sd">    https://univ-scholarvox-com.ezproxy.universite-paris-saclay.fr/book/88809524</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Linear drag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the velocity gradient</span>
+    <span class="n">velocity_derivative_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">velocity_array</span><span class="p">,</span> <span class="n">x_array</span><span class="p">)</span>
+
+    <span class="c1"># Define the functions for the ODE</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">F1</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">):</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">63</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">37</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">boundary_progress</span> <span class="o">/</span> <span class="mi">15</span><span class="p">)</span> <span class="o">-</span>
+                        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">144</span><span class="p">))</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">boundary_progress</span> <span class="o">/</span> <span class="mi">63</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">15</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">boundary_progress</span> <span class="o">/</span> <span class="mi">72</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">F2</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">boundary_progress</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">-</span> \
+            <span class="p">(</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">boundary_progress</span> <span class="o">+</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">/</span> <span class="mi">63</span><span class="p">)</span> <span class="o">*</span>\
+            <span class="p">((</span><span class="mi">37</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-</span> <span class="n">boundary_progress</span> <span class="o">/</span> <span class="mi">15</span> <span class="o">-</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">144</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_boundary_progress_from_z</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="n">current_velocity_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">)</span>
+        <span class="n">current_velocity_derivative_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_derivative_array</span><span class="p">)</span>
+        <span class="n">boundary_progress</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> \
+            <span class="n">current_velocity_derivative_array</span> <span class="o">/</span> <span class="n">current_velocity_array</span>
+        <span class="k">return</span> <span class="n">boundary_progress</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_delta_from_z</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="n">current_velocity_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="n">nu</span> <span class="o">/</span> <span class="n">current_velocity_array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">delta</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_z_derivative</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">V_s</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Vs=0 for now, general case might be implemented later</span>
+        <span class="n">boundary_progress</span> <span class="o">=</span> <span class="n">get_boundary_progress_from_z</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">get_delta_from_z</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">F1_val</span> <span class="o">=</span> <span class="n">F1</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">)</span>
+        <span class="n">F2_val</span> <span class="o">=</span> <span class="n">F2</span><span class="p">(</span><span class="n">boundary_progress</span><span class="p">)</span>
+        <span class="n">z_derivative</span> <span class="o">=</span> <span class="p">(</span><span class="n">F2_val</span> <span class="o">/</span> <span class="n">F1_val</span><span class="p">)</span> <span class="o">+</span> <span class="n">boundary_progress</span> <span class="o">-</span> \
+            <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">F1_val</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">V_s</span> <span class="o">*</span> <span class="n">delta</span><span class="p">)</span> <span class="o">/</span> <span class="n">nu</span><span class="p">)</span>
+        <span class="c1"># z_derivative = np.array(z_derivative)</span>
+        <span class="k">return</span> <span class="n">z_derivative</span>
+
+    <span class="c1"># Should be zero but initialized slightly above to avoid divergence</span>
+    <span class="n">z_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2e-5</span><span class="p">])</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Solve the ODE with Runge-Kutta 4</span>
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+        <span class="n">get_z_derivative</span><span class="p">,</span>
+        <span class="n">t_span</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="n">y0</span><span class="o">=</span><span class="n">z_0</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;RK45&quot;</span><span class="p">,</span>
+        <span class="n">first_step</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span>
+        <span class="n">t_eval</span><span class="o">=</span><span class="n">x_array</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Compute boundary layer variables</span>
+    <span class="n">boundary_progress_array</span> <span class="o">=</span> <span class="n">get_boundary_progress_from_z</span><span class="p">(</span>
+        <span class="n">solution</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">delta_array</span> <span class="o">=</span> <span class="n">get_delta_from_z</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># plt.plot(solution.t, delta_array)</span>
+    <span class="c1"># plt.show()</span>
+
+    <span class="c1"># Raise error if boundary layer separation</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">boundary_progress_array</span> <span class="o">&lt;</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Boundary layer separation, unable to compute the drag.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Raise error if excess velocity</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">boundary_progress_array</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Excess velocity detected, unable to compute the drag. Please use a more precise model.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Check turbulent transition</span>
+    <span class="n">check_turbulent_transition</span><span class="p">(</span><span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+
+    <span class="c1"># Compute the wall shear stress</span>
+    <span class="n">tau_w_array</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">boundary_progress_array</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="n">rho</span> <span class="o">*</span> <span class="n">nu</span> <span class="o">*</span> <span class="n">velocity_array</span> <span class="o">/</span> <span class="n">delta_array</span>
+
+    <span class="c1"># Integrate to determine the drag</span>
+    <span class="n">linear_drag</span> <span class="o">=</span> <span class="n">simpson</span><span class="p">(</span><span class="n">tau_w_array</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_array</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">linear_drag</span><span class="p">,</span> <span class="n">tau_w_array</span>
+    <span class="k">return</span> <span class="n">linear_drag</span></div>
+
+
+<div class="viewcode-block" id="compute_simulation_linear_drag">
+<a class="viewcode-back" href="../../flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_simulation_linear_drag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_simulation_linear_drag</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="compute_linear_drag">
+<a class="viewcode-back" href="../../flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_linear_drag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_linear_drag</span><span class="p">(</span><span class="n">x_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;blasius&quot;</span><span class="p">,</span> <span class="s2">&quot;polhausen&quot;</span><span class="p">,</span> <span class="s2">&quot;simulation&quot;</span><span class="p">],</span> <span class="n">return_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;blasius&quot;</span><span class="p">:</span>
+        <span class="n">linear_drag</span> <span class="o">=</span> <span class="n">compute_blasius_linear_drag</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="n">return_array</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;polhausen&quot;</span><span class="p">:</span>
+        <span class="n">linear_drag</span> <span class="o">=</span> <span class="n">compute_polhausen_linear_drag</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="n">return_array</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;simulation&quot;</span><span class="p">:</span>
+        <span class="n">linear_drag</span> <span class="o">=</span> <span class="n">compute_simulation_linear_drag</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="n">return_array</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> is not implemented. Please use &#39;blasius&#39;, &#39;polhausen&#39; or &#39;simulation&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">linear_drag</span></div>
+
+
+<div class="viewcode-block" id="compute_blasius_rectangle_drag">
+<a class="viewcode-back" href="../../flight_mech.aerodynamics.html#flight_mech.aerodynamics.compute_blasius_rectangle_drag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_blasius_rectangle_drag</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute drag produced by the upper face of a rectangle with no incidence at the given velocity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    width : float</span>
+<span class="sd">        Width of the rectangle.</span>
+<span class="sd">    length : float</span>
+<span class="sd">        Length of the rectangle.</span>
+<span class="sd">    velocity : float</span>
+<span class="sd">        Velocity of the rectangle.</span>
+<span class="sd">    rho : float</span>
+<span class="sd">        Density of the fluid.</span>
+<span class="sd">    nu : float</span>
+<span class="sd">        Kinematic viscosity of the fluid.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Drag of the upper face of the rectangle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Prepare data</span>
+    <span class="n">x_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">])</span>
+    <span class="n">velocity_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">velocity</span><span class="p">,</span> <span class="n">velocity</span><span class="p">])</span>
+
+    <span class="c1"># Compute drag</span>
+    <span class="n">linear_drag</span> <span class="o">=</span> <span class="n">compute_blasius_linear_drag</span><span class="p">(</span><span class="n">x_array</span><span class="p">,</span> <span class="n">velocity_array</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+    <span class="n">drag</span> <span class="o">=</span> <span class="n">linear_drag</span> <span class="o">*</span> <span class="n">width</span>
+
+    <span class="k">return</span> <span class="n">drag</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
