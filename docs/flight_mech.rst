@@ -12,8 +12,10 @@ Submodules
 .. toctree::
    :maxdepth: 5
 
-   flight_mech.atmosphere
-   flight_mech.plane
+   flight_mech.aerodynamics
    flight_mech.airfoil
-   flight_mech.wing
+   flight_mech.atmosphere
+   flight_mech.fuel
+   flight_mech.plane
    flight_mech.turbine
+   flight_mech.wing
