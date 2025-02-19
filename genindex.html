@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motor_module.html">Motor module</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
 <ul>
@@ -243,14 +244,16 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_ground_effect">compute_ground_effect() (flight_mech.plane.Plane method)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.compute_I_at_max_efficiency">compute_I_at_max_efficiency() (flight_mech.motor.ElectricalMotor method)</a>
+</li>
       <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_kinematic_viscosity_from_altitude">compute_kinematic_viscosity_from_altitude() (flight_mech.atmosphere.StandardAtmosphere class method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_landing_distance">compute_landing_distance() (flight_mech.plane.Plane method)</a>
 </li>
-      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_landing_speed">compute_landing_speed() (flight_mech.plane.Plane method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_landing_speed">compute_landing_speed() (flight_mech.plane.Plane method)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_lift">compute_lift() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.compute_lift_and_induced_drag_coefficients">compute_lift_and_induced_drag_coefficients() (flight_mech.wing.Wing method)</a>
@@ -367,11 +370,19 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.engine_type">engine_type (flight_mech.plane.Plane attribute)</a>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.efficiency">efficiency (flight_mech.motor.ElectricalMotor property)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor">ElectricalMotor (class in flight_mech.motor)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.electromotive_force">electromotive_force (flight_mech.motor.ElectricalMotor property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.engine_type">engine_type (flight_mech.plane.Plane attribute)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.extension">extension (flight_mech.plane.Plane property)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.external_resistance">external_resistance (flight_mech.motor.ElectricalMotor attribute)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.extrados_z_array">extrados_z_array (flight_mech.airfoil.Airfoil attribute)</a>
 </li>
@@ -422,6 +433,13 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    flight_mech.motor
+
+      <ul>
+        <li><a href="flight_mech.motor.html#module-flight_mech.motor">module</a>
+</li>
+      </ul></li>
       <li>
     flight_mech.plane
 
@@ -485,13 +503,21 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_from_airfoiltools">import_from_airfoiltools() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.I">I (flight_mech.motor.ElectricalMotor property)</a>
 </li>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays">import_xz_selig_arrays() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.I_0">I_0 (flight_mech.motor.ElectricalMotor attribute)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.I_max">I_max (flight_mech.motor.ElectricalMotor attribute)</a>
+</li>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_from_airfoiltools">import_from_airfoiltools() (flight_mech.airfoil.Airfoil method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.import_xz_selig_arrays">import_xz_selig_arrays() (flight_mech.airfoil.Airfoil method)</a>
+</li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.initialize">initialize() (flight_mech.wing.Wing method)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.internal_resistance">internal_resistance (flight_mech.motor.ElectricalMotor attribute)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.intrados_z_array">intrados_z_array (flight_mech.airfoil.Airfoil attribute)</a>
 </li>
@@ -521,6 +547,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTypes.KEROSENE">KEROSENE (flight_mech.fuel.FuelTypes attribute)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.Kv">Kv (flight_mech.motor.ElectricalMotor attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -533,9 +561,11 @@
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.list_airfoils_in_database">list_airfoils_in_database() (flight_mech.airfoil.Airfoil method)</a>
 </li>
+      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil">load_database_airfoil() (flight_mech.airfoil.Airfoil method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.load_database_airfoil">load_database_airfoil() (flight_mech.airfoil.Airfoil method)</a>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.load_motor_data">load_motor_data() (flight_mech.motor.ElectricalMotor method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.load_plane_data">load_plane_data() (flight_mech.plane.Plane method)</a>
 </li>
@@ -559,9 +589,13 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.m_payload">m_payload (flight_mech.plane.Plane attribute)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.mass">mass (flight_mech.motor.ElectricalMotor attribute)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber">max_camber (flight_mech.airfoil.Airfoil property)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.max_camber_location">max_camber_location (flight_mech.airfoil.Airfoil property)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.max_efficiency">max_efficiency (flight_mech.motor.ElectricalMotor property)</a>
 </li>
       <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.max_reference_surface_mass_flow_rate_4_star">max_reference_surface_mass_flow_rate_4_star (flight_mech.turbine.TurbojetSingleBody attribute)</a>
 </li>
@@ -586,6 +620,8 @@
         <li><a href="flight_mech.atmosphere.html#module-flight_mech.atmosphere">flight_mech.atmosphere</a>
 </li>
         <li><a href="flight_mech.fuel.html#module-flight_mech.fuel">flight_mech.fuel</a>
+</li>
+        <li><a href="flight_mech.motor.html#module-flight_mech.motor">flight_mech.motor</a>
 </li>
         <li><a href="flight_mech.plane.html#module-flight_mech.plane">flight_mech.plane</a>
 </li>
@@ -648,10 +684,10 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane">Plane (class in flight_mech.plane)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.plot">plot() (flight_mech.airfoil.Airfoil method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.plot_2D">plot_2D() (flight_mech.wing.Wing method)</a>
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.plot_3D">plot_3D() (flight_mech.wing.Wing method)</a>
@@ -664,7 +700,11 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.plot_gliding_WV_graph">plot_gliding_WV_graph() (flight_mech.plane.Plane method)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.plot_graph">plot_graph() (flight_mech.motor.ElectricalMotor method)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.plot_polar_graph">plot_polar_graph() (flight_mech.plane.Plane method)</a>
+</li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.power">power (flight_mech.motor.ElectricalMotor property)</a>
 </li>
       <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Ps8">Ps8 (flight_mech.turbine.TurbojetSingleBody property)</a>
 </li>
@@ -700,6 +740,8 @@
       </ul></li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.rotate_arrays">rotate_arrays() (in module flight_mech.airfoil)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.rotation_speed">rotation_speed (flight_mech.motor.ElectricalMotor property)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -710,10 +752,14 @@
 </li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.save_3D_shape">save_3D_shape() (flight_mech.wing.Wing method)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.set_at_max_efficiency">set_at_max_efficiency() (flight_mech.motor.ElectricalMotor method)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.set_chord_at_zero_incidence">set_chord_at_zero_incidence() (flight_mech.airfoil.Airfoil method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.set_motor_parameters">set_motor_parameters() (flight_mech.motor.ElectricalMotor method)</a>
+</li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.single_side_surface">single_side_surface (flight_mech.wing.Wing property)</a>
 </li>
       <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere">StandardAtmosphere (class in flight_mech.atmosphere)</a>
@@ -756,6 +802,8 @@
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.thrust_per_engine">thrust_per_engine (flight_mech.plane.Plane attribute)</a>
 </li>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.torque">torque (flight_mech.motor.ElectricalMotor property)</a>
+</li>
       <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.trailing_edge_x_array">trailing_edge_x_array (flight_mech.wing.Wing property)</a>
 </li>
       <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.Ts8">Ts8 (flight_mech.turbine.TurbojetSingleBody property)</a>
@@ -776,12 +824,16 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_C_L_max">update_C_L_max() (flight_mech.plane.Plane method)</a>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.U">U (flight_mech.motor.ElectricalMotor property)</a>
 </li>
-      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_ground_effect_coefficient">update_ground_effect_coefficient() (flight_mech.plane.Plane method)</a>
+      <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.U_max">U_max (flight_mech.motor.ElectricalMotor attribute)</a>
+</li>
+      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_C_L_max">update_C_L_max() (flight_mech.plane.Plane method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_ground_effect_coefficient">update_ground_effect_coefficient() (flight_mech.plane.Plane method)</a>
+</li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_k">update_k() (flight_mech.plane.Plane method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_P">update_P() (flight_mech.plane.Plane method)</a>

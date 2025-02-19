@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.motor module &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="flight_mech.wing module" href="flight_mech.wing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motor_module.html">Motor module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.aerodynamics.html">flight_mech.aerodynamics module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.airfoil.html">flight_mech.airfoil module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.atmosphere.html">flight_mech.atmosphere module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.fuel.html">flight_mech.fuel module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.plane.html">flight_mech.plane module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.turbine.html">flight_mech.turbine module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flight_mech.wing.html">flight_mech.wing module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">flight_mech.motor module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flight_mech.motor.ElectricalMotor"><code class="docutils literal notranslate"><span class="pre">ElectricalMotor</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="flight_mech.html">flight_mech package</a></li>
+      <li class="breadcrumb-item active">flight_mech.motor module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/flight_mech.motor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-flight_mech.motor">
+<span id="flight-mech-motor-module"></span><h1>flight_mech.motor module<a class="headerlink" href="#module-flight_mech.motor" title="Link to this heading"></a></h1>
+<p>Module to define motor models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.motor.</span></span><span class="sig-name descname"><span class="pre">ElectricalMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_data_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_database_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/flight_mech/motor_database'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_parameters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/motor.html#ElectricalMotor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.motor.ElectricalMotor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to define an electrical motor controlled by tension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>I0</strong> (<em>float</em>) – No-load current in A.</p></li>
+<li><p><strong>internal_resistance</strong> (<em>float</em>) – Internal resistance of the motor in Ohm.</p></li>
+<li><p><strong>external_resistance</strong> (<em>float</em>) – External resistance of the batteries in Ohm.</p></li>
+<li><p><strong>K</strong> (<em>float</em>) – Coefficient between tension and rotation speed in s-1.V-1.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.I">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">I</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.I" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.I_0">
+<span class="sig-name descname"><span class="pre">I_0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.I_0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.I_max">
+<span class="sig-name descname"><span class="pre">I_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.I_max" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.Kv">
+<span class="sig-name descname"><span class="pre">Kv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.Kv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.U">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">U</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.U" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.U_max">
+<span class="sig-name descname"><span class="pre">U_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.U_max" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.compute_I_at_max_efficiency">
+<span class="sig-name descname"><span class="pre">compute_I_at_max_efficiency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/motor.html#ElectricalMotor.compute_I_at_max_efficiency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.compute_I_at_max_efficiency" title="Link to this definition"></a></dt>
+<dd><p>Compute the current that gives the maximum efficiency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Current of maximum efficiency</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.efficiency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">efficiency</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.efficiency" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.electromotive_force">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">electromotive_force</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.electromotive_force" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.external_resistance">
+<span class="sig-name descname"><span class="pre">external_resistance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.external_resistance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.internal_resistance">
+<span class="sig-name descname"><span class="pre">internal_resistance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.internal_resistance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.load_motor_data">
+<span class="sig-name descname"><span class="pre">load_motor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_data_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">motor_data_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/flight-mech/flight-mech/flight_mech/motor_database'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/motor.html#ElectricalMotor.load_motor_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.load_motor_data" title="Link to this definition"></a></dt>
+<dd><p>Load the data from a motor stored in the given database folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor_data_name</strong> (<em>str</em>) – Name of the motor.</p></li>
+<li><p><strong>motor_data_folder</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the database folder, by default default_motor_database</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.mass">
+<span class="sig-name descname"><span class="pre">mass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.mass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.max_efficiency">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_efficiency</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.max_efficiency" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.plot_graph">
+<span class="sig-name descname"><span class="pre">plot_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'efficiency'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'rotation_speed'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'power'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'torque'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/motor.html#ElectricalMotor.plot_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.plot_graph" title="Link to this definition"></a></dt>
+<dd><p>Plot the graph of evolution of the given variable with the current in the motor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>variable</strong> (<em>Literal</em><em>[</em><em>&quot;efficiency&quot;</em><em>, </em><em>&quot;rotation_speed&quot;</em><em>, </em><em>&quot;power&quot;</em><em>, </em><em>&quot;torque&quot;</em><em>]</em>) – Name of the variable to plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.power">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">power</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.power" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.rotation_speed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotation_speed</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.rotation_speed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.set_at_max_efficiency">
+<span class="sig-name descname"><span class="pre">set_at_max_efficiency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/motor.html#ElectricalMotor.set_at_max_efficiency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.set_at_max_efficiency" title="Link to this definition"></a></dt>
+<dd><p>Set the motor in the maximum efficiency conditions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.set_motor_parameters">
+<span class="sig-name descname"><span class="pre">set_motor_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">I_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal_resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">external_resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/motor.html#ElectricalMotor.set_motor_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.set_motor_parameters" title="Link to this definition"></a></dt>
+<dd><p>Set the parameters of the motor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>I0</strong> (<em>float</em>) – No-load current in A.</p></li>
+<li><p><strong>internal_resistance</strong> (<em>float</em>) – Internal resistance of the motor in Ohm.</p></li>
+<li><p><strong>external_resistance</strong> (<em>float</em>) – External resistance of the batteries in Ohm.</p></li>
+<li><p><strong>Kv</strong> (<em>float</em>) – Coefficient between tension and rotation speed in s-1.V-1.</p></li>
+<li><p><strong>U_max</strong> (<em>float</em>) – Max tension of the motor in V.</p></li>
+<li><p><strong>mass</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Mass of the motor in kg.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="flight_mech.motor.ElectricalMotor.torque">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">torque</span></span><a class="headerlink" href="#flight_mech.motor.ElectricalMotor.torque" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="flight_mech.wing.html" class="btn btn-neutral float-left" title="flight_mech.wing module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flight_mech.motor &mdash; flight-mech 1.0.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e2a723ec"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            flight-mech
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wing_module.html">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../turbine_module.html">Turbine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../motor_module.html">Motor module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../flight_mech.html">flight_mech package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flight-mech</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">flight_mech.motor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for flight_mech.motor</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to define motor models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Imports #</span>
+<span class="c1">###########</span>
+
+<span class="c1"># Python imports #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="c1"># Dependencies #</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="c1"># Local imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Constants #</span>
+<span class="c1">#############</span>
+
+<span class="c1"># Define a default plane database location</span>
+<span class="n">default_motor_database</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;motor_database&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define the units of the variables to indicate them on the plot labels</span>
+<span class="n">VARIABLE_TO_UNIT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;efficiency&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rotation_speed&quot;</span><span class="p">:</span> <span class="s2">&quot;rad.s-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;torque&quot;</span><span class="p">:</span> <span class="s2">&quot;N.m&quot;</span>
+<span class="p">}</span>
+
+<span class="c1">###########</span>
+<span class="c1"># Classes #</span>
+<span class="c1">###########</span>
+
+<div class="viewcode-block" id="ElectricalMotor">
+<a class="viewcode-back" href="../../flight_mech.motor.html#flight_mech.motor.ElectricalMotor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ElectricalMotor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to define an electrical motor controlled by tension.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    I0 : float</span>
+<span class="sd">        No-load current in A.</span>
+<span class="sd">    internal_resistance : float</span>
+<span class="sd">        Internal resistance of the motor in Ohm.</span>
+<span class="sd">    external_resistance : float</span>
+<span class="sd">        External resistance of the batteries in Ohm.</span>
+<span class="sd">    K : float</span>
+<span class="sd">        Coefficient between tension and rotation speed in s-1.V-1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">I_0</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># A</span>
+    <span class="n">internal_resistance</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Ohm</span>
+    <span class="n">external_resistance</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Ohm</span>
+    <span class="n">Kv</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># rad.s-1.V-1</span>
+    <span class="n">I_max</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># A</span>
+    <span class="n">U_max</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># V</span>
+    <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># kg</span>
+
+    <span class="c1"># Internal variables</span>
+    <span class="n">_U</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># V</span>
+    <span class="n">_I</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># A</span>
+    <span class="n">_rotation_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># rad.s-1</span>
+    <span class="n">_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># W</span>
+    <span class="n">_torque</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># N.m</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_data_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">motor_database_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">default_motor_database</span><span class="p">,</span> <span class="n">motor_parameters_dict</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">motor_data_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">motor_parameters_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;You have provided both a data file to load and a parameters dictionary. Please provide only one of them to create a motor instance.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">motor_data_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_motor_data</span><span class="p">(</span><span class="n">motor_data_name</span><span class="p">,</span> <span class="n">motor_database_folder</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">motor_parameters_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_motor_parameters</span><span class="p">(</span><span class="o">**</span><span class="n">motor_parameters_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ElectricalMotor.load_motor_data">
+<a class="viewcode-back" href="../../flight_mech.motor.html#flight_mech.motor.ElectricalMotor.load_motor_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_motor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motor_data_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">motor_data_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">default_motor_database</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load the data from a motor stored in the given database folder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        motor_data_name : str</span>
+<span class="sd">            Name of the motor.</span>
+<span class="sd">        motor_data_folder : str, optional</span>
+<span class="sd">            Path to the database folder, by default default_motor_database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Load the json file</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">motor_data_folder</span><span class="p">,</span> <span class="n">motor_data_name</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">motor_parameters_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="c1"># Load the parameters in the instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_motor_parameters</span><span class="p">(</span><span class="o">**</span><span class="n">motor_parameters_dict</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ElectricalMotor.set_motor_parameters">
+<a class="viewcode-back" href="../../flight_mech.motor.html#flight_mech.motor.ElectricalMotor.set_motor_parameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_motor_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">I_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">internal_resistance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">external_resistance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Kv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">U_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the parameters of the motor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        I0 : float</span>
+<span class="sd">            No-load current in A.</span>
+<span class="sd">        internal_resistance : float</span>
+<span class="sd">            Internal resistance of the motor in Ohm.</span>
+<span class="sd">        external_resistance : float</span>
+<span class="sd">            External resistance of the batteries in Ohm.</span>
+<span class="sd">        Kv : float</span>
+<span class="sd">            Coefficient between tension and rotation speed in s-1.V-1.</span>
+<span class="sd">        U_max : float</span>
+<span class="sd">            Max tension of the motor in V.</span>
+<span class="sd">        mass : float | None, optional</span>
+<span class="sd">            Mass of the motor in kg.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">=</span> <span class="n">I_0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_max</span> <span class="o">=</span> <span class="n">I_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">=</span> <span class="n">internal_resistance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span> <span class="o">=</span> <span class="n">external_resistance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Kv</span> <span class="o">=</span> <span class="n">Kv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">U_max</span> <span class="o">=</span> <span class="n">U_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">mass</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">U</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">U_max</span>
+
+    <span class="nd">@U</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">U</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">U_max</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The given tension (</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">) is above the motor maximum tension (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">U_max</span><span class="si">}</span><span class="s2">). Please provide a lower value or change the value of U_max.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_U</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_I_minimize_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_max</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_I</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_I</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_I_from_rotation_speed</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_power</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_I_from_power</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_I_from_torque</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;No value to compute the current, please specify a desired current, rotation speed, power or torque.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@I</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_max</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The given current (</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> A) exceeds the max current of the motor (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">I_max</span><span class="si">}</span><span class="s2"> A).&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The given current (</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> A) is under the no-load current of the motor (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">I_0</span><span class="si">}</span><span class="s2"> A).&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_I</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_power</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rotation_speed_from_I</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+
+    <span class="nd">@rotation_speed</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_I</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_power</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_power</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_power</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_power_from_I</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+
+    <span class="nd">@power</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_power</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_I</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_torque_from_I</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+
+    <span class="nd">@torque</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_I</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotation_speed</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_power</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">efficiency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_efficiency_from_I</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">efficiency</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">electromotive_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">electromotive_force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_electromotive_force_from_I</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">electromotive_force</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">max_efficiency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_efficiency_from_I</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_I_at_max_efficiency</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">max_efficiency</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_efficiency_from_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the efficiency at the given current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        I : float</span>
+<span class="sd">            Current in the motor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Efficiency of the motor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">efficiency</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">I</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span><span class="p">)</span> <span class="o">*</span> <span class="n">I</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">efficiency</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_electromotive_force_from_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the electromotive force at the given current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        I : float</span>
+<span class="sd">            Current in the motor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Electromotive force of the motor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">electromotive_force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span> <span class="o">*</span> <span class="n">I</span>
+
+        <span class="k">return</span> <span class="n">electromotive_force</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_rotation_speed_from_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the rotation speed at the given current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        I : float</span>
+<span class="sd">            Current in the motor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Rotation speed of the motor in rad.s-1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">electromotive_force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_electromotive_force_from_I</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+        <span class="n">rotation_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Kv</span> <span class="o">*</span> <span class="n">electromotive_force</span>
+
+        <span class="k">return</span> <span class="n">rotation_speed</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_power_from_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the power at the given current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        I : float</span>
+<span class="sd">            Current in the motor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Power of the motor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">*</span> <span class="n">I</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_efficiency_from_I</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">power</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_torque_from_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the torque at the given current.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        I : float</span>
+<span class="sd">            Current in the motor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Torque of the motor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">torque</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_power_from_I</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>\
+            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rotation_speed_from_I</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">torque</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_I_from_rotation_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute I using the rotation speed value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Current in A.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span><span class="p">))</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">*</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_speed</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Kv</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">I</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_I_from_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute I using the power value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Current in A.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">I</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_I_from_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute I using the torque value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Current in A.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">+</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">torque</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Kv</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_0</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">torque</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Kv</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">I</span>
+
+<div class="viewcode-block" id="ElectricalMotor.plot_graph">
+<a class="viewcode-back" href="../../flight_mech.motor.html#flight_mech.motor.ElectricalMotor.plot_graph">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;efficiency&quot;</span><span class="p">,</span> <span class="s2">&quot;rotation_speed&quot;</span><span class="p">,</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;torque&quot;</span><span class="p">],</span> <span class="n">nb_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the graph of evolution of the given variable with the current in the motor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable : Literal[&quot;efficiency&quot;, &quot;rotation_speed&quot;, &quot;power&quot;, &quot;torque&quot;]</span>
+<span class="sd">            Name of the variable to plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Allocate list for the x and y values</span>
+        <span class="n">values_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb_points</span><span class="p">)</span>
+        <span class="n">current_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Extract the values</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">current_array</span><span class="p">):</span>
+            <span class="n">values_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;_compute_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">_from_I&quot;</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Plot</span>
+        <span class="n">plot_graph</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="o">=</span><span class="n">current_array</span><span class="p">,</span>
+            <span class="n">y_array</span><span class="o">=</span><span class="n">values_array</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> graph&quot;</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;Current [A]&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">VARIABLE_TO_UNIT</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ElectricalMotor.compute_I_at_max_efficiency">
+<a class="viewcode-back" href="../../flight_mech.motor.html#flight_mech.motor.ElectricalMotor.compute_I_at_max_efficiency">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_I_at_max_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the current that gives the maximum efficiency.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Current of maximum efficiency</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">/</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">internal_resistance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_resistance</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">I</span></div>
+
+
+<div class="viewcode-block" id="ElectricalMotor.set_at_max_efficiency">
+<a class="viewcode-back" href="../../flight_mech.motor.html#flight_mech.motor.ElectricalMotor.set_at_max_efficiency">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_at_max_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the motor in the maximum efficiency conditions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_I_at_max_efficiency</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PaulCreusy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

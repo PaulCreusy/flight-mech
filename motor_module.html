@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wing module &mdash; flight-mech 1.0.6 documentation</title>
+  <title>Motor module &mdash; flight-mech 1.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
@@ -16,11 +16,12 @@
       <script src="_static/documentation_options.js?v=e2a723ec"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Turbine module" href="turbine_module.html" />
-    <link rel="prev" title="Airfoil module" href="airfoil_module.html" /> 
+    <link rel="next" title="flight_mech package" href="flight_mech.html" />
+    <link rel="prev" title="Turbine module" href="turbine_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,9 +48,13 @@
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Wing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="motor_module.html">Motor module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Motor module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#physical-background">Physical background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-source">Database source</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
 <ul>
@@ -70,9 +75,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Wing module</li>
+      <li class="breadcrumb-item active">Motor module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/wing_module.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/motor_module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -80,17 +85,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="wing-module">
-<h1>Wing module<a class="headerlink" href="#wing-module" title="Link to this heading"></a></h1>
-<p>Todo</p>
+  <section id="motor-module">
+<h1>Motor module<a class="headerlink" href="#motor-module" title="Link to this heading"></a></h1>
+<p>This module includes an electric motor model that can be used to compute rotation speed, torque efficiency based on the characteristics.</p>
+<section id="physical-background">
+<h2>Physical background<a class="headerlink" href="#physical-background" title="Link to this heading"></a></h2>
+<p>The model can be represented as shown below:</p>
+<a class="reference internal image-reference" href="_images/electric_motor.png"><img alt="Electric diagram" src="_images/electric_motor.png" style="width: 400px;" />
+</a>
+<p>It considers two resistors, one inside the motor and the other one in the power source in addition to the motor itself.</p>
+<p>A coefficient <span class="math notranslate nohighlight">\(K_v\)</span> is used to bind the rotation speed with the electromotive force <span class="math notranslate nohighlight">\(E\)</span>:</p>
+<div class="math notranslate nohighlight" id="equation-e-def">
+<span class="eqno">(1)<a class="headerlink" href="#equation-e-def" title="Link to this equation"></a></span>\[E = \frac{\omega}{K_v}\]</div>
+<p>All the relations in the module derive from the electric equations behind this representation.</p>
+</section>
+<section id="database-source">
+<h2>Database source<a class="headerlink" href="#database-source" title="Link to this heading"></a></h2>
+<p>Some motor characteristics are based on the technical documentation of <a class="reference external" href="https://emrax.com/e-motors/">EMRAX</a>. The other ones are fictional examples.</p>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="airfoil_module.html" class="btn btn-neutral float-left" title="Airfoil module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="turbine_module.html" class="btn btn-neutral float-right" title="Turbine module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="turbine_module.html" class="btn btn-neutral float-left" title="Turbine module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="flight_mech.html" class="btn btn-neutral float-right" title="flight_mech package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
