@@ -1,0 +1,9 @@
+{
+    "I_0": 5,
+    "I_max": 100,
+    "U": 660,
+    "internal_resistance": 0.01437,
+    "external_resistance": 0.3,
+    "Kv": 1.42451,
+    "mass": 7.1
+}
