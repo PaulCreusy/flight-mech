@@ -14,6 +14,7 @@ This software includes various modules to build a numerical plane model and comp
 * **wing** : allows to define the geometry of a wing and compute the lift and drag coefficients.
 * **fuel** : defines several types of broadly used fuels in aeronautics.
 * **turbine** : allows to define several types of turbine to compute their thrust and consumption at various operating conditions.
+* **motor** : allows to define an electric motor model and compute its outputs.
 * **plane** : allows to define a numerical plane model, binding the previous modules, to compute its flight characteristics. 
 
 .. Warning::
