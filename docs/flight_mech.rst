@@ -19,3 +19,4 @@ Submodules
    flight_mech.plane
    flight_mech.turbine
    flight_mech.wing
+   flight_mech.motor
