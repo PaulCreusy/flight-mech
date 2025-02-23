@@ -29,7 +29,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
     'sphinx_rtd_theme',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    'nbsphinx',
+    'sphinx_sitemap'
 ]
 
 templates_path = ['_templates']
@@ -47,3 +49,7 @@ html_static_path = ['_static']
 # https://www.sphinx-doc.org/en/master/usage/extensions/todo.html#configuration
 
 todo_include_todos = True
+
+# -- Options for sitemap -----------------------------------------------------
+
+html_baseurl = 'https://flight-mech.creusy.fr/'
