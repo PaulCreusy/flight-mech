@@ -4,19 +4,23 @@
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="A Python library to design and evaluate the performances of a plane based on flight mechanics equations." lang="en" name="description" xml:lang="en" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flight-mech documentation &mdash; flight-mech 1.0.6 documentation</title>
+  <title>Flight-mech Documentation &mdash; flight-mech 1.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
+    <link rel="canonical" href="https://flight-mech.creusy.fr/index.html" />
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=e2a723ec"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -42,7 +46,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
@@ -51,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="motor_module.html">Motor module</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.html">flight_mech package</a></li>
 </ul>
@@ -70,7 +74,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Flight-mech documentation</li>
+      <li class="breadcrumb-item active">Flight-mech Documentation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -81,11 +85,27 @@
            <div itemprop="articleBody">
              
   <section id="flight-mech-documentation">
-<h1>Flight-mech documentation<a class="headerlink" href="#flight-mech-documentation" title="Link to this heading"></a></h1>
-<p>This library includes a simple atmospheric model and a set of flight mechanics equations allowing to compute plane and airfoils characteristics.</p>
+<h1>Flight-mech Documentation<a class="headerlink" href="#flight-mech-documentation" title="Link to this heading"></a></h1>
+<p>Flight-mech includes a set of modules based on simple physical models to design a plane or compute its characteristics.</p>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
-<p>This software includes various modules to build a numerical plane model and compute its characteristics. The modules implemented are the following:</p>
+<p>The goal of flight-mech is to describe with simple physical models, all the main components that can be defined to design a plane and ultimately with a few key dimensions and properties to evaluate the behavior of the plane.</p>
+<p>Flight-mech is for you if:</p>
+<ul class="simple">
+<li><p>You want to design a plane and are looking for a way to determine its main characteristics.</p></li>
+<li><p>You do not have a precise geometry or mesh.</p></li>
+<li><p>You want to optimize a plane over a large set of parameters.</p></li>
+</ul>
+<p>Flight-mech is probably not the best solution if:</p>
+<ul class="simple">
+<li><p>You need to evaluate the aerodynamics of a specific geometry.</p></li>
+<li><p>You want to simulate precisely the behavior of a plane or a component.</p></li>
+<li><p>Your plane can fly at supersonic speed or uses cutting-edge technologies.</p></li>
+</ul>
+</section>
+<section id="organisation">
+<h2>Organisation<a class="headerlink" href="#organisation" title="Link to this heading"></a></h2>
+<p>This package is decomposed in various independent modules, each one describing a physical aspect of the plane. The modules implemented are the following:</p>
 <ul class="simple">
 <li><p><strong>atmosphere</strong> : defines several atmosphere models to compute density, temperature, pressure and other quantities.</p></li>
 <li><p><strong>aerodynamics</strong> : contains functions to compute quantities in the boundary layer of a fluid flow.</p></li>
@@ -103,13 +123,13 @@
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
-<p>You can install it using Pip with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>flight-mech
+<p>You can install flight-mech using Pip with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install flight-mech</span>
 </pre></div>
 </div>
-<p>The source code is available on Github at this <a class="reference external" href="https://github.com/PaulCreusy/flight-mech/tree/main">link</a>.</p>
+<p>The source code of flight-mech is available on Github at this <a class="reference external" href="https://github.com/PaulCreusy/flight-mech/tree/main">link</a>.</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
@@ -120,7 +140,9 @@
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Package documentation</span></p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="flight_mech.html">flight_mech package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="flight_mech.html#submodules">Submodules</a><ul>
