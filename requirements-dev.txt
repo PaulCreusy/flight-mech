@@ -3,3 +3,4 @@ sphinx_rtd_theme==3.0.2
 pytest==8.3.4
 sphinx-sitemap
 nbsphinx
+pydata-sphinx-theme

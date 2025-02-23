@@ -1,24 +1,24 @@
-Flight-mech Documentation
+Flight-Mech Documentation
 =========================
 
 .. meta::
     :description lang=en:
         A Python library to design and evaluate the performances of a plane based on flight mechanics equations.
 
-Flight-mech includes a set of modules based on simple physical models to design a plane or compute its characteristics.
+Flight-Mech includes a set of modules based on simple physical models to design a plane or compute its characteristics.
 
 Introduction
 ------------
 
 The goal of flight-mech is to describe with simple physical models, all the main components that can be defined to design a plane and ultimately with a few key dimensions and properties to evaluate the behavior of the plane.
 
-Flight-mech is for you if:
+Flight-Mech is for you if:
 
 * You want to design a plane and are looking for a way to determine its main characteristics.
 * You do not have a precise geometry or mesh.
 * You want to optimize a plane over a large set of parameters.
 
-Flight-mech is probably not the best solution if:
+Flight-Mech is probably not the best solution if:
 
 * You need to evaluate the aerodynamics of a specific geometry.
 * You want to simulate precisely the behavior of a plane or a component.
@@ -46,7 +46,7 @@ Installation
 
 You can install flight-mech using Pip with:
 
-.. code-block:: console
+.. code:: console
 
    pip install flight-mech
 
