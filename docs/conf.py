@@ -7,6 +7,7 @@
 
 import os
 import sys
+import tomli
 sys.path.insert(
     0, os.path.abspath('..'))
 # sys.path.append(".")
@@ -14,12 +15,20 @@ sys.path.insert(
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+with open(os.path.join(os.path.abspath('..'), "pyproject.toml"), "rb") as f:
+    toml = tomli.load(f)
+
 project = 'flight-mech'
 copyright = '2025, PaulCreusy'
 author = 'PaulCreusy'
 
-version = '1.0.6'
-release = '1.0.6'
+# version = '1.0.6'
+# release = '1.0.6'
+
+pyproject = toml["project"]
+
+version = pyproject["version"]
+release = pyproject["version"]
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,8 +51,30 @@ language = 'en'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = "pydata_sphinx_theme"
 html_static_path = ['_static']
+
+html_theme_options = {
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/PaulCreusy/flight-mech",
+            "icon": "fa-brands fa-square-github",
+            "type": "fontawesome",
+        }
+    ],
+    "logo": {
+        "text": "Flight-Mech",
+        "image_light": "figures/logo-light.png",
+        "image_dark": "figures/logo-dark.png",
+    }
+}
+
+# html_logo = "figures/logo.png"
+# html_title = "Flight-Mech"
+
+html_favicon = "figures/logo-light.png"
 
 # -- Options for todo extension ----------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/todo.html#configuration
