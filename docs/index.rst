@@ -57,28 +57,6 @@ Content
 
 .. toctree:: 
    :maxdepth: 1
-   
+
    user_guide
    api_references
-
-
-.. .. toctree::
-..    :maxdepth: 1
-..    :caption: User guide
-
-..    atmosphere_module
-..    plane_module
-..    airfoil_module
-..    wing_module
-..    turbine_module
-..    motor_module
-
-.. .. toctree:: 
-..    :maxdepth: 1
-..    :caption: Examples
-
-.. .. toctree::
-..    :maxdepth: 3
-..    :caption: API Reference
-
-..    flight_mech
