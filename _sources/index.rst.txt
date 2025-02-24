@@ -52,24 +52,11 @@ You can install flight-mech using Pip with:
 
 The source code of flight-mech is available on Github at this `link <https://github.com/PaulCreusy/flight-mech/tree/main>`_.
 
-
-.. toctree::
-   :maxdepth: 1
-   :caption: User guide
-
-   atmosphere_module
-   plane_module
-   airfoil_module
-   wing_module
-   turbine_module
-   motor_module
+Content
+-------
 
 .. toctree:: 
    :maxdepth: 1
-   :caption: Examples
 
-.. toctree::
-   :maxdepth: 3
-   :caption: API Reference
-
-   flight_mech
+   user_guide
+   api_references
