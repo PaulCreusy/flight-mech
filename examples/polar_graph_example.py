@@ -26,7 +26,7 @@ from flight_mech.plane import Plane
 plane = Plane("cessna_citation_III")
 
 # Set the missing lift coefficient
-plane.a = 2 * np.pi
+plane.C_L_alpha = 2 * np.pi
 
 # Plot the polar graph
 plane.plot_polar_graph()
