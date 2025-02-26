@@ -185,9 +185,6 @@ def compute_polhausen_linear_drag(x_array: np.ndarray, velocity_array: np.ndarra
         solution.t, solution.y[0])
     delta_array = get_delta_from_z(solution.t, solution.y[0])
 
-    # plt.plot(solution.t, delta_array)
-    # plt.show()
-
     # Raise error if boundary layer separation
     if (boundary_progress_array < - 12).any():
         raise ValueError(
