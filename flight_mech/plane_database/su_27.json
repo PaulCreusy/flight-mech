@@ -1,0 +1,12 @@
+{
+    "m_empty": 16517,
+    "m_fuel": 8379,
+    "S": 62,
+    "b": 14.731,
+    "nb_engines": 2,
+    "thrust_per_engine": 115.245e3,
+    "C_D_0": 0.0166,
+    "k": 0.114,
+    "C_L_alpha": 3.665,
+    "wing_to_ground_height": 0.833
+}
