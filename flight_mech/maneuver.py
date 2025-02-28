@@ -8,26 +8,72 @@ Module to define plane maneuvers.
 
 # Python imports #
 
-import os
 from typing import Literal, Callable
-import json
+from abc import ABC, abstractmethod
 
 # Dependencies #
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 # Local imports #
 
 from flight_mech.plane import (
     Plane
 )
+from flight_mech._common import plot_graph
 
 ###########
 # Classes #
 ###########
 
-class TakeOffManeuver:
+class Maneuver(ABC):
+    """
+    Base class to create maneuvers.
+    """
+
+    time_list: list[float]
+    evolution_variable_names: list[str]
+    evolution_variable_units: dict[str, str]
+
+    def plot_graph(self, variable: str, **kwargs):
+        """
+        Plot the graph of evolution of the given variable during the maneuver.
+
+        Parameters
+        ----------
+        variable : str
+            Name of the variable to plot.
+
+        Note
+        ----
+        For more details on the optional arguments, please check flight_mech._common.plot_graph.
+        """
+
+        # Plot
+        plot_graph(
+            x_array=self.time_list,
+            y_array=self.__getattribute__(f"{variable}_list"),
+            title=f"{variable.capitalize()} graph",
+            x_label=f"Time [{self.evolution_variable_units['time']}]",
+            y_label=f"{variable.capitalize()} [{self.evolution_variable_units[variable]}]",
+            **kwargs
+        )
+
+    @abstractmethod
+    def compute_evolution(self) -> None:
+        """
+        Compute the evolution of variables during the maneuver.
+        """
+        pass
+
+    @abstractmethod
+    def _initialize_evolution_variables(self):
+        """
+        Initialize the evolution variables.
+        """
+        pass
+
+class TakeOffManeuver(Maneuver):
     """
     Class to compute the evolution of variables during a take off sequence.
     """
@@ -42,23 +88,44 @@ class TakeOffManeuver:
     plane_model: Plane
     dt: float = 0.1
     evolution_variable_names = [
-        "phase_list",
-        "altitude_list",
-        "time_list",
-        "thrust_list",
-        "incidence_list",
-        "pitch_list",
-        "lift_coefficient_list",
-        "drag_coefficient_list",
-        "x_coord_list",
-        "velocity_list",
-        "acceleration_list",
-        "ground_reaction_force_list",
-        "ground_friction_force_list",
-        "lift_list",
-        "drag_list",
-        "rho_list"
+        "phase",
+        "altitude",
+        "time",
+        "thrust",
+        "incidence",
+        "pitch",
+        "lift_coefficient",
+        "drag_coefficient",
+        "x_coord",
+        "velocity",
+        "acceleration",
+        "ground_reaction_force",
+        "ground_friction_force",
+        "lift",
+        "drag",
+        "rho"
     ]
+    _nb_max_iterations: int = 1000
+    rotation_start_time: float | None = None
+    flight_start_time: float | None = None
+    evolution_variable_units = {
+        "phase": "",
+        "altitude": "m",
+        "time": "s",
+        "thrust": "N",
+        "incidence": "rad",
+        "pitch": "rad",
+        "lift_coefficient": "",
+        "drag_coefficient": "",
+        "x_coord": "m",
+        "velocity": "m.s-1",
+        "acceleration": "m.s-2",
+        "ground_reaction_force": "N",
+        "ground_friction_force": "N",
+        "lift": "N",
+        "drag": "N",
+        "rho": "kg.m-3"
+    }
 
     def __init__(self,
                  plane_model: Plane,
@@ -82,10 +149,6 @@ class TakeOffManeuver:
             self.end_take_off_altitude = ground_altitude + 30
 
     def _initialize_evolution_variables(self):
-        """
-        Initialize the evolution variables.
-        """
-
         self.phase_list = ["initial_acceleration"]
         self.time_list = [0.]
         self.thrust_list = [
@@ -111,26 +174,31 @@ class TakeOffManeuver:
         self.rho_list = [self.plane_model.atmosphere_model.compute_density_from_altitude(
             self.ground_altitude)]
 
+        # Reset timers
+        self.rotation_start_time = None
+        self.flight_start_time = None
+
     def compute_evolution(self):
-        """
-        Compute the evolution of variables during the maneuver.
-        """
 
         # Initialise
         self._initialize_evolution_variables()
 
         # Iterate until lift off
-        while self.phase_list[-1] != "flight" and self.altitude_list[-1] < self.end_take_off_altitude:
-            # Determine the phase
-            if self.velocity_list[-1] > self.rotation_sequence_trigger_speed and self.ground_reaction_force_list[-1] == 0:
-                current_phase = "flight"
-            elif self.velocity_list[-1] > self.rotation_sequence_trigger_speed:
-                current_phase = "rotation"
-            else:
-                current_phase = "initial_acceleration"
-
+        while self.altitude_list[-1] < self.end_take_off_altitude and len(self.phase_list) < self._nb_max_iterations:
             # Compute time
             current_time = self.time_list[-1] + self.dt
+
+            # Determine the phase
+            if self.velocity_list[-1] > self.rotation_sequence_trigger_speed and self.ground_reaction_force_list[-1] <= 0:
+                current_phase = "flight"
+                if self.phase_list[-1] == "rotation":
+                    self.flight_start_time = current_time
+            elif self.velocity_list[-1] > self.rotation_sequence_trigger_speed:
+                current_phase = "rotation"
+                if self.phase_list[-1] == "initial_acceleration":
+                    self.rotation_start_time = current_time
+            else:
+                current_phase = "initial_acceleration"
 
             # Compute thrust
             current_thrust = self.plane_model.thrust_per_engine * \
@@ -185,7 +253,7 @@ class TakeOffManeuver:
             if current_phase == "flight":
                 current_ground_reaction_force = 0
             else:
-                current_ground_reaction_force = vertical_force
+                current_ground_reaction_force = max(vertical_force, 0)
 
             # Compute ground friction force
             current_ground_friction_force = current_ground_reaction_force * \
@@ -205,7 +273,11 @@ class TakeOffManeuver:
 
             # Compute distance
             current_x_coord = self.x_coord_list[-1] + \
-                current_velocity * self.dt
+                current_velocity * self.dt * np.cos(current_pitch)
+
+            # Compute altitude
+            current_altitude = self.altitude_list[-1] + \
+                current_velocity * self.dt * np.sin(current_pitch)
 
             # Add the variables in the lists
             self.phase_list.append(current_phase)
@@ -222,3 +294,8 @@ class TakeOffManeuver:
             self.pitch_derivative_list.append(current_pitch_derivative)
             self.drag_list.append(current_drag)
             self.lift_list.append(current_lift)
+            self.altitude_list.append(current_altitude)
+            self.ground_reaction_force_list.append(
+                current_ground_reaction_force)
+            self.ground_friction_force_list.append(
+                current_ground_friction_force)

@@ -108,6 +108,10 @@ class _Turbojet:
         ----------
         variable : Literal["pressure", "temperature", "mass_flow"]
             Name of the variable to plot.
+
+        Note
+        ----
+        For more details on the optional arguments, please check flight_mech._common.plot_graph.
         """
 
         # Extract code of the variable

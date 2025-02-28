@@ -175,3 +175,6 @@ draft*
 
 # Ignore vs code files
 .vscode
+
+# Ignore private files
+.private
