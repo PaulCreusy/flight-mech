@@ -84,3 +84,4 @@ todo_include_todos = True
 # -- Options for sitemap -----------------------------------------------------
 
 html_baseurl = 'https://flight-mech.creusy.fr/'
+sitemap_url_scheme = "{link}"
