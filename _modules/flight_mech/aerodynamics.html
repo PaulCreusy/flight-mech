@@ -536,9 +536,6 @@
         <span class="n">solution</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">delta_array</span> <span class="o">=</span> <span class="n">get_delta_from_z</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="c1"># plt.plot(solution.t, delta_array)</span>
-    <span class="c1"># plt.show()</span>
-
     <span class="c1"># Raise error if boundary layer separation</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">boundary_progress_array</span> <span class="o">&lt;</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
