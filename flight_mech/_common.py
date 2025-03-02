@@ -21,6 +21,7 @@ def plot_graph(
         data_label: str | None = None,
         title: str | None = None,
         use_grid: bool = False,
+        use_legend: bool = False,
         save_path: str | None = None,
         hold_plot: bool = False,
         clear_before_plot: bool = False,
@@ -81,6 +82,10 @@ def plot_graph(
     # Enable grid if needed
     if use_grid:
         plt.grid()
+
+    # Enable legend if needed
+    if use_legend:
+        plt.legend()
 
     # Save figure if needed
     if save_path is not None:

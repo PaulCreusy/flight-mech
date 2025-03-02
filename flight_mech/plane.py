@@ -23,14 +23,13 @@ import matplotlib.colors as mcolors
 from flight_mech.atmosphere import (
     StandardAtmosphere
 )
+from flight_mech.environment import (
+    EarthEnvironment
+)
 
 #############
 # Constants #
 #############
-
-# Define physical constants
-P0 = 1e5  # Pa
-g = 9.81  # m.s-2
 
 # Define a default plane database location
 default_plane_database = os.path.join(
@@ -78,6 +77,7 @@ class Plane:
 
     # Type of atmosphere
     atmosphere_model = StandardAtmosphere
+    environment_model = EarthEnvironment
 
     def __init__(self,
                  plane_data_name: str | None = None,
@@ -167,7 +167,7 @@ class Plane:
         """
 
         if self.P is None or force:
-            self.P = self.m * g
+            self.P = self.m * self.environment_model.g
 
     def update_ground_effect_coefficient(self, force: bool = False):
         """
@@ -745,10 +745,11 @@ class Plane:
     def compute_max_range_at_fixed_altitude(self, z: float):
         rho = self.atmosphere_model.compute_density_from_altitude(z)
         optimal_C_L = self.C_L_f_max / np.sqrt(3)
-        plane_range = (2 / (self.fuel_specific_conso_SI * g))\
+        plane_range = (2 / (self.fuel_specific_conso_SI * self.environment_model.g))\
             * (np.sqrt(optimal_C_L) / self.C_D(C_L=optimal_C_L)) * \
             np.sqrt(2 / (rho * self.S)) * \
-            (np.sqrt(self.P) - np.sqrt((self.m_empty + self.m_payload) * g))
+            (np.sqrt(self.P) - np.sqrt((self.m_empty +
+             self.m_payload) * self.environment_model.g))
         return plane_range
 
     def compute_range_at_fixed_speed(self,
@@ -757,8 +758,9 @@ class Plane:
                                      f: float | None = None):
         if f is None:
             f = self.f(alpha)
-        plane_range = (v / (self.fuel_specific_conso_SI * g)) * \
-            f * np.log(self.P / ((self.m_empty + self.m_payload) * g))
+        plane_range = (v / (self.fuel_specific_conso_SI * self.environment_model.g)) * \
+            f * np.log(self.P / ((self.m_empty + self.m_payload)
+                       * self.environment_model.g))
         return plane_range
 
     def compute_endurance(self,
@@ -766,15 +768,16 @@ class Plane:
                           f: float | None = None):
         if f is None:
             f = self.f(alpha)
-        endurance = (1 / (self.fuel_specific_conso_SI * g)) * f * \
-            np.log(self.P / ((self.m_empty + self.m_payload) * g))
+        endurance = (1 / (self.fuel_specific_conso_SI * self.environment_model.g)) * f * \
+            np.log(self.P / ((self.m_empty + self.m_payload)
+                   * self.environment_model.g))
         return endurance
 
     def compute_take_off_distance_no_friction(self, z: float):
         T = self.compute_thrust(z)
         rho = self.atmosphere_model.compute_density_from_altitude(z)
         d_take_off = (self.P / T) * (1.44 * self.P / self.S) / \
-            (rho * g * self.C_L_max)
+            (rho * self.environment_model.g * self.C_L_max)
         return d_take_off
 
     def compute_ground_effect(self,
@@ -870,7 +873,7 @@ class Plane:
             take_off_speed * 0.7, z, C_L=C_L_max)
         L = self.compute_lift(take_off_speed * 0.7, z, C_L=C_L_max)
         rho = self.atmosphere_model.compute_density_from_altitude(z)
-        d_take_off = (1.44 * (self.P / self.S)) / (rho * g *
+        d_take_off = (1.44 * (self.P / self.S)) / (rho * self.environment_model.g *
                                                    C_L_max) * (self.P / (T - (D + mu * (self.P - L))))
 
         return d_take_off
@@ -912,7 +915,7 @@ class Plane:
         D = self.compute_drag(landing_speed * 0.7, z, C_L=C_L)
         L = self.compute_lift(landing_speed * 0.7, z, C_L=C_L)
         rho = self.atmosphere_model.compute_density_from_altitude(z)
-        d_landing = (1.69 * (self.P / self.S)) / (rho * g * C_L_max) * \
+        d_landing = (1.69 * (self.P / self.S)) / (rho * self.environment_model.g * C_L_max) * \
             (self.P / (reverse_thrust + (D + mu * (self.P - L))))
 
         return d_landing
