@@ -31,6 +31,7 @@ class Maneuver(ABC):
     Base class to create maneuvers.
     """
 
+    plane_model: Plane
     time_list: list[float]
     evolution_variable_names: list[str]
     evolution_variable_units: dict[str, str]
@@ -54,6 +55,8 @@ class Maneuver(ABC):
             x_array=self.time_list,
             y_array=self.__getattribute__(f"{variable}_list"),
             title=f"{variable.capitalize()} graph",
+            data_label=variable,
+            use_legend=True,
             x_label=f"Time [{self.evolution_variable_units['time']}]",
             y_label=f"{variable.capitalize()} [{self.evolution_variable_units[variable]}]",
             **kwargs
@@ -85,8 +88,7 @@ class TakeOffManeuver(Maneuver):
     ground_friction_coefficient: float
     max_ground_angle_of_incidence: float  # rad
     end_take_off_altitude: float  # m
-    plane_model: Plane
-    dt: float = 0.1
+
     evolution_variable_names = [
         "phase",
         "altitude",
@@ -96,7 +98,7 @@ class TakeOffManeuver(Maneuver):
         "pitch",
         "lift_coefficient",
         "drag_coefficient",
-        "x_coord",
+        "ground_distance",
         "velocity",
         "acceleration",
         "ground_reaction_force",
@@ -105,9 +107,6 @@ class TakeOffManeuver(Maneuver):
         "drag",
         "rho"
     ]
-    _nb_max_iterations: int = 1000
-    rotation_start_time: float | None = None
-    flight_start_time: float | None = None
     evolution_variable_units = {
         "phase": "",
         "altitude": "m",
@@ -117,7 +116,7 @@ class TakeOffManeuver(Maneuver):
         "pitch": "rad",
         "lift_coefficient": "",
         "drag_coefficient": "",
-        "x_coord": "m",
+        "ground_distance": "m",
         "velocity": "m.s-1",
         "acceleration": "m.s-2",
         "ground_reaction_force": "N",
@@ -126,6 +125,11 @@ class TakeOffManeuver(Maneuver):
         "drag": "N",
         "rho": "kg.m-3"
     }
+
+    rotation_start_time: float | None = None
+    flight_start_time: float | None = None
+    dt: float = 0.1
+    nb_max_iterations: int = 1000
 
     def __init__(self,
                  plane_model: Plane,
@@ -159,7 +163,7 @@ class TakeOffManeuver(Maneuver):
         self.lift_coefficient_list = [
             self.plane_model.C_L(0)]
         self.drag_coefficient_list = [self.plane_model.C_D_0]
-        self.x_coord_list = [0.]
+        self.ground_distance_list = [0.]
         self.velocity_list = [0.]
         self.acceleration_list = [0.]
         self.pitch_derivative_list = [0.]
@@ -184,7 +188,7 @@ class TakeOffManeuver(Maneuver):
         self._initialize_evolution_variables()
 
         # Iterate until lift off
-        while self.altitude_list[-1] < self.end_take_off_altitude and len(self.phase_list) < self._nb_max_iterations:
+        while self.altitude_list[-1] < self.end_take_off_altitude and len(self.phase_list) < self.nb_max_iterations:
             # Compute time
             current_time = self.time_list[-1] + self.dt
 
@@ -201,8 +205,7 @@ class TakeOffManeuver(Maneuver):
                 current_phase = "initial_acceleration"
 
             # Compute thrust
-            current_thrust = self.plane_model.thrust_per_engine * \
-                self.plane_model.nb_engines * \
+            current_thrust = self.plane_model.compute_thrust(self.altitude_list[-1]) * \
                 self.thrust_evolution_function(current_time)
 
             # Compute angle of incidence
@@ -241,8 +244,8 @@ class TakeOffManeuver(Maneuver):
             )
 
             # Compute pitch derivative
-            vertical_force = -(-self.plane_model.P * np.cos(current_pitch) +
-                               current_lift + current_thrust * np.sin(current_incidence))
+            vertical_force = (self.plane_model.P * np.cos(current_pitch) -
+                              current_lift - current_thrust * np.sin(current_incidence))
             if current_phase == "flight":
                 current_pitch_derivative = -vertical_force / \
                     (self.plane_model.m * self.velocity_list[-1])
@@ -272,7 +275,7 @@ class TakeOffManeuver(Maneuver):
                 current_acceleration * self.dt
 
             # Compute distance
-            current_x_coord = self.x_coord_list[-1] + \
+            current_ground_distance = self.ground_distance_list[-1] + \
                 current_velocity * self.dt * np.cos(current_pitch)
 
             # Compute altitude
@@ -289,7 +292,7 @@ class TakeOffManeuver(Maneuver):
             self.drag_coefficient_list.append(current_drag_coefficient)
             self.acceleration_list.append(current_acceleration)
             self.velocity_list.append(current_velocity)
-            self.x_coord_list.append(current_x_coord)
+            self.ground_distance_list.append(current_ground_distance)
             self.rho_list.append(current_rho)
             self.pitch_derivative_list.append(current_pitch_derivative)
             self.drag_list.append(current_drag)
@@ -299,3 +302,206 @@ class TakeOffManeuver(Maneuver):
                 current_ground_reaction_force)
             self.ground_friction_force_list.append(
                 current_ground_friction_force)
+
+class LandingManeuver(Maneuver):
+    """
+    Class to compute the evolution of variables during a landing sequence.
+    """
+
+    thrust_evolution_function: Callable[[float], float]
+    initial_incidence: float  # rad
+    initial_velocity: float  # m.s-1
+    ground_altitude: float  # m
+    braking_friction_coefficient: float
+    ground_friction_coefficient: float
+    parachute_drag_coefficient: float
+    parachute_reference_surface: float  # m2
+
+    evolution_variable_names = [
+        "phase",
+        "time",
+        "thrust",
+        "incidence",
+        "lift_coefficient",
+        "drag_coefficient",
+        "ground_distance",
+        "velocity",
+        "acceleration",
+        "ground_reaction_force",
+        "ground_friction_force",
+        "drag",
+        "lift",
+        "braking_energy"
+    ]
+
+    evolution_variable_units = {
+        "phase": "",
+        "time": "s",
+        "thrust": "N",
+        "incidence": "rad",
+        "lift_coefficient": "",
+        "drag_coefficient": "",
+        "ground_distance": "m",
+        "velocity": "m.s-1",
+        "acceleration": "m.s-2",
+        "ground_reaction_force": "N",
+        "ground_friction_force": "N",
+        "drag": "N",
+        "lift": "N",
+        "braking_energy": "J"
+    }
+
+    braking_start_time: float | None = None
+    dt: float = 0.1
+    nb_max_iterations: int = 1000
+
+    def __init__(self,
+                 plane_model: Plane,
+                 rotation_speed: float,
+                 initial_velocity: float,
+                 thrust_evolution_function: Callable[[
+                     float], float] = lambda x: 0.,
+                 ground_friction_coefficient: float = 0.03,
+                 braking_friction_coefficient: float = 0.5,
+                 initial_incidence: float = 11 * np.pi / 180,
+                 ground_altitude: float = 0.,
+                 parachute_drag_coefficient: float = 0.,
+                 parachute_reference_surface: float = 0.):
+
+        self.plane_model = plane_model
+        self.ground_rotation_speed = rotation_speed
+        self.initial_velocity = initial_velocity
+        self.thrust_evolution_function = thrust_evolution_function
+        self.ground_friction_coefficient = ground_friction_coefficient
+        self.braking_friction_coefficient = braking_friction_coefficient
+        self.initial_incidence = initial_incidence
+        self.ground_altitude = ground_altitude
+        self.parachute_drag_coefficient = parachute_drag_coefficient
+        self.parachute_reference_surface = parachute_reference_surface
+
+        # Raise warning in case the parachute is only partially defined
+        if self.parachute_drag_coefficient * self.parachute_reference_surface == 0 and (self.parachute_reference_surface != 0 or self.parachute_drag_coefficient != 0):
+            raise Warning(
+                "Warning, one of the parachute coefficients is zero. The parachute will remain disabled for the sequence.")
+
+    def _initialize_evolution_variables(self):
+        self.phase_list = ["initial_touchdown"]
+        self.time_list = [0.]
+        self.thrust_list = [
+            self.thrust_evolution_function(0)]
+        self.incidence_list = [self.initial_incidence]
+        self.lift_coefficient_list = [
+            self.plane_model.C_L(0)]
+        self.drag_coefficient_list = [self.plane_model.C_D_0]
+        self.ground_distance_list = [0.]
+        self.velocity_list = [self.initial_velocity]
+        self.acceleration_list = [0.]
+        self.ground_reaction_force_list = [0.]
+        self.ground_friction_force_list = [0.]
+        rho = self.plane_model.atmosphere_model.compute_density_from_altitude(
+            self.ground_altitude)
+        self.drag_list = [self.plane_model.compute_drag(
+            self.initial_velocity, z=self.ground_altitude, alpha=self.initial_incidence) + .5 * rho * np.power(self.velocity_list[-1], 2) * self.parachute_drag_coefficient * self.parachute_reference_surface]
+        self.lift_list = [self.plane_model.compute_lift(
+            self.initial_velocity, z=self.ground_altitude, alpha=self.initial_incidence)]
+        self.braking_energy_list = [0.]
+
+        # Reset timers
+        self.braking_start_time = None
+        self.stop_time = None
+
+    def compute_evolution(self):
+        # Initialise
+        self._initialize_evolution_variables()
+
+        # Compute air density
+        rho = self.plane_model.atmosphere_model.compute_density_from_altitude(
+            self.ground_altitude)
+
+        # Iterate until lift off
+        while self.phase_list[-1] != "stopped" and len(self.phase_list) < self.nb_max_iterations:
+            # Compute time
+            current_time = self.time_list[-1] + self.dt
+
+            # Determine the phase
+            if self.velocity_list[-1] <= 0:
+                current_phase = "stopped"
+            elif self.incidence_list[-1] <= 0:
+                current_phase = "braking"
+                if self.phase_list[-1] == "rotation":
+                    self.braking_start_time = current_time
+            else:
+                current_phase = "rotation"
+
+            # Compute thrust
+            current_thrust = self.plane_model.compute_thrust(self.ground_altitude) * \
+                self.thrust_evolution_function(current_time)
+
+            # Compute angle of incidence
+            current_incidence = max(
+                self.incidence_list[-1] - self.ground_rotation_speed * self.dt, 0)
+
+            # Compute lift coefficient
+            current_lift_coefficient = self.plane_model.C_L(current_incidence)
+
+            # Compute drag coefficient (including the parachute drag)
+            current_drag_coefficient = self.plane_model.C_D(
+                current_incidence) + self.parachute_reference_surface * self.parachute_drag_coefficient / self.plane_model.S
+
+            # Compute drag (including the parachute drag)
+            current_drag = self.plane_model.compute_drag(
+                v=self.velocity_list[-1],
+                z=self.ground_altitude,
+                alpha=current_incidence
+            ) + .5 * rho * np.power(self.velocity_list[-1], 2) * self.parachute_drag_coefficient * self.parachute_reference_surface
+
+            # Compute lift
+            current_lift = self.plane_model.compute_lift(
+                v=self.velocity_list[-1],
+                z=self.ground_altitude,
+                alpha=current_incidence
+            )
+
+            # Compute ground reaction force
+            current_ground_reaction_force = (self.plane_model.P - current_lift -
+                                             current_thrust * np.sin(current_incidence))
+
+            # Compute ground friction force
+            current_ground_friction_force = current_ground_reaction_force * \
+                (self.ground_friction_coefficient +
+                 self.braking_friction_coefficient)
+
+            # Compute acceleration
+            current_acceleration = (current_thrust * np.cos(current_incidence) -
+                                    current_drag - current_ground_friction_force) / self.plane_model.m
+
+            # Compute velocity
+            current_velocity = self.velocity_list[-1] + \
+                current_acceleration * self.dt
+
+            # Compute ground distance
+            current_ground_distance = self.ground_distance_list[-1] + \
+                current_velocity * self.dt
+
+            # Compute braking energy
+            current_braking_energy = self.braking_energy_list[-1] + current_ground_reaction_force * \
+                self.braking_friction_coefficient * current_velocity * \
+                self.dt
+
+            # Add the variables in the list
+            self.phase_list.append(current_phase)
+            self.time_list.append(current_time)
+            self.thrust_list.append(current_thrust)
+            self.incidence_list.append(current_incidence)
+            self.lift_coefficient_list.append(current_lift_coefficient)
+            self.drag_coefficient_list.append(current_drag_coefficient)
+            self.lift_list.append(current_lift)
+            self.drag_list.append(current_drag)
+            self.ground_reaction_force_list.append(
+                current_ground_reaction_force)
+            self.ground_friction_force_list.append(
+                current_ground_friction_force)
+            self.acceleration_list.append(current_acceleration)
+            self.velocity_list.append(current_velocity)
+            self.ground_distance_list.append(current_ground_distance)
+            self.braking_energy_list.append(current_braking_energy)
