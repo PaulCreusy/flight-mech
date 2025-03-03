@@ -60,8 +60,16 @@ User Guide
 
    user_guide
 
-API
----
+Examples
+--------
+
+.. toctree:: 
+    :maxdepth: 2
+
+    examples
+
+API References
+--------------
 
 .. toctree:: 
    :maxdepth: 2

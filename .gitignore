@@ -178,3 +178,6 @@ draft*
 
 # Ignore private files
 .private
+
+# Ignore docs example files
+docs/examples/*

@@ -8,6 +8,7 @@
 import os
 import sys
 import tomli
+import shutil
 sys.path.insert(
     0, os.path.abspath('..'))
 # sys.path.append(".")
@@ -85,3 +86,17 @@ todo_include_todos = True
 
 html_baseurl = 'https://flight-mech.creusy.fr/'
 sitemap_url_scheme = "{link}"
+
+# -- Copy example files to _static -------------------------------------------
+
+examples_folder_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "examples")
+sphinx_examples_folder_path = os.path.join(
+    os.path.dirname(__file__), "examples")
+if os.path.exists(sphinx_examples_folder_path):
+    shutil.rmtree(sphinx_examples_folder_path)
+os.mkdir(sphinx_examples_folder_path)
+for file in os.listdir(examples_folder_path):
+    if file.endswith(".ipynb"):
+        shutil.copy(os.path.join(examples_folder_path, file),
+                    os.path.join(sphinx_examples_folder_path, file))
