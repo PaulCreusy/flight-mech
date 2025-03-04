@@ -142,6 +142,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../api_references.html">
     API references
   </a>
@@ -237,6 +244,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../user_guide.html">
     User guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../examples.html">
+    Examples
   </a>
 </li>
 
@@ -970,7 +984,25 @@
 
 <div class="viewcode-block" id="Plane.compute_velocity_interval_for_fixed_thrust">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_velocity_interval_for_fixed_thrust">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_velocity_interval_for_fixed_thrust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_velocity_interval_for_fixed_thrust</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the velocity interval that is available with the thrust of the plane at a given altitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        This velocity interval does not take into account the stall velocity. The minimum velocity can therefore be inferior</span>
+<span class="sd">        to the stall velocity.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple[float,float]</span>
+<span class="sd">            Tuple containing the min and max velocity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_normalized_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">v_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">v_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">v_ref</span><span class="p">)</span>
@@ -1145,50 +1177,141 @@
 
 <div class="viewcode-block" id="Plane.compute_speed_for_max_ascension_speed">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_speed_for_max_ascension_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_for_max_ascension_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_for_max_ascension_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the velocity that gives the maximum ascension speed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Velocity giving the maximum ascension speed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_normalized_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">u_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">t</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
         <span class="n">v_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">v_ref</span> <span class="o">*</span> <span class="n">u_m</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_max_ascension_speed">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_max_ascension_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_ascension_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_ascension_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the maximum ascension speed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Maximum ascension speed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_normalized_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">u_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">t</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
         <span class="n">v_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">v_z_max</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_max</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">u_m</span> <span class="o">-</span>
                                             <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">u_m</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">u_m</span><span class="p">))</span> <span class="o">*</span> <span class="n">v_ref</span>
+
         <span class="k">return</span> <span class="n">v_z_max</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_ascension_slope">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_ascension_slope">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_ascension_slope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_ascension_slope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the ascension slope at a given incidence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            Angle of incidence in rad.</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Ascension slope in rad.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">gamma</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_max_ascension_slope">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_max_ascension_slope">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_ascension_slope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the maximum ascension slope.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Maximum ascension slope in rad.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_normalized_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">gamma_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">((</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_max</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">gamma_max</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_load_factor_from_roll_angle">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_load_factor_from_roll_angle">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_load_factor_from_roll_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the load angle for a roll at the given angle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        phi : float</span>
+<span class="sd">            Angle of roll.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Load factor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">n_z</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">n_z</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_max_range_at_fixed_altitude">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_max_range_at_fixed_altitude">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_range_at_fixed_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the maximum range at a fixed altitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Maximum range in meters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_model</span><span class="o">.</span><span class="n">compute_density_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">optimal_C_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_L_f_max</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">plane_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuel_specific_conso_SI</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span><span class="p">))</span>\
@@ -1196,6 +1319,7 @@
             <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">))</span> <span class="o">*</span> \
             <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m_empty</span> <span class="o">+</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">m_payload</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">plane_range</span></div>
 
 
@@ -1205,11 +1329,30 @@
                                      <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                      <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                      <span class="n">f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the maximum range at a fixed speed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        v : float</span>
+<span class="sd">            Speed in m.s-1.</span>
+<span class="sd">        alpha : float | None, optional</span>
+<span class="sd">            Angle of incidence, by default None</span>
+<span class="sd">        f : float | None, optional</span>
+<span class="sd">            Glide ratio, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Maximum range in meters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
         <span class="n">plane_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuel_specific_conso_SI</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span><span class="p">))</span> <span class="o">*</span> \
             <span class="n">f</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m_empty</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_payload</span><span class="p">)</span>
                        <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">plane_range</span></div>
 
 
@@ -1218,21 +1361,53 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_endurance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                           <span class="n">f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the amount of time that the plane can stay at the same altitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float | None, optional</span>
+<span class="sd">            Angle of incidence in rad, if not specified the glide ratio will be used instead, by default None</span>
+<span class="sd">        f : float | None, optional</span>
+<span class="sd">            Glide ratio, if not specified the angle of incidence will be used instead, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Amount of time the plane can stay at the same altitude in seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
         <span class="n">endurance</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuel_specific_conso_SI</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span><span class="p">))</span> <span class="o">*</span> <span class="n">f</span> <span class="o">*</span> \
             <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m_empty</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_payload</span><span class="p">)</span>
                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">endurance</span></div>
 
 
 <div class="viewcode-block" id="Plane.compute_take_off_distance_no_friction">
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_take_off_distance_no_friction">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_take_off_distance_no_friction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_take_off_distance_no_friction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the take off distance of the plane without taking the ground friction in account.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Take off distance in meters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_thrust</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_model</span><span class="o">.</span><span class="n">compute_density_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">d_take_off</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> <span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.44</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span><span class="p">)</span> <span class="o">/</span> \
             <span class="p">(</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_model</span><span class="o">.</span><span class="n">g</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_L_max</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">d_take_off</span></div>
 
 
@@ -1240,12 +1415,29 @@
 <a class="viewcode-back" href="../../flight_mech.plane.html#flight_mech.plane.Plane.compute_ground_effect">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_ground_effect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                              <span class="n">C_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                              <span class="n">C_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the additional drag due to the ground effect.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        alpha : float | None, optional</span>
+<span class="sd">            Angle of incidence in rad, by default None</span>
+<span class="sd">        C_L : float | None, optional</span>
+<span class="sd">            Lift coefficient, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Ground effect drag force in N.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">C_L</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">C_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_L</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
         <span class="n">ground_effect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ground_effect_coefficient</span> <span class="o">*</span> \
             <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">C_L</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_shape_coefficient</span> <span class="o">*</span>
                                 <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">ground_effect</span></div>
 
 
@@ -1255,11 +1447,32 @@
                                         <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                         <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                         <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                                        <span class="n">C_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                                        <span class="n">C_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the total drag, taking the ground effect into account.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        v : float</span>
+<span class="sd">            Velocity in m.s-1</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Altitude in m</span>
+<span class="sd">        alpha : float | None, optional</span>
+<span class="sd">            Angle of incidence in rad, by default None</span>
+<span class="sd">        C_L : float | None, optional</span>
+<span class="sd">            Lift coefficient, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Drag with ground effect in N.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">ground_effect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ground_effect</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">C_L</span><span class="o">=</span><span class="n">C_L</span><span class="p">)</span>
         <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_model</span><span class="o">.</span><span class="n">compute_density_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">drag_with_ground_effect</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">S</span> <span class="o">*</span> \
             <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_D_0</span> <span class="o">+</span> <span class="n">ground_effect</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">drag_with_ground_effect</span></div>
 
 

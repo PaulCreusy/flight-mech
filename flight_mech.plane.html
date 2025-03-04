@@ -144,6 +144,13 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="api_references.html">
     API references
@@ -242,6 +249,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="user_guide.html">
     User guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
   </a>
 </li>
 
@@ -515,8 +529,23 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_ascension_slope">
-<span class="sig-name descname"><span class="pre">compute_ascension_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_ascension_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_ascension_slope" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_ascension_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_ascension_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_ascension_slope" title="Link to this definition">#</a></dt>
+<dd><p>Compute the ascension slope at a given incidence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em>) – Angle of incidence in rad.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ascension slope in rad.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_drag">
@@ -542,13 +571,45 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_drag_with_ground_effect">
-<span class="sig-name descname"><span class="pre">compute_drag_with_ground_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_drag_with_ground_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_drag_with_ground_effect" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_drag_with_ground_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_drag_with_ground_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_drag_with_ground_effect" title="Link to this definition">#</a></dt>
+<dd><p>Compute the total drag, taking the ground effect into account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>float</em>) – Velocity in m.s-1</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Altitude in m</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Angle of incidence in rad, by default None</p></li>
+<li><p><strong>C_L</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Lift coefficient, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Drag with ground effect in N.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_endurance">
 <span class="sig-name descname"><span class="pre">compute_endurance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_endurance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_endurance" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the amount of time that the plane can stay at the same altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Angle of incidence in rad, if not specified the glide ratio will be used instead, by default None</p></li>
+<li><p><strong>f</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Glide ratio, if not specified the angle of incidence will be used instead, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Amount of time the plane can stay at the same altitude in seconds.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_gliding_speed">
@@ -589,8 +650,23 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_ground_effect">
-<span class="sig-name descname"><span class="pre">compute_ground_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_ground_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_ground_effect" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_ground_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C_L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_ground_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_ground_effect" title="Link to this definition">#</a></dt>
+<dd><p>Compute the additional drag due to the ground effect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Angle of incidence in rad, by default None</p></li>
+<li><p><strong>C_L</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Lift coefficient, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ground effect drag force in N.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_landing_distance">
@@ -657,7 +733,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_load_factor_from_roll_angle">
 <span class="sig-name descname"><span class="pre">compute_load_factor_from_roll_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_load_factor_from_roll_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_load_factor_from_roll_angle" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the load angle for a roll at the given angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>phi</strong> (<em>float</em>) – Angle of roll.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Load factor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_altitude">
@@ -676,12 +764,36 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_ascension_slope">
 <span class="sig-name descname"><span class="pre">compute_max_ascension_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_ascension_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_ascension_slope" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the maximum ascension slope.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Maximum ascension slope in rad.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_ascension_speed">
-<span class="sig-name descname"><span class="pre">compute_max_ascension_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_ascension_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_ascension_speed" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_max_ascension_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_ascension_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_ascension_speed" title="Link to this definition">#</a></dt>
+<dd><p>Compute the maximum ascension speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Maximum ascension speed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_gliding_range">
@@ -720,7 +832,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_max_range_at_fixed_altitude">
 <span class="sig-name descname"><span class="pre">compute_max_range_at_fixed_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_max_range_at_fixed_altitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_max_range_at_fixed_altitude" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the maximum range at a fixed altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Maximum range in meters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_min_descent_gliding_slope">
@@ -770,7 +894,23 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_range_at_fixed_speed">
 <span class="sig-name descname"><span class="pre">compute_range_at_fixed_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_range_at_fixed_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_range_at_fixed_speed" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the maximum range at a fixed speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>float</em>) – Speed in m.s-1.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Angle of incidence, by default None</p></li>
+<li><p><strong>f</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Glide ratio, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Maximum range in meters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_reference_speed">
@@ -791,8 +931,20 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_max_ascension_speed">
-<span class="sig-name descname"><span class="pre">compute_speed_for_max_ascension_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_max_ascension_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_max_ascension_speed" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_speed_for_max_ascension_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_speed_for_max_ascension_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_speed_for_max_ascension_speed" title="Link to this definition">#</a></dt>
+<dd><p>Compute the velocity that gives the maximum ascension speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Velocity giving the maximum ascension speed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_speed_for_min_power_needed">
@@ -851,8 +1003,20 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_take_off_distance_no_friction">
-<span class="sig-name descname"><span class="pre">compute_take_off_distance_no_friction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_take_off_distance_no_friction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_take_off_distance_no_friction" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_take_off_distance_no_friction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_take_off_distance_no_friction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_take_off_distance_no_friction" title="Link to this definition">#</a></dt>
+<dd><p>Compute the take off distance of the plane without taking the ground friction in account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Take off distance in meters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_take_off_distance_with_friction">
@@ -952,8 +1116,27 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.compute_velocity_interval_for_fixed_thrust">
-<span class="sig-name descname"><span class="pre">compute_velocity_interval_for_fixed_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_velocity_interval_for_fixed_thrust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_velocity_interval_for_fixed_thrust" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">compute_velocity_interval_for_fixed_thrust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/flight_mech/plane.html#Plane.compute_velocity_interval_for_fixed_thrust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.plane.Plane.compute_velocity_interval_for_fixed_thrust" title="Link to this definition">#</a></dt>
+<dd><p>Compute the velocity interval that is available with the thrust of the plane at a given altitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>float</em>) – Altitude in meters.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This velocity interval does not take into account the stall velocity. The minimum velocity can therefore be inferior
+to the stall velocity.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple containing the min and max velocity.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[float,float]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flight_mech.plane.Plane.engine_type">
