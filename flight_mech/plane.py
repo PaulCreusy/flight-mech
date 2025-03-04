@@ -563,7 +563,25 @@ class Plane:
 
         return z / v_z_min
 
-    def compute_velocity_interval_for_fixed_thrust(self, z: float) -> float:
+    def compute_velocity_interval_for_fixed_thrust(self, z: float) -> tuple[float, float]:
+        """
+        Compute the velocity interval that is available with the thrust of the plane at a given altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude in meters.
+
+        Warning
+        -------
+        This velocity interval does not take into account the stall velocity. The minimum velocity can therefore be inferior
+        to the stall velocity.
+
+        Returns
+        -------
+        tuple[float,float]
+            Tuple containing the min and max velocity.
+        """
         t = self.compute_normalized_thrust(z)
         v_ref = self.compute_reference_speed(z)
         v_max = float(np.sqrt(t + np.sqrt(pow(t, 2) - 1)) * v_ref)
@@ -714,35 +732,126 @@ class Plane:
 
         return z_max
 
-    def compute_speed_for_max_ascension_speed(self, z: float):
+    def compute_speed_for_max_ascension_speed(self, z: float) -> float:
+        """
+        Compute the velocity that gives the maximum ascension speed.
+
+        Parameters
+        ----------
+        z : float
+            Altitude in meters.
+
+        Returns
+        -------
+        float
+            Velocity giving the maximum ascension speed.
+        """
+
         t = self.compute_normalized_thrust(z)
         u_m = np.sqrt((t + np.sqrt(np.power(t, 2) + 3)) / 3)
         v_ref = self.compute_reference_speed(z)
+
         return v_ref * u_m
 
-    def compute_max_ascension_speed(self, z: float):
+    def compute_max_ascension_speed(self, z: float) -> float:
+        """
+        Compute the maximum ascension speed.
+
+        Parameters
+        ----------
+        z : float
+            Altitude in meters.
+
+        Returns
+        -------
+        float
+            Maximum ascension speed.
+        """
+
         t = self.compute_normalized_thrust(z)
         u_m = np.sqrt((t + np.sqrt(np.power(t, 2) + 3)) / 3)
         v_ref = self.compute_reference_speed(z)
         v_z_max = (1 / (2 * self.f_max)) * (2 * t * u_m -
                                             (np.power(u_m, 3) + 1 / u_m)) * v_ref
+
         return v_z_max
 
-    def compute_ascension_slope(self, alpha: float, z: float):
+    def compute_ascension_slope(self, alpha: float, z: float) -> float:
+        """
+        Compute the ascension slope at a given incidence.
+
+        Parameters
+        ----------
+        alpha : float
+            Angle of incidence in rad.
+        z : float
+            Altitude in meters.
+
+        Returns
+        -------
+        float
+            Ascension slope in rad.
+        """
+
         T = self.compute_thrust(z)
         gamma = np.arcsin(T / self.P - 1 / self.f(alpha))
+
         return gamma
 
     def compute_max_ascension_slope(self, z: float):
+        """
+        Compute the maximum ascension slope.
+
+        Parameters
+        ----------
+        z : float
+            Altitude in meters.
+
+        Returns
+        -------
+        float
+            Maximum ascension slope in rad.
+        """
+
         t = self.compute_normalized_thrust(z)
         gamma_max = np.arcsin((t - 1) / self.f_max)
+
         return gamma_max
 
     def compute_load_factor_from_roll_angle(self, phi: float):
+        """
+        Compute the load angle for a roll at the given angle.
+
+        Parameters
+        ----------
+        phi : float
+            Angle of roll.
+
+        Returns
+        -------
+        float
+            Load factor.
+        """
+
         n_z = 1 / np.cos(phi)
+
         return n_z
 
     def compute_max_range_at_fixed_altitude(self, z: float):
+        """
+        Compute the maximum range at a fixed altitude.
+
+        Parameters
+        ----------
+        z : float
+            Altitude in meters.
+
+        Returns
+        -------
+        float
+            Maximum range in meters.
+        """
+
         rho = self.atmosphere_model.compute_density_from_altitude(z)
         optimal_C_L = self.C_L_f_max / np.sqrt(3)
         plane_range = (2 / (self.fuel_specific_conso_SI * self.environment_model.g))\
@@ -750,55 +859,145 @@ class Plane:
             np.sqrt(2 / (rho * self.S)) * \
             (np.sqrt(self.P) - np.sqrt((self.m_empty +
              self.m_payload) * self.environment_model.g))
+
         return plane_range
 
     def compute_range_at_fixed_speed(self,
                                      v: float,
                                      alpha: float | None = None,
                                      f: float | None = None):
+        """
+        Compute the maximum range at a fixed speed.
+
+        Parameters
+        ----------
+        v : float
+            Speed in m.s-1.
+        alpha : float | None, optional
+            Angle of incidence, by default None
+        f : float | None, optional
+            Glide ratio, by default None
+
+        Returns
+        -------
+        float
+            Maximum range in meters.
+        """
+
         if f is None:
             f = self.f(alpha)
         plane_range = (v / (self.fuel_specific_conso_SI * self.environment_model.g)) * \
             f * np.log(self.P / ((self.m_empty + self.m_payload)
                        * self.environment_model.g))
+
         return plane_range
 
     def compute_endurance(self,
                           alpha: float | None = None,
                           f: float | None = None):
+        """
+        Compute the amount of time that the plane can stay at the same altitude.
+
+        Parameters
+        ----------
+        alpha : float | None, optional
+            Angle of incidence in rad, if not specified the glide ratio will be used instead, by default None
+        f : float | None, optional
+            Glide ratio, if not specified the angle of incidence will be used instead, by default None
+
+        Returns
+        -------
+        float
+            Amount of time the plane can stay at the same altitude in seconds.
+        """
+
         if f is None:
             f = self.f(alpha)
         endurance = (1 / (self.fuel_specific_conso_SI * self.environment_model.g)) * f * \
             np.log(self.P / ((self.m_empty + self.m_payload)
                    * self.environment_model.g))
+
         return endurance
 
-    def compute_take_off_distance_no_friction(self, z: float):
+    def compute_take_off_distance_no_friction(self, z: float) -> float:
+        """
+        Compute the take off distance of the plane without taking the ground friction in account.
+
+        Parameters
+        ----------
+        z : float
+            Altitude in meters.
+
+        Returns
+        -------
+        float
+            Take off distance in meters.
+        """
+
         T = self.compute_thrust(z)
         rho = self.atmosphere_model.compute_density_from_altitude(z)
         d_take_off = (self.P / T) * (1.44 * self.P / self.S) / \
             (rho * self.environment_model.g * self.C_L_max)
+
         return d_take_off
 
     def compute_ground_effect(self,
                               alpha: float | None = None,
-                              C_L: float | None = None):
+                              C_L: float | None = None) -> float:
+        """
+        Compute the additional drag due to the ground effect.
+
+        Parameters
+        ----------
+        alpha : float | None, optional
+            Angle of incidence in rad, by default None
+        C_L : float | None, optional
+            Lift coefficient, by default None
+
+        Returns
+        -------
+        float
+            Ground effect drag force in N.
+        """
+
         if C_L is None:
             C_L = self.C_L(alpha)
         ground_effect = self.ground_effect_coefficient * \
             np.power(C_L, 2) / (self.wing_shape_coefficient *
                                 np.pi * self.extension)
+
         return ground_effect
 
     def compute_drag_with_ground_effect(self,
                                         v: float,
                                         z: float,
                                         alpha: float | None = None,
-                                        C_L: float | None = None):
+                                        C_L: float | None = None) -> float:
+        """
+        Compute the total drag, taking the ground effect into account.
+
+        Parameters
+        ----------
+        v : float
+            Velocity in m.s-1
+        z : float
+            Altitude in m
+        alpha : float | None, optional
+            Angle of incidence in rad, by default None
+        C_L : float | None, optional
+            Lift coefficient, by default None
+
+        Returns
+        -------
+        float
+            Drag with ground effect in N.
+        """
+
         ground_effect = self.compute_ground_effect(alpha=alpha, C_L=C_L)
         rho = self.atmosphere_model.compute_density_from_altitude(z)
         drag_with_ground_effect = .5 * rho * self.S * \
             np.power(v, 2) * (self.C_D_0 + ground_effect)
+
         return drag_with_ground_effect
 
     def compute_take_off_speed(self, z: float):

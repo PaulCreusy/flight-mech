@@ -4,3 +4,5 @@ pytest==8.3.4
 sphinx-sitemap
 nbsphinx
 pydata-sphinx-theme
+ipykernel
+nbmake
