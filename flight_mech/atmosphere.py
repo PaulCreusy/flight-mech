@@ -40,7 +40,7 @@ def compute_air_sound_speed(temperature: float):
 # Classes #
 ###########
 
-class Atmosphere(ABC):
+class AtmosphereModel(ABC):
     """
     Atmosphere abstract class.
     """
@@ -101,7 +101,7 @@ class Atmosphere(ABC):
         """
         pass
 
-class ConstantAtmosphere(Atmosphere):
+class ConstantAtmosphere(AtmosphereModel):
     """
     A constant atmosphere model. Used for test purposes only.
     """
@@ -121,7 +121,7 @@ class ConstantAtmosphere(Atmosphere):
         return self.rho_0
 
 
-class LinearAtmosphere(Atmosphere):
+class LinearAtmosphere(AtmosphereModel):
     """
     A very basic linear model for the atmosphere allowing to compute the density only.
     """
@@ -145,7 +145,7 @@ class LinearAtmosphere(Atmosphere):
         return z
 
 
-class StandardAtmosphere(Atmosphere):
+class StandardAtmosphere(AtmosphereModel):
     """
     International Standard Atmosphere model to compute pressure, temperature and density with altitude.
 
