@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Examples &#8212; flight-mech 1.0.8 documentation</title>
+    <title>Gas Module &#8212; flight-mech 1.0.8 documentation</title>
   
   
   
@@ -46,13 +46,13 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'examples';</script>
-    <link rel="canonical" href="https://flight-mech.creusy.fr/examples.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gas_module';</script>
+    <link rel="canonical" href="https://flight-mech.creusy.fr/gas_module.html" />
     <link rel="icon" href="_static/logo-light.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Gas Example" href="examples/gas_example.html" />
-    <link rel="prev" title="Wing module" href="wing_module.html" />
+    <link rel="next" title="Motor module" href="motor_module.html" />
+    <link rel="prev" title="Atmosphere module" href="atmosphere_module.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="1.0.8" />
@@ -139,15 +139,15 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
+<li class="nav-item current active">
   <a class="nav-link nav-internal" href="user_guide.html">
     User guide
   </a>
 </li>
 
 
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
     Examples
   </a>
 </li>
@@ -248,15 +248,15 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
+<li class="nav-item current active">
   <a class="nav-link nav-internal" href="user_guide.html">
     User guide
   </a>
 </li>
 
 
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
     Examples
   </a>
 </li>
@@ -311,15 +311,14 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="examples/gas_example.html">Gas Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_gliding_example.html">Plane Gliding Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_graphs_example.html">Plane Graphs Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_landing_example.html">Plane Landing Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_range_example.html">Plane Range Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_take_off_example.html">Plane Take-Off Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_velocity_example.html">Plane Velocity Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/turbojet_example.html">Turbojet Example</a></li>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gas Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motor_module.html">Motor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 </ul>
 </div>
 </nav></div>
@@ -360,7 +359,10 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Examples</span></li>
+    
+    <li class="breadcrumb-item"><a href="user_guide.html" class="nav-link">User guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Gas Module</span></li>
   </ul>
 </nav>
 </div>
@@ -377,21 +379,115 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h1>
-<p>This page references the examples for the use of the flight-mech library.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/gas_example.html">Gas Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_gliding_example.html">Plane Gliding Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_graphs_example.html">Plane Graphs Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_landing_example.html">Plane Landing Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_range_example.html">Plane Range Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_take_off_example.html">Plane Take-Off Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/plane_velocity_example.html">Plane Velocity Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/turbojet_example.html">Turbojet Example</a></li>
+  <section id="gas-module">
+<h1>Gas Module<a class="headerlink" href="#gas-module" title="Link to this heading">#</a></h1>
+<p>This module provides simple gas models for thermodynamic calculations. The models implemented include perfect gases and gas mixtures, each with specific assumptions and limitations.</p>
+<section id="gasmodel-abstract-base-class">
+<span id="module-gas_models"></span><h2>GasModel (Abstract Base Class)<a class="headerlink" href="#gasmodel-abstract-base-class" title="Link to this heading">#</a></h2>
+<p>The <cite>GasModel</cite> serves as an abstract base class for defining different gas models. It provides a common structure for all gases. It takes two quantities in input, the temperature (<span class="math notranslate nohighlight">\(T\)</span>) and the pressure (<span class="math notranslate nohighlight">\(P\)</span>) and uses them to compute the following properties:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\rho\)</span> : the density in <span class="math notranslate nohighlight">\(kg.m^{-3}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_p\)</span> : the heat capacity at constant pressure in <span class="math notranslate nohighlight">\(J.K^{-1}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_v\)</span> : the heat capacity at constant volume in <span class="math notranslate nohighlight">\(J.K^{-1}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(c\)</span> : the sound velocity in <span class="math notranslate nohighlight">\(m.s^{-1}\)</span></p></li>
 </ul>
+<p><strong>Assumptions:</strong></p>
+<ul class="simple">
+<li><p>Represents a generic gas with thermodynamic properties.</p></li>
+<li><p>Assumes thermodynamic equilibrium.</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Requires subclasses to define actual gas properties.</p></li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If you pass a valid chemical formula (such as “O2”) as name when defining a gas, its molar mass will be computed automatically.</p>
 </div>
+</section>
+<section id="perfect-gas-model">
+<h2>Perfect Gas Model<a class="headerlink" href="#perfect-gas-model" title="Link to this heading">#</a></h2>
+<p>The <cite>PerfectGas</cite> model follows the ideal gas law:</p>
+<div class="math notranslate nohighlight">
+\[PV = nRT\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(P\)</span> : the pressure,</p></li>
+<li><p><span class="math notranslate nohighlight">\(V\)</span> : the volume,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> : the number of moles,</p></li>
+<li><p><span class="math notranslate nohighlight">\(R\)</span> : the universal gas constant,</p></li>
+<li><p><span class="math notranslate nohighlight">\(T\)</span> : the temperature.</p></li>
+</ul>
+<p>The other quantities are defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[C_p = \frac{\gamma}{\gamma - 1} r\]</div>
+<div class="math notranslate nohighlight">
+\[C_v = \frac{1}{\gamma - 1} r\]</div>
+<div class="math notranslate nohighlight">
+\[c = \sqrt{\gamma r T}\]</div>
+<p><strong>Assumptions:</strong></p>
+<ul class="simple">
+<li><p>The gas behaves ideally with no intermolecular forces.</p></li>
+<li><p>The heat capacity ratio (<span class="math notranslate nohighlight">\(\gamma\)</span>) remains constant.</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Does not account for real gas effects such as compressibility at high pressures.</p></li>
+<li><p>Assumes uniform temperature and pressure.</p></li>
+</ul>
+<p>For a <cite>MonoatomicPerfectGas</cite>, the heat capacity ratio is fixed at 5/3.</p>
+<p>For a <cite>DiatomicPerfectGas</cite>, the heat capacity ratio is set to 7/5.</p>
+</section>
+<section id="gas-mixture-model">
+<h2>Gas Mixture Model<a class="headerlink" href="#gas-mixture-model" title="Link to this heading">#</a></h2>
+<p>The <cite>GasMixture</cite> model represents a mixture of gases, where the overall properties are derived from the weighted contributions of individual gas components. It assumes Dalton’s Law of Partial Pressures and perfect mixing:</p>
+<div class="math notranslate nohighlight">
+\[P_{total} = \sum P_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(P_i\)</span> is the partial pressure of each gas.</p>
+<p>The molar mass of the mixture is computed as:</p>
+<div class="math notranslate nohighlight">
+\[M_{mix} = \sum x_i M_i\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x_i\)</span> is the molar fraction of each gas,</p></li>
+<li><p><span class="math notranslate nohighlight">\(M_i\)</span> is the molar mass of each gas.</p></li>
+</ul>
+<p>The heat capacity of the mixture is computed as a weighted sum of each gas:</p>
+<div class="math notranslate nohighlight">
+\[Cp_{mix} = \sum x_i Cp_i\]</div>
+<div class="math notranslate nohighlight">
+\[Cv_{mix} = \sum x_i Cv_i\]</div>
+<p>The sound speed velocity and density are computed using the inverse molar fraction weighting rule:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{\rho_{mix}} = \sum \frac{x_i}{\rho_i}\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{1}{c_{mix}} = \sum \frac{x_i}{c_i}\]</div>
+<p>Other properties, such as density and heat capacities, are obtained as weighted sums of the individual gas contributions.</p>
+<p><strong>Assumptions:</strong></p>
+<ul class="simple">
+<li><p>The gases mix ideally without chemical interactions.</p></li>
+<li><p>Follows Dalton’s Law for partial pressures.</p></li>
+<li><p>Properties are computed as weighted averages.</p></li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul class="simple">
+<li><p>Neglects non-ideal behavior and interactions between different gas species.</p></li>
+</ul>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading">#</a></h2>
+<p>Here is a short example on how to use the module. Please check the <a class="reference internal" href="examples.html"><span class="std std-ref">Examples</span></a> section for more details.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gas_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonoatomicPerfectGas</span>
+
+<span class="n">helium</span> <span class="o">=</span> <span class="n">MonoatomicPerfectGas</span><span class="p">(</span><span class="s2">&quot;He&quot;</span><span class="p">)</span>
+<span class="n">helium</span><span class="o">.</span><span class="n">pressure</span> <span class="o">=</span> <span class="mf">1e5</span>  <span class="c1"># Pa</span>
+<span class="n">helium</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="mi">273</span>  <span class="c1"># K</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">helium</span><span class="o">.</span><span class="n">density</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">helium</span><span class="o">.</span><span class="n">Cp</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -405,20 +501,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="wing_module.html"
+       href="atmosphere_module.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Wing module</p>
+        <p class="prev-next-title">Atmosphere module</p>
       </div>
     </a>
     <a class="right-next"
-       href="examples/gas_example.html"
+       href="motor_module.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Gas Example</p>
+        <p class="prev-next-title">Motor module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -434,10 +530,25 @@
 
 
   <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gasmodel-abstract-base-class">GasModel (Abstract Base Class)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-gas-model">Perfect Gas Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gas-mixture-model">Gas Mixture Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-example">Usage Example</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/examples.rst.txt"
+      <li><a href="_sources/gas_module.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

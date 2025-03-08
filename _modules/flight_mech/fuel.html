@@ -372,9 +372,9 @@
 <span class="c1"># Classes #</span>
 <span class="c1">###########</span>
 
-<div class="viewcode-block" id="FuelType">
-<a class="viewcode-back" href="../../flight_mech.fuel.html#flight_mech.fuel.FuelType">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FuelType</span><span class="p">:</span>
+<div class="viewcode-block" id="FuelModel">
+<a class="viewcode-back" href="../../flight_mech.fuel.html#flight_mech.fuel.FuelModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FuelModel</span><span class="p">:</span>
     <span class="n">density</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># kg.m-3</span>
     <span class="n">lower_heating_value</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># J.kg-1</span>
 
@@ -383,9 +383,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lower_heating_value</span> <span class="o">=</span> <span class="n">lower_heating_value</span></div>
 
 
-<div class="viewcode-block" id="FuelTypes">
-<a class="viewcode-back" href="../../flight_mech.fuel.html#flight_mech.fuel.FuelTypes">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FuelTypes</span><span class="p">(</span><span class="n">FuelType</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="FuelTable">
+<a class="viewcode-back" href="../../flight_mech.fuel.html#flight_mech.fuel.FuelTable">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FuelTable</span><span class="p">(</span><span class="n">FuelModel</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">METHANE</span> <span class="o">=</span> <span class="mf">0.670</span><span class="p">,</span> <span class="mf">50.1e6</span>
     <span class="n">DIESEL</span> <span class="o">=</span> <span class="mf">0.91e3</span><span class="p">,</span> <span class="mf">43e6</span>
     <span class="n">H2</span> <span class="o">=</span> <span class="mf">0.088</span><span class="p">,</span> <span class="mf">120.1e6</span>
@@ -393,7 +393,8 @@
     <span class="n">KEROSENE</span> <span class="o">=</span> <span class="mf">0.8e3</span><span class="p">,</span> <span class="mf">44e6</span>
     <span class="n">JET_A</span> <span class="o">=</span> <span class="mf">807.5</span><span class="p">,</span> <span class="mf">42.8e6</span>
     <span class="n">JP_4</span> <span class="o">=</span> <span class="mf">776.5</span><span class="p">,</span> <span class="mf">42.8e6</span>
-    <span class="n">JP_5</span> <span class="o">=</span> <span class="mf">816.5</span><span class="p">,</span> <span class="mf">42.8e6</span></div>
+    <span class="n">JP_5</span> <span class="o">=</span> <span class="mf">816.5</span><span class="p">,</span> <span class="mf">42.8e6</span>
+    <span class="n">AMMONIAC</span> <span class="o">=</span> <span class="mf">0.86</span><span class="p">,</span> <span class="mf">19e6</span></div>
 
 </pre></div>
 

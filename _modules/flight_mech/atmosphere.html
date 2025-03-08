@@ -400,17 +400,17 @@
 <span class="c1"># Classes #</span>
 <span class="c1">###########</span>
 
-<div class="viewcode-block" id="Atmosphere">
-<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.Atmosphere">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Atmosphere</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="AtmosphereModel">
+<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AtmosphereModel</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Atmosphere abstract class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">rho_0</span><span class="p">:</span> <span class="nb">float</span>
 
-<div class="viewcode-block" id="Atmosphere.compute_sigma_from_altitude">
-<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.Atmosphere.compute_sigma_from_altitude">[docs]</a>
+<div class="viewcode-block" id="AtmosphereModel.compute_sigma_from_altitude">
+<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.compute_sigma_from_altitude">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_sigma_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -430,8 +430,8 @@
         <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="Atmosphere.compute_density_from_altitude">
-<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.Atmosphere.compute_density_from_altitude">[docs]</a>
+<div class="viewcode-block" id="AtmosphereModel.compute_density_from_altitude">
+<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.compute_density_from_altitude">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_density_from_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -451,8 +451,8 @@
         <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="Atmosphere.compute_altitude_from_sigma">
-<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.Atmosphere.compute_altitude_from_sigma">[docs]</a>
+<div class="viewcode-block" id="AtmosphereModel.compute_altitude_from_sigma">
+<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.compute_altitude_from_sigma">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_altitude_from_sigma</span><span class="p">(</span><span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -475,7 +475,7 @@
 
 <div class="viewcode-block" id="ConstantAtmosphere">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.ConstantAtmosphere">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ConstantAtmosphere</span><span class="p">(</span><span class="n">Atmosphere</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConstantAtmosphere</span><span class="p">(</span><span class="n">AtmosphereModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A constant atmosphere model. Used for test purposes only.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -507,7 +507,7 @@
 
 <div class="viewcode-block" id="LinearAtmosphere">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LinearAtmosphere</span><span class="p">(</span><span class="n">Atmosphere</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinearAtmosphere</span><span class="p">(</span><span class="n">AtmosphereModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A very basic linear model for the atmosphere allowing to compute the density only.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -543,7 +543,7 @@
 
 <div class="viewcode-block" id="StandardAtmosphere">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">StandardAtmosphere</span><span class="p">(</span><span class="n">Atmosphere</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StandardAtmosphere</span><span class="p">(</span><span class="n">AtmosphereModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    International Standard Atmosphere model to compute pressure, temperature and density with altitude.</span>
 

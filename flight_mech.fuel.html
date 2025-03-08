@@ -388,64 +388,69 @@
 <span id="flight-mech-fuel-module"></span><h1>flight_mech.fuel module<a class="headerlink" href="#module-flight_mech.fuel" title="Link to this heading">#</a></h1>
 <p>Module to define fuel characteristics.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.fuel.</span></span><span class="sig-name descname"><span class="pre">FuelType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_heating_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/fuel.html#FuelType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.fuel.FuelType" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.fuel.</span></span><span class="sig-name descname"><span class="pre">FuelModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_heating_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/fuel.html#FuelModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.fuel.FuelModel" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelType.density">
-<span class="sig-name descname"><span class="pre">density</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.fuel.FuelType.density" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelModel.density">
+<span class="sig-name descname"><span class="pre">density</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.fuel.FuelModel.density" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelType.lower_heating_value">
-<span class="sig-name descname"><span class="pre">lower_heating_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.fuel.FuelType.lower_heating_value" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelModel.lower_heating_value">
+<span class="sig-name descname"><span class="pre">lower_heating_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#flight_mech.fuel.FuelModel.lower_heating_value" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.fuel.</span></span><span class="sig-name descname"><span class="pre">FuelTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/fuel.html#FuelTypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.fuel.FuelTypes" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flight_mech.fuel.FuelType" title="flight_mech.fuel.FuelType"><code class="xref py py-class docutils literal notranslate"><span class="pre">FuelType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flight_mech.fuel.</span></span><span class="sig-name descname"><span class="pre">FuelTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flight_mech/fuel.html#FuelTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flight_mech.fuel.FuelTable" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flight_mech.fuel.FuelModel" title="flight_mech.fuel.FuelModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">FuelModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>An enumeration.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.DIESEL">
-<span class="sig-name descname"><span class="pre">DIESEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(910.0,</span> <span class="pre">43000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.DIESEL" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.AMMONIAC">
+<span class="sig-name descname"><span class="pre">AMMONIAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.86,</span> <span class="pre">19000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.AMMONIAC" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.GASOLINE">
-<span class="sig-name descname"><span class="pre">GASOLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(750.0,</span> <span class="pre">41000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.GASOLINE" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.DIESEL">
+<span class="sig-name descname"><span class="pre">DIESEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(910.0,</span> <span class="pre">43000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.DIESEL" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.H2">
-<span class="sig-name descname"><span class="pre">H2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.088,</span> <span class="pre">120100000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.H2" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.GASOLINE">
+<span class="sig-name descname"><span class="pre">GASOLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(750.0,</span> <span class="pre">41000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.GASOLINE" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.JET_A">
-<span class="sig-name descname"><span class="pre">JET_A</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(807.5,</span> <span class="pre">42800000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.JET_A" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.H2">
+<span class="sig-name descname"><span class="pre">H2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.088,</span> <span class="pre">120100000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.H2" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.JP_4">
-<span class="sig-name descname"><span class="pre">JP_4</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(776.5,</span> <span class="pre">42800000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.JP_4" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.JET_A">
+<span class="sig-name descname"><span class="pre">JET_A</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(807.5,</span> <span class="pre">42800000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.JET_A" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.JP_5">
-<span class="sig-name descname"><span class="pre">JP_5</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(816.5,</span> <span class="pre">42800000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.JP_5" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.JP_4">
+<span class="sig-name descname"><span class="pre">JP_4</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(776.5,</span> <span class="pre">42800000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.JP_4" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.KEROSENE">
-<span class="sig-name descname"><span class="pre">KEROSENE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(800.0,</span> <span class="pre">44000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.KEROSENE" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.JP_5">
+<span class="sig-name descname"><span class="pre">JP_5</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(816.5,</span> <span class="pre">42800000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.JP_5" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="flight_mech.fuel.FuelTypes.METHANE">
-<span class="sig-name descname"><span class="pre">METHANE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.67,</span> <span class="pre">50100000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTypes.METHANE" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.KEROSENE">
+<span class="sig-name descname"><span class="pre">KEROSENE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(800.0,</span> <span class="pre">44000000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.KEROSENE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flight_mech.fuel.FuelTable.METHANE">
+<span class="sig-name descname"><span class="pre">METHANE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.67,</span> <span class="pre">50100000.0)</span></em><a class="headerlink" href="#flight_mech.fuel.FuelTable.METHANE" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -499,20 +504,21 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelType"><code class="docutils literal notranslate"><span class="pre">FuelType</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelType.density"><code class="docutils literal notranslate"><span class="pre">FuelType.density</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelType.lower_heating_value"><code class="docutils literal notranslate"><span class="pre">FuelType.lower_heating_value</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelModel"><code class="docutils literal notranslate"><span class="pre">FuelModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelModel.density"><code class="docutils literal notranslate"><span class="pre">FuelModel.density</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelModel.lower_heating_value"><code class="docutils literal notranslate"><span class="pre">FuelModel.lower_heating_value</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes"><code class="docutils literal notranslate"><span class="pre">FuelTypes</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.DIESEL"><code class="docutils literal notranslate"><span class="pre">FuelTypes.DIESEL</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.GASOLINE"><code class="docutils literal notranslate"><span class="pre">FuelTypes.GASOLINE</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.H2"><code class="docutils literal notranslate"><span class="pre">FuelTypes.H2</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.JET_A"><code class="docutils literal notranslate"><span class="pre">FuelTypes.JET_A</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.JP_4"><code class="docutils literal notranslate"><span class="pre">FuelTypes.JP_4</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.JP_5"><code class="docutils literal notranslate"><span class="pre">FuelTypes.JP_5</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.KEROSENE"><code class="docutils literal notranslate"><span class="pre">FuelTypes.KEROSENE</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTypes.METHANE"><code class="docutils literal notranslate"><span class="pre">FuelTypes.METHANE</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable"><code class="docutils literal notranslate"><span class="pre">FuelTable</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.AMMONIAC"><code class="docutils literal notranslate"><span class="pre">FuelTable.AMMONIAC</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.DIESEL"><code class="docutils literal notranslate"><span class="pre">FuelTable.DIESEL</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.GASOLINE"><code class="docutils literal notranslate"><span class="pre">FuelTable.GASOLINE</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.H2"><code class="docutils literal notranslate"><span class="pre">FuelTable.H2</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.JET_A"><code class="docutils literal notranslate"><span class="pre">FuelTable.JET_A</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.JP_4"><code class="docutils literal notranslate"><span class="pre">FuelTable.JP_4</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.JP_5"><code class="docutils literal notranslate"><span class="pre">FuelTable.JP_5</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.KEROSENE"><code class="docutils literal notranslate"><span class="pre">FuelTable.KEROSENE</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flight_mech.fuel.FuelTable.METHANE"><code class="docutils literal notranslate"><span class="pre">FuelTable.METHANE</span></code></a></li>
 </ul>
 </li>
 </ul>

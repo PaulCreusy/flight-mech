@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plane Velocity Example &#8212; flight-mech 1.0.8 documentation</title>
+    <title>Gas Example &#8212; flight-mech 1.0.8 documentation</title>
   
   
   
@@ -47,13 +47,13 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/plane_velocity_example';</script>
-    <link rel="canonical" href="https://flight-mech.creusy.fr/examples/plane_velocity_example.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/gas_example';</script>
+    <link rel="canonical" href="https://flight-mech.creusy.fr/examples/gas_example.html" />
     <link rel="icon" href="../_static/logo-light.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Turbojet Example" href="turbojet_example.html" />
-    <link rel="prev" title="Plane Take-Off Example" href="plane_take_off_example.html" />
+    <link rel="next" title="Plane Gliding Example" href="plane_gliding_example.html" />
+    <link rel="prev" title="Examples" href="../examples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="1.0.8" />
@@ -313,13 +313,13 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="gas_example.html">Gas Example</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gas Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_gliding_example.html">Plane Gliding Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_graphs_example.html">Plane Graphs Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_landing_example.html">Plane Landing Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_range_example.html">Plane Range Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plane_take_off_example.html">Plane Take-Off Example</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Plane Velocity Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plane_velocity_example.html">Plane Velocity Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="turbojet_example.html">Turbojet Example</a></li>
 </ul>
 </div>
@@ -364,7 +364,7 @@
     
     <li class="breadcrumb-item"><a href="../examples.html" class="nav-link">Examples</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Plane Velocity Example</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Gas Example</span></li>
   </ul>
 </nav>
 </div>
@@ -381,13 +381,12 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="Plane-Velocity-Example">
-<h1>Plane Velocity Example<a class="headerlink" href="#Plane-Velocity-Example" title="Link to this heading">#</a></h1>
-<p>This example demonstrates how to use flight-mech to compute the velocity of a plane in several conditions.</p>
+  <section id="Gas-Example">
+<h1>Gas Example<a class="headerlink" href="#Gas-Example" title="Link to this heading">#</a></h1>
 <section id="Imports">
 <h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python imports</span>
@@ -395,29 +394,25 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
 
-<span class="c1"># Additional imports</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
 <span class="c1"># Flight-Mech imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.plane</span><span class="w"> </span><span class="kn">import</span> <span class="n">Plane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.gas</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonoatomicPerfectGas</span><span class="p">,</span> <span class="n">DiatomicPerfectGas</span><span class="p">,</span> <span class="n">GasMixture</span>
 </pre></div>
 </div>
 </div>
 </section>
-<section id="Plane-definition">
-<h2>Plane definition<a class="headerlink" href="#Plane-definition" title="Link to this heading">#</a></h2>
-<p>You can define a plane simply by calling its name if it is already defined in the database. Once the plane instance is created, you can easily compute essential quantities such as glide ratio and lift coefficient at maximum glide ratio.</p>
+<section id="Monoatomic-perfect-gas">
+<h2>Monoatomic perfect gas<a class="headerlink" href="#Monoatomic-perfect-gas" title="Link to this heading">#</a></h2>
+<p>Let us define a monoatomic perfect gas such as helium and check its properties.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the plane</span>
-<span class="n">plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">(</span><span class="s2">&quot;cessna_172&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">helium</span> <span class="o">=</span> <span class="n">MonoatomicPerfectGas</span><span class="p">(</span><span class="s2">&quot;helium&quot;</span><span class="p">,</span><span class="n">molar_mass</span><span class="o">=</span><span class="mf">4e-3</span><span class="p">)</span>
+<span class="n">helium</span><span class="o">.</span><span class="n">pressure</span> <span class="o">=</span> <span class="mf">1e5</span>  <span class="c1"># Pa</span>
+<span class="n">helium</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="mi">273</span>  <span class="c1"># K</span>
 
-<span class="c1"># Compute the fmax and CL at fmax</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fmax&quot;</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">f_max</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C_L_f_max&quot;</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">C_L_f_max</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;density [kg.m-3]&quot;</span><span class="p">,</span> <span class="n">helium</span><span class="o">.</span><span class="n">density</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sound velocity [m.s-1]&quot;</span><span class="p">,</span> <span class="n">helium</span><span class="o">.</span><span class="n">sound_velocity</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -426,35 +421,59 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-fmax 12.909944487358056
-C_L_f_max 0.7745966692414834
+density [kg.m-3] 0.17622323083183306
+sound velocity [m.s-1] 972.507132526508
 </pre></div></div>
 </div>
-<p>It is also possible to change some plane characteristics directly. In this case, you might need to update the values of the variables.</p>
-<div class="nbinput nblast docutils container">
+</section>
+<section id="Diatomic-perfect-gas">
+<h2>Diatomic perfect gas<a class="headerlink" href="#Diatomic-perfect-gas" title="Link to this heading">#</a></h2>
+<p>It is also possible to define a gas using its chemical formula. In that case, it is not necessary to provide a molar mass. Let us try with O2.</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change the amount of fuel</span>
-<span class="n">plane</span><span class="o">.</span><span class="n">m_fuel</span> <span class="o">=</span> <span class="mf">136.26</span>  <span class="c1"># kg</span>
-<span class="n">plane</span><span class="o">.</span><span class="n">update_variables</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oxygen</span> <span class="o">=</span> <span class="n">DiatomicPerfectGas</span><span class="p">(</span><span class="s2">&quot;O2&quot;</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">293</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cp [J.K-1]&quot;</span><span class="p">,</span> <span class="n">oxygen</span><span class="o">.</span><span class="n">Cp</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cv [J.K-1]&quot;</span><span class="p">,</span> <span class="n">oxygen</span><span class="o">.</span><span class="n">Cv</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Cp [J.K-1] 909.4511895598583
+Cv [J.K-1] 649.6079925427559
+</pre></div></div>
+</div>
 </section>
-<section id="Velocity-interval-at-8000-meters">
-<h2>Velocity interval at 8000 meters<a class="headerlink" href="#Velocity-interval-at-8000-meters" title="Link to this heading">#</a></h2>
-<p>You can compute some specific velocities deduced from the plane characteristics at a given altitude such as the reference altitude, the velocity interval (i.e. the interval of velocities that is available with the thrust of the plane) and the stall velocity.</p>
+<section id="Gas-mixture">
+<h2>Gas mixture<a class="headerlink" href="#Gas-mixture" title="Link to this heading">#</a></h2>
+<p>If you need to study a gas mixture, you can either provide its molar mass directly or define it using the gas mixture class. Let us try with air.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the speed interval at 8000 meters</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reference speed at 8000m [m.s-1]&quot;</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="mi">8000</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;speed interval at 8000m [m.s-1]&quot;</span><span class="p">,</span>
-      <span class="n">plane</span><span class="o">.</span><span class="n">compute_velocity_interval_for_fixed_thrust</span><span class="p">(</span><span class="mi">8000</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;stall speed at 8000m [m.s-1]&quot;</span><span class="p">,</span>
-      <span class="n">plane</span><span class="o">.</span><span class="n">compute_stall_speed</span><span class="p">(</span><span class="mi">8000</span><span class="p">,</span> <span class="n">C_L_max</span><span class="o">=</span><span class="mf">1.5</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oxygen</span> <span class="o">=</span> <span class="n">DiatomicPerfectGas</span><span class="p">(</span><span class="s2">&quot;O2&quot;</span><span class="p">)</span>
+<span class="n">nitrogen</span> <span class="o">=</span> <span class="n">DiatomicPerfectGas</span><span class="p">(</span><span class="s2">&quot;N2&quot;</span><span class="p">)</span>
+<span class="n">gas_model_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;O2&quot;</span><span class="p">:</span> <span class="n">oxygen</span><span class="p">,</span>
+    <span class="s2">&quot;N2&quot;</span><span class="p">:</span> <span class="n">nitrogen</span>
+<span class="p">}</span>
+<span class="n">gas_molar_fraction_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;O2&quot;</span><span class="p">:</span> <span class="mf">0.21</span><span class="p">,</span>
+    <span class="s2">&quot;N2&quot;</span><span class="p">:</span> <span class="mf">0.79</span>
+<span class="p">}</span>
+
+<span class="n">air</span> <span class="o">=</span> <span class="n">GasMixture</span><span class="p">(</span><span class="n">gas_model_dict</span><span class="p">,</span> <span class="n">gas_molar_fraction_dict</span><span class="p">)</span>
+<span class="n">air</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="mi">283</span>
+<span class="n">air</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">1e5</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;density [kg.m-3]&quot;</span><span class="p">,</span> <span class="n">air</span><span class="o">.</span><span class="n">density</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sound velocity [m.s-1]&quot;</span><span class="p">,</span> <span class="n">air</span><span class="o">.</span><span class="n">sound_velocity</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -463,27 +482,18 @@ C_L_f_max 0.7745966692414834
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-reference speed at 8000m [m.s-1] 56.25034304495441
-speed interval at 8000m [m.s-1] (22.573885291918142, 140.16643797724348)
-stall speed at 8000m [m.s-1] 41.82955138380646
+density [kg.m-3] 1.2261252357914747
+sound velocity [m.s-1] 338.0352369810981
 </pre></div></div>
 </div>
-</section>
-<section id="Ascension-velocity-and-slope">
-<h2>Ascension velocity and slope<a class="headerlink" href="#Ascension-velocity-and-slope" title="Link to this heading">#</a></h2>
-<p>You can also compute the velocity in a non-horizontal flight conditions.</p>
+<p>After defining a gas, you can change the temperature or pressure to compute its properties in other conditions.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Consider that the tank is almost empty</span>
-<span class="n">plane</span><span class="o">.</span><span class="n">m_fuel</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># kg</span>
-<span class="n">plane</span><span class="o">.</span><span class="n">update_variables</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">air</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="mi">750</span> <span class="c1"># K</span>
 
-<span class="c1"># Compute the ascension speed and slope at sea level</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max ascension speed [m.s-1]&quot;</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">compute_max_ascension_speed</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reference speed at 0m [m.s-1]&quot;</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">compute_reference_speed</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max slope at 0m [rad]&quot;</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">compute_max_ascension_slope</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;density [kg.m-3]&quot;</span><span class="p">,</span> <span class="n">air</span><span class="o">.</span><span class="n">density</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -492,9 +502,7 @@ stall speed at 8000m [m.s-1] 41.82955138380646
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-max ascension speed [m.s-1] 32.89702949399428
-reference speed at 0m [m.s-1] 34.52424312519015
-max slope at 0m [rad] 0.5695767110104357
+density [kg.m-3] 0.4626579223053165
 </pre></div></div>
 </div>
 </section>
@@ -511,20 +519,20 @@ max slope at 0m [rad] 0.5695767110104357
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="plane_take_off_example.html"
+       href="../examples.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Plane Take-Off Example</p>
+        <p class="prev-next-title">Examples</p>
       </div>
     </a>
     <a class="right-next"
-       href="turbojet_example.html"
+       href="plane_gliding_example.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Turbojet Example</p>
+        <p class="prev-next-title">Plane Gliding Example</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -548,9 +556,9 @@ max slope at 0m [rad] 0.5695767110104357
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Plane-definition">Plane definition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Velocity-interval-at-8000-meters">Velocity interval at 8000 meters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Ascension-velocity-and-slope">Ascension velocity and slope</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Monoatomic-perfect-gas">Monoatomic perfect gas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Diatomic-perfect-gas">Diatomic perfect gas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Gas-mixture">Gas mixture</a></li>
 </ul>
   </nav></div>
 
@@ -558,7 +566,7 @@ max slope at 0m [rad] 0.5695767110104357
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/examples/plane_velocity_example.ipynb.txt"
+      <li><a href="../_sources/examples/gas_example.ipynb.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

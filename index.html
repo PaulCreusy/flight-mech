@@ -359,19 +359,18 @@
 <h2>Organisation<a class="headerlink" href="#organisation" title="Link to this heading">#</a></h2>
 <p>This package is decomposed in various independent modules, each one describing a physical aspect of the plane. The modules implemented are the following:</p>
 <ul class="simple">
-<li><p><strong>atmosphere</strong> : defines several atmosphere models to compute density, temperature, pressure and other quantities.</p></li>
 <li><p><strong>aerodynamics</strong> : contains functions to compute quantities in the boundary layer of a fluid flow.</p></li>
 <li><p><strong>airfoil</strong> : allows to define the geometry of an airfoil and compute the lift and moment coefficients.</p></li>
-<li><p><strong>wing</strong> : allows to define the geometry of a wing and compute the lift and drag coefficients.</p></li>
+<li><p><strong>atmosphere</strong> : defines several atmosphere models to compute density, temperature, pressure and other quantities.</p></li>
+<li><p><strong>environment</strong> : defines environmental quantities such as gravity.</p></li>
 <li><p><strong>fuel</strong> : defines several types of broadly used fuels in aeronautics.</p></li>
-<li><p><strong>turbine</strong> : allows to define several types of turbine to compute their thrust and consumption at various operating conditions.</p></li>
+<li><p><strong>gas</strong> : defines several gas models to compute their properties.</p></li>
+<li><p><strong>maneuver</strong> : allows to define maneuvers for a plane model.</p></li>
 <li><p><strong>motor</strong> : allows to define an electric motor model and compute its outputs.</p></li>
 <li><p><strong>plane</strong> : allows to define a numerical plane model, binding the previous modules, to compute its flight characteristics.</p></li>
+<li><p><strong>turbine</strong> : allows to define several types of turbine to compute their thrust and consumption at various operating conditions.</p></li>
+<li><p><strong>wing</strong> : allows to define the geometry of a wing and compute the lift and drag coefficients.</p></li>
 </ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>All units are defined in the international unit system except if explicitly indicated.</p>
-</div>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
@@ -386,12 +385,13 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plane_module.html">Plane module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="airfoil_module.html">Airfoil module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="wing_module.html">Wing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere_module.html">Atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gas_module.html">Gas Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="motor_module.html">Motor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plane_module.html">Plane module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="turbine_module.html">Turbine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wing_module.html">Wing module</a></li>
 </ul>
 </li>
 </ul>
@@ -402,6 +402,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/gas_example.html">Gas Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/plane_gliding_example.html">Plane Gliding Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/plane_graphs_example.html">Plane Graphs Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/plane_landing_example.html">Plane Landing Example</a></li>
