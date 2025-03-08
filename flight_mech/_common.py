@@ -94,3 +94,23 @@ def plot_graph(
     # Show it if needed
     if not hold_plot:
         plt.show()
+
+def lazy(func):
+    memory = {}
+
+    def inner(arg):
+        current_hash = hash(arg)
+        if current_hash in memory:
+            res = memory[current_hash]
+            return res
+        res = func(arg)
+        memory[current_hash] = res
+        return res
+
+    return inner
+
+def hash_dict(dict_to_hash: dict):
+    res = 0
+    for key in dict_to_hash:
+        res += (hash(key) * hash(dict_to_hash[key])) % int(1e12)
+    return res

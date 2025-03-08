@@ -21,7 +21,7 @@ from flight_mech.atmosphere import (
     StandardAtmosphere,
     compute_air_sound_speed
 )
-from flight_mech.fuel import FuelTypes
+from flight_mech.fuel import FuelTable
 from flight_mech._common import plot_graph
 
 #############
@@ -65,7 +65,7 @@ class _Turbojet:
     atmosphere_model = StandardAtmosphere
 
     mode: Literal["design", "operation"] = "design"
-    fuel = FuelTypes.KEROSENE
+    fuel = FuelTable.KEROSENE
 
     @property
     def ambient_pressure(self):

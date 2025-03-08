@@ -43,10 +43,14 @@ And open the file `docs/_build/html/index.html` in your browser.
 
 This software includes various modules to build a numerical plane model and compute its characteristics. The modules implemented are the following:
 
-- `atmosphere` : defines several atmosphere models to compute density, temperature, pressure and other quantities.
 - `aerodynamics` : contains functions to compute quantities in the boundary layer of a fluid flow.
 - `airfoil` : allows to define the geometry of an airfoil and compute the lift and moment coefficients.
-- `wing` : allows to define the geometry of a wing and compute the lift and drag coefficients.
+- `atmosphere` : defines several atmosphere models to compute density, temperature, pressure and other quantities.
+- `environment` : defines environmental quantities such as gravity.
 - `fuel` : defines several types of broadly used fuels in aeronautics.
+- `gas` : defines several gas models to compute their properties.
+- `maneuver` : allows to define maneuvers for a plane model.
+- `motor` : defines an electric motor model.
+- `plane` : allows to define a numerical plane model, binding the previous modules, to compute its flight characteristics.
 - `turbine` : allows to define several types of turbine to compute their thrust and consumption at various operating conditions.
-- `plane` : allows to define a numerical plane model, binding the previous modules, to compute its flight characteristics. 
+- `wing` : allows to define the geometry of a wing and compute the lift and drag coefficients.

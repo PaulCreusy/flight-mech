@@ -17,7 +17,15 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["numpy>=2.0.0", "matplotlib", "scipy", "bs4", "pandas", "tqdm"]
+dependencies = [
+    "numpy>=2.0.0",
+    "matplotlib",
+    "scipy",
+    "bs4",
+    "pandas",
+    "tqdm",
+    "periodictable",
+]
 keywords = [
     "flight",
     "airplane",
