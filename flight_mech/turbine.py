@@ -122,11 +122,8 @@ class _Turbojet:
         id_list = []
 
         # Extract the values
-        for i in range(1, 10):
-            if i == 9:
-                current_code = code + "s8"
-            else:
-                current_code = code + str(i)
+        for i in range(1, 9):
+            current_code = code + str(i)
             if current_code in self.__dir__():
                 id_list.append(i)
                 values_list.append(self.__getattribute__(current_code))
@@ -176,6 +173,10 @@ class TurbojetSingleBody(_Turbojet):
             np.power((1 + (GAMMA - 1) / 2 * np.power(self.M0, 2)),
                      GAMMA / (GAMMA - 1))
         return P0
+
+    @property
+    def V0(self):
+        return self.M0 * compute_air_sound_speed(self.ambient_temperature)
 
     @property
     def T0(self):
@@ -331,20 +332,38 @@ class TurbojetSingleBody(_Turbojet):
             return self._get_design_variable("A8")
 
     @property
-    def v8(self):
+    def V8(self):
         v8 = self.M8 * compute_air_sound_speed(self.Ts8)
         return v8
 
     @property
     def thrust(self):
         self._check_temperatures_positivity()
-        thrust = self.v8 * self.W8 + self.A8 * \
+        thrust = self.V8 * self.W8 + self.A8 * \
             (self.Ps8 - self.ambient_pressure)
         return thrust
 
     @property
     def fuel_consumption(self):
         return self.Wf
+
+    @property
+    def global_efficiency(self):
+        global_efficiency = self.thrust * self.V0 / \
+            (self.Wf * self.fuel.lower_heating_value)
+        return global_efficiency
+
+    @property
+    def propulsive_efficiency(self):
+        propulsive_efficiency = self.thrust * self.V0 / \
+            (self.W0 * (np.square(self.V8) - np.square(self.V0)) / 2)
+        return propulsive_efficiency
+
+    @property
+    def thermal_efficiency(self):
+        thermal_efficiency = (self.W0 * (np.square(self.V8) - np.square(self.V0)) / 2) /\
+            (self.Wf * self.fuel.lower_heating_value)
+        return thermal_efficiency
 
     def _check_temperatures_positivity(self):
         for i in range(1, 9):
