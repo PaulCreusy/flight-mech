@@ -479,11 +479,8 @@
         <span class="n">id_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Extract the values</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-                <span class="n">current_code</span> <span class="o">=</span> <span class="n">code</span> <span class="o">+</span> <span class="s2">&quot;s8&quot;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">current_code</span> <span class="o">=</span> <span class="n">code</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+            <span class="n">current_code</span> <span class="o">=</span> <span class="n">code</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">current_code</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">():</span>
                 <span class="n">id_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
                 <span class="n">values_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">current_code</span><span class="p">))</span>
@@ -535,6 +532,10 @@
             <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
                      <span class="n">GAMMA</span> <span class="o">/</span> <span class="p">(</span><span class="n">GAMMA</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">P0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">V0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">M0</span> <span class="o">*</span> <span class="n">compute_air_sound_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ambient_temperature</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">T0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -690,20 +691,38 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_design_variable</span><span class="p">(</span><span class="s2">&quot;A8&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">v8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">V8</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">v8</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">M8</span> <span class="o">*</span> <span class="n">compute_air_sound_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ts8</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v8</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">thrust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_temperatures_positivity</span><span class="p">()</span>
-        <span class="n">thrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v8</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W8</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">A8</span> <span class="o">*</span> \
+        <span class="n">thrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">V8</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">W8</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">A8</span> <span class="o">*</span> \
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ps8</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambient_pressure</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">thrust</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">fuel_consumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Wf</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">global_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">global_efficiency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrust</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">V0</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Wf</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel</span><span class="o">.</span><span class="n">lower_heating_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">global_efficiency</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">propulsive_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">propulsive_efficiency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrust</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">V0</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W0</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V8</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">propulsive_efficiency</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thermal_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">thermal_efficiency</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">W0</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V8</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span>\
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Wf</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel</span><span class="o">.</span><span class="n">lower_heating_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">thermal_efficiency</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_temperatures_positivity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
