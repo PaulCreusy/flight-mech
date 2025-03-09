@@ -16,4 +16,4 @@ class EarthEnvironment:
     Class to define the Earth's environment.
     """
 
-    g = 9.81  # m.s-2
+    g = 9.80665  # m.s-2
