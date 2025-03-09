@@ -363,11 +363,32 @@
 <span class="c1"># Imports #</span>
 <span class="c1">###########</span>
 
+<span class="c1"># Python imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
 <span class="c1"># Dependencies #</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Bounds</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="c1"># Local imports #</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+
+<span class="c1">#############</span>
+<span class="c1"># Constants #</span>
+<span class="c1">#############</span>
+
+<span class="n">VARIABLE_TO_UNIT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="s2">&quot;Pa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;density&quot;</span><span class="p">:</span> <span class="s2">&quot;kg.m-3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sound_speed&quot;</span><span class="p">:</span> <span class="s2">&quot;m.s-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dynamic_viscosity&quot;</span><span class="p">:</span> <span class="s2">&quot;kg.m-1.s-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kinematic_viscosity&quot;</span><span class="p">:</span> <span class="s2">&quot;m2.s-1&quot;</span>
+<span class="p">}</span>
 
 <span class="c1">#############</span>
 <span class="c1"># Functions #</span>
@@ -470,6 +491,52 @@
 <span class="sd">            Altitude in meters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AtmosphereModel.plot_graph">
+<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.plot_graph">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_graph</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">variable</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="s2">&quot;sound_speed&quot;</span><span class="p">,</span> <span class="s2">&quot;dynamic_viscosity&quot;</span><span class="p">],</span>
+            <span class="n">min_altitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="n">max_altitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20000.</span><span class="p">,</span>
+            <span class="n">nb_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the graph of evolution of the given variable in the atmosphere.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable : Literal[&quot;pressure&quot;, &quot;temperature&quot;, &quot;density&quot;, &quot;sound_speed&quot;, &quot;dynamic_viscosity&quot;]</span>
+<span class="sd">            Name of the variable to plot.</span>
+<span class="sd">        min_altitude : float, optional</span>
+<span class="sd">            Minimum altitude on the plot in meters, by default 0.</span>
+<span class="sd">        max_altitude : float, optional</span>
+<span class="sd">            Maximum altitude on the plot in meters, by default 20000.</span>
+<span class="sd">        nb_points : int, optional</span>
+<span class="sd">            Number of points in the plot.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        For more details on the optional arguments, please check flight_mech._common.plot_graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Define an altitude array</span>
+        <span class="n">altitude_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_altitude</span><span class="p">,</span> <span class="n">max_altitude</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+
+        <span class="c1"># Compute the variable array</span>
+        <span class="n">variable_array</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;compute_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2">_from_altitude&quot;</span><span class="p">)(</span><span class="n">altitude_array</span><span class="p">)</span>
+
+        <span class="c1"># Plot</span>
+        <span class="n">plot_graph</span><span class="p">(</span>
+            <span class="n">x_array</span><span class="o">=</span><span class="n">variable_array</span><span class="p">,</span>
+            <span class="n">y_array</span><span class="o">=</span><span class="n">altitude_array</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> graph&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;Altitude in meters&quot;</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">VARIABLE_TO_UNIT</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
 </div>
 
 
@@ -583,7 +650,7 @@
             <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">32000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">47000</span><span class="p">)</span> <span class="o">+</span> \
             <span class="mf">270.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">47000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">+</span> \
             <span class="p">(</span><span class="mf">270.15</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mf">2.8</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">+</span> \
-            <span class="p">(</span><span class="mf">214.15</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mf">2.</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">86000</span><span class="p">)</span>
+            <span class="p">(</span><span class="mf">214.15</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mf">2.</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">86000</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">temperature</span></div>
 
@@ -606,16 +673,16 @@
 <span class="sd">            Air pressure in Pa.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">pressure</span> <span class="o">=</span> <span class="p">(</span><span class="mi">101325</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">22.588e-6</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span> <span class="mf">5.256</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">11000</span><span class="p">)</span> <span class="o">+</span> \
-            <span class="p">(</span><span class="mi">22632</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">157.77e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">11000</span><span class="p">)))</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">11000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">20000</span><span class="p">)</span> <span class="o">+</span> \
-            <span class="p">(</span><span class="mf">5474.9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">4.615e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">20000</span><span class="p">),</span> <span class="mf">34.163</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">20000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">32000</span><span class="p">)</span> <span class="o">+</span> \
+        <span class="n">pressure</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">11000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">101325</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">22.588e-6</span> <span class="o">*</span> <span class="n">z</span><span class="p">),</span> <span class="mf">5.256</span><span class="p">))</span> <span class="o">+</span> \
+            <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">11000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">20000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">22632</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">157.77e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">11000</span><span class="p">)))</span> <span class="o">+</span> \
+            <span class="p">(</span><span class="mf">5474.9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">4.615e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">20000</span><span class="p">),</span> <span class="mf">34.163</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">20000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">32000</span><span class="p">)</span> <span class="o">+</span> \
             <span class="p">(</span><span class="mf">868.014</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">12.245e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">32000</span><span class="p">),</span> <span class="o">-</span><span class="mf">12.2</span><span class="p">))</span> <span class="o">*</span> \
             <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">32000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">47000</span><span class="p">)</span> <span class="o">+</span> \
             <span class="p">(</span><span class="mf">110.906</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">126.293e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">47000</span><span class="p">)))</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">47000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">+</span> \
-            <span class="p">(</span><span class="mf">66.939</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mf">270.65</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">270.65</span> <span class="o">-</span> <span class="mf">2.8</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="mf">12.2</span><span class="p">))</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="mf">66.939</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mf">270.65</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">270.65</span> <span class="o">-</span> <span class="mf">2.8</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="o">-</span><span class="mf">12.2</span><span class="p">))</span> <span class="o">*</span> \
             <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">51000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">+</span> \
             <span class="p">(</span><span class="mf">3.9564</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="mf">214.65</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">214.65</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="o">-</span><span class="mf">17.09</span><span class="p">))</span> <span class="o">*</span> \
-            <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mi">86000</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">71000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">86000</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">pressure</span></div>
 
