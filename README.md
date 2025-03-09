@@ -1,4 +1,4 @@
-# Flight-mech
+# Flight-Mech
 
 ![PyPI - Version](https://img.shields.io/pypi/v/flight-mech)![PyPI - Downloads](https://img.shields.io/pypi/dm/flight-mech)![Pylint Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pylint.yml/badge.svg)![Pytest Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pytest.yml/badge.svg)
 
