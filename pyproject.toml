@@ -36,6 +36,9 @@ keywords = [
     "wing",
     "turbojet",
     "airfoil-analysis",
+    "atmosphere",
+    "gas",
+    "motor",
 ]
 
 [project.urls]
