@@ -151,7 +151,8 @@ class StandardAtmosphere(AtmosphereModel):
 
     Notes
     -----
-    For more details, see https://en.wikipedia.org/wiki/International_Standard_Atmosphere.
+    For more details, see: https://en.wikipedia.org/wiki/International_Standard_Atmosphere.
+    For the original paper, see: https://www.digitaldutch.com/atmoscalc/US_Standard_Atmosphere_1976.pdf.
     """
 
     gamma = 1.4
@@ -175,11 +176,14 @@ class StandardAtmosphere(AtmosphereModel):
             Air temperature in K.
         """
 
-        temperature = (288.15 + z * (216.65 - 288.15) / 11000) * (z < 11000) + \
+        temperature = (288.15 + z * -6.5 / 1000) * (z < 11000) + \
             216.65 * (z >= 11000) * (z < 20000) + \
-            (216.65 + (z - 20000) * (228.65 - 216.65) / 12000) * (z >= 20000) * (z < 32000) + \
-            (228.65 + (z - 32000) * (270.65 - 228.65) / 12000) * \
-            (z >= 32000) * (z < 47000)
+            (216.65 + (z - 20000) * 1. / 1000) * (z >= 20000) * (z < 32000) + \
+            (228.65 + (z - 32000) * 2.8 / 1000) * \
+            (z >= 32000) * (z < 47000) + \
+            270.15 * (z >= 47000) * (z < 51000) + \
+            (270.15 + (z - 51000) * -2.8 / 1000) * (z >= 51000) * (z < 71000) + \
+            (214.15 + (z - 71000) * -2. / 1000) * (z >= 71000) * (z < 86000)
 
         return temperature
 
@@ -203,7 +207,12 @@ class StandardAtmosphere(AtmosphereModel):
             (22632 * np.exp(-157.77e-6 * (z - 11000))) * (z >= 11000) * (z < 20000) + \
             (5474.9 * np.power(1 + 4.615e-6 * (z - 20000), 34.163)) * (z >= 20000) * (z < 32000) + \
             (868.014 * np.power(1 + 12.245e-6 * (z - 32000), -12.2)) * \
-            (z >= 32000) * (z < 47000)
+            (z >= 32000) * (z < 47000) + \
+            (110.906 * np.exp(-126.293e-3 * (z - 47000))) * (z >= 47000) * (z < 51000) + \
+            (66.939 * np.power((270.65) / (270.65 - 2.8 * (z - 51000) / 1000))) * \
+            (z >= 51000) * (z < 71000) + \
+            (3.9564 * np.power((214.65) / (214.65 - 2. * (z - 71000) / 1000))) * \
+            (z >= 71000) * (z < 86000)
 
         return pressure
 
