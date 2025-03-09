@@ -12,6 +12,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #############
+# Constants #
+#############
+
+LAZY_MEMORY_LIMIT = 10
+
+#############
 # Functions #
 #############
 
@@ -103,6 +109,8 @@ def lazy(func):
         if current_hash in memory:
             res = memory[current_hash]
             return res
+        if len(memory) > LAZY_MEMORY_LIMIT:
+            memory.clear()
         res = func(arg)
         memory[current_hash] = res
         return res
