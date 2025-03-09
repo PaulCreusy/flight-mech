@@ -6,11 +6,32 @@ Module providing simple atmospheric models.
 # Imports #
 ###########
 
+# Python imports #
+
+from typing import Literal
+from abc import ABC, abstractmethod
+
 # Dependencies #
 
 import numpy as np
 from scipy.optimize import minimize, Bounds
-from abc import ABC, abstractmethod
+
+# Local imports #
+
+from flight_mech._common import plot_graph
+
+#############
+# Constants #
+#############
+
+VARIABLE_TO_UNIT = {
+    "pressure": "Pa",
+    "temperature": "K",
+    "density": "kg.m-3",
+    "sound_speed": "m.s-1",
+    "dynamic_viscosity": "kg.m-1.s-1",
+    "kinematic_viscosity": "m2.s-1"
+}
 
 #############
 # Functions #
@@ -101,6 +122,49 @@ class AtmosphereModel(ABC):
         """
         pass
 
+    def plot_graph(
+            self,
+            variable: Literal["pressure", "temperature", "density", "sound_speed", "dynamic_viscosity"],
+            min_altitude: float = 0.,
+            max_altitude: float = 20000.,
+            nb_points: int = 100,
+            **kwargs):
+        """
+        Plot the graph of evolution of the given variable in the atmosphere.
+
+        Parameters
+        ----------
+        variable : Literal["pressure", "temperature", "density", "sound_speed", "dynamic_viscosity"]
+            Name of the variable to plot.
+        min_altitude : float, optional
+            Minimum altitude on the plot in meters, by default 0.
+        max_altitude : float, optional
+            Maximum altitude on the plot in meters, by default 20000.
+        nb_points : int, optional
+            Number of points in the plot.
+
+        Note
+        ----
+        For more details on the optional arguments, please check flight_mech._common.plot_graph.
+        """
+
+        # Define an altitude array
+        altitude_array = np.linspace(min_altitude, max_altitude, nb_points)
+
+        # Compute the variable array
+        variable_array = getattr(
+            self, f"compute_{variable}_from_altitude")(altitude_array)
+
+        # Plot
+        plot_graph(
+            x_array=variable_array,
+            y_array=altitude_array,
+            title=f"{variable.capitalize()} graph",
+            y_label="Altitude in meters",
+            x_label=f"{variable.capitalize()} [{VARIABLE_TO_UNIT[variable]}]",
+            **kwargs
+        )
+
 class ConstantAtmosphere(AtmosphereModel):
     """
     A constant atmosphere model. Used for test purposes only.
@@ -183,7 +247,7 @@ class StandardAtmosphere(AtmosphereModel):
             (z >= 32000) * (z < 47000) + \
             270.15 * (z >= 47000) * (z < 51000) + \
             (270.15 + (z - 51000) * -2.8 / 1000) * (z >= 51000) * (z < 71000) + \
-            (214.15 + (z - 71000) * -2. / 1000) * (z >= 71000) * (z < 86000)
+            (214.15 + (z - 71000) * -2. / 1000) * (z >= 71000) * (z <= 86000)
 
         return temperature
 
@@ -203,16 +267,16 @@ class StandardAtmosphere(AtmosphereModel):
             Air pressure in Pa.
         """
 
-        pressure = (101325 * np.power(1 - 22.588e-6 * z, 5.256)) * (z < 11000) + \
-            (22632 * np.exp(-157.77e-6 * (z - 11000))) * (z >= 11000) * (z < 20000) + \
-            (5474.9 * np.power(1 + 4.615e-6 * (z - 20000), 34.163)) * (z >= 20000) * (z < 32000) + \
+        pressure = (z < 11000) * (101325 * np.power(np.abs(1 - 22.588e-6 * z), 5.256)) + \
+            (z >= 11000) * (z < 20000) * (22632 * np.exp(-157.77e-6 * (z - 11000))) + \
+            (5474.9 * np.power(1 - 4.615e-6 * (z - 20000), 34.163)) * (z >= 20000) * (z < 32000) + \
             (868.014 * np.power(1 + 12.245e-6 * (z - 32000), -12.2)) * \
             (z >= 32000) * (z < 47000) + \
             (110.906 * np.exp(-126.293e-6 * (z - 47000))) * (z >= 47000) * (z < 51000) + \
-            (66.939 * np.power((270.65) / (270.65 - 2.8 * (z - 51000) / 1000), 12.2)) * \
+            (66.939 * np.power((270.65) / (270.65 - 2.8 * (z - 51000) / 1000), -12.2)) * \
             (z >= 51000) * (z < 71000) + \
             (3.9564 * np.power((214.65) / (214.65 - 2. * (z - 71000) / 1000), -17.09)) * \
-            (z >= 71000) * (z < 86000)
+            (z >= 71000) * (z <= 86000)
 
         return pressure
 

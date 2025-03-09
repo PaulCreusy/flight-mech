@@ -69,11 +69,19 @@ Here is the list of hypotheses of the model:
 2. The air is dry.
 3. The gravity force is uniform.
 4. The atmosphere is at equilibrium. Therefore :math:`dp = -\rho g_0 dh`
-5. The temperature changes with altitude following these relations:
-
-    1. Between 0 and 11km: :math:`T(h) = 288.15 + h (216.65 - 288.15)/11000`
-    2. Between 11 and 20km: :math:`T(h) = 216.65`
-    3. Between 20 and 32km: :math:`T(h) = 216.65 + (h - 20000) (228.65 - 216.65)/12000`
-    4. Between 32 and 47km: :math:`T(h) = 228.65 + (h - 32000) (270.65 - 228.65)/12000`
+5. The temperature changes with altitude following a table defined in the :download:`US Standard Atmosphere NASA definition from 1976 <_static/US_Standard_Atmosphere_1976.pdf>`.
 
 The formulas of the other quantities directly derive from theses hypotheses.
+
+Graphs
+^^^^^^
+
+Here is an overview of the temperature and pressure evolutions.
+
+.. image:: ./figures/standard_temperature.png
+  :width: 400
+  :alt: Temperature Evolution
+
+.. image:: ./figures/standard_pressure.png
+  :width: 400
+  :alt: Pressure Evolution
