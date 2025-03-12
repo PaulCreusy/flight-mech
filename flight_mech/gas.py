@@ -366,11 +366,22 @@ class GasMixture(GasModel):
     _gas_state_hash: int = 0
     _molar_mass: float
 
-    def __init__(self, gas_model_dict: dict[str, GasModel], gas_molar_fraction_dict: dict[str, float]):
+    def __init__(self,
+                 gas_model_dict: dict[str, GasModel],
+                 gas_molar_fraction_dict: dict[str, float],
+                 temperature: float | None = None,
+                 pressure: float | None = None):
+
         self.gas_model_dict = gas_model_dict
         self.gas_molar_fraction_dict = gas_molar_fraction_dict
         self._check_gaz_molar_fraction()
         self._check_dict_correspondance()
+
+        if temperature is not None:
+            self.temperature = temperature
+
+        if pressure is not None:
+            self.pressure = pressure
 
     def __hash__(self):
         return self._get_gas_state_hash() + hash(self.T) + hash(self.P)
@@ -560,3 +571,18 @@ class GasMixture(GasModel):
             molar_fraction_array, viscosity_array, molar_mass_array)
 
         return mixture_viscosity
+
+class Air(GasMixture):
+
+    def __init__(self, temperature: float | None = None, pressure: float | None = None):
+
+        gas_model_dict = {
+            "O2": DiatomicPerfectGas("O2"),
+            "N2": DiatomicPerfectGas("N2")
+        }
+        gas_molar_fraction_dict = {
+            "O2": 0.21,
+            "N2": 0.79
+        }
+
+        super().__init__(gas_model_dict, gas_molar_fraction_dict, temperature, pressure)

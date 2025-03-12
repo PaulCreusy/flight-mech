@@ -19,6 +19,7 @@ from scipy.optimize import minimize, Bounds
 # Local imports #
 
 from flight_mech._common import plot_graph
+from flight_mech.gas import Air, GasModel
 
 #############
 # Constants #
@@ -66,7 +67,7 @@ class AtmosphereModel(ABC):
     Atmosphere abstract class.
     """
 
-    rho_0: float
+    gas_model: GasModel
 
     @staticmethod
     @abstractmethod
@@ -170,7 +171,10 @@ class ConstantAtmosphere(AtmosphereModel):
     A constant atmosphere model. Used for test purposes only.
     """
 
-    rho_0 = 1.225  # kg.m-3
+    gas_model = Air(
+        temperature=283.15,
+        pressure=101325.
+    )
 
     @staticmethod
     def compute_sigma_from_altitude(z: float):
@@ -182,7 +186,7 @@ class ConstantAtmosphere(AtmosphereModel):
 
     @classmethod
     def compute_density_from_altitude(self, z: float):
-        return self.rho_0
+        return self.gas_model.density
 
 
 class LinearAtmosphere(AtmosphereModel):
@@ -190,7 +194,10 @@ class LinearAtmosphere(AtmosphereModel):
     A very basic linear model for the atmosphere allowing to compute the density only.
     """
 
-    rho_0 = 1.225  # kg.m-3
+    gas_model = Air(
+        temperature=283.15,
+        pressure=101325.
+    )
 
     @staticmethod
     def compute_sigma_from_altitude(z: float):
@@ -200,7 +207,7 @@ class LinearAtmosphere(AtmosphereModel):
     @classmethod
     def compute_density_from_altitude(self, z: float):
         sigma = self.compute_sigma_from_altitude(z)
-        rho = self.rho_0 * sigma
+        rho = self.gas_model.density * sigma
         return rho
 
     @staticmethod
@@ -223,6 +230,11 @@ class StandardAtmosphere(AtmosphereModel):
     r = 287.058  # J.kg-1.K-1
     rho_0 = 1.225  # kg.m-3
     mu_0 = 17.26e-6  # kg.m-1.s-1
+
+    gas_model = Air(
+        temperature=283.15,
+        pressure=101325.
+    )
 
     @staticmethod
     def compute_temperature_from_altitude(z: float):
