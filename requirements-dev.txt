@@ -6,3 +6,4 @@ nbsphinx
 pydata-sphinx-theme
 ipykernel
 nbmake
+sphinxcontrib-bibtex
