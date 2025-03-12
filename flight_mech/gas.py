@@ -28,6 +28,113 @@ ideal_gas_constant = 8.31446261815324
 monoatomic_heat_capacity_ratio = 5 / 3
 diatomic_heat_capacity_ratio = 7 / 5
 
+# Values computed between 173K and 373K from : https://webbook.nist.gov/chemistry/fluid/#
+SUTHERLAND_CONSTANTS = {
+    "N2": {"T_0": 173, "mu_0": 11.415e-6, "S": 107.5},
+    "H2": {"T_0": 173, "mu_0": 6.0978e-6, "S": 60.2},
+    "O2": {"T_0": 173, "mu_0": 12.948e-6, "S": 124.1},
+    "CH4": {"T_0": 173, "mu_0": 6.6944e-6, "S": 170.1},
+    "He": {"T_0": 173, "mu_0": 13.743e-6, "S": 54.35},
+}
+
+#############
+# Functions #
+#############
+
+def compute_Sutherland_constant(mu_0: float, T_0: float, mu_1: float, T_1: float):
+    """
+    Compute the Sutherland's constant from two known viscosities.
+
+    Parameters
+    ----------
+    mu_0 : float
+        Viscosity at reference temperature in kg.m-1.s-1.
+    T_0 : float
+        Reference temperature in K.
+    mu_1 : float
+        Viscosity at other temperature in kg.m-1.s-1.
+    T_1 : float
+        Other temperature in K.
+
+    Returns
+    -------
+    float
+        Sutherland's constant.
+    """
+
+    temperature_ratio = T_1 / T_0
+    S = (mu_0 * np.power(temperature_ratio, 3 / 2) * T_0 - mu_1 * T_1) / \
+        (mu_1 - mu_0 * np.power(temperature_ratio, 3 / 2))
+
+    return S
+
+def compute_viscosity_Sutherland(mu_0: float, T_0: float, S: float, T_1: float):
+    """
+    Compute the viscosity of a gas knowing the Sutherland's constant and the viscosity
+    at a reference temperature.
+
+    Parameters
+    ----------
+    mu_0 : float
+        Viscosity at reference temperature in kg.m-1.s-1.
+    T_0 : float
+        Reference temperature in K.
+    S : float
+        Sutherland's constant.
+    T_1 : float
+        Temperature in K.
+
+    Returns
+    -------
+    float
+        Viscosity at target temperature in kg.m-1.s-1.
+    """
+
+    temperature_ratio = T_1 / T_0
+    mu = mu_0 * np.power(temperature_ratio, 3 / 2) * \
+        (T_0 + S) / (T_1 + S)
+
+    return mu
+
+def compute_mixing_viscosity_Wilke(molar_fraction_array: np.ndarray, viscosity_array: np.ndarray, molar_mass_array: np.ndarray):
+    """
+    Compute the viscosity of a gas mixture using Wilke's equation.
+
+    Reference
+    ---------
+    Based on: A viscosity for Gas Mixture, C. R. Wilke, 1950, The Journal of Chemical Physics, Volume 18, Number 4
+
+    Parameters
+    ----------
+    molar_fraction_array : np.ndarray
+        Array containing the molar fraction of each gas.
+    viscosity_array : np.ndarray
+        Array containing the viscosity of each gas.
+    molar_mass_array : np.ndarray
+        Array containing the molar mass of each gas.
+
+    Returns
+    -------
+    float
+        Viscosity of the mixture.
+    """
+
+    # Extract the number of gases
+    nb_gases = molar_fraction_array.shape[0]
+
+    # Compute the phi matrix
+    phi_matrix = np.power(1 + np.power(viscosity_array.reshape(nb_gases, 1) / viscosity_array.reshape(
+        1, nb_gases), 0.5) * np.power(molar_mass_array.reshape(1, nb_gases) / molar_mass_array.reshape(nb_gases, 1), 0.5), 2) / \
+        ((4 / np.sqrt(2)) *
+         np.power(1 + (molar_mass_array.reshape(nb_gases, 1) /
+                       molar_mass_array.reshape(1, nb_gases)), 0.5))
+
+    # Compute the viscosity mixture
+    mixture_viscosity = np.sum(viscosity_array / (np.dot(phi_matrix,
+                               molar_fraction_array.reshape(nb_gases, 1)).flatten() / molar_fraction_array))
+
+    return mixture_viscosity
+
 ###########
 # Classes #
 ###########
@@ -103,11 +210,40 @@ class GasModel(ABC):
         pass
 
     @property
+    @abstractmethod
+    def dynamic_viscosity(self) -> float:
+        """
+        Dynamic viscosity in kg.m-1.s-1.
+        """
+        pass
+
+    @property
+    def kinematic_viscosity(self):
+        """
+        Dynamic viscosity in m2.s-1.
+        """
+        return self.dynamic_viscosity / self.rho
+
+    @property
     def rho(self):
         """
         Alias for density.
         """
         return self.density
+
+    @property
+    def mu(self):
+        """
+        Alias for dynamic viscosity.
+        """
+        return self.dynamic_viscosity
+
+    @property
+    def nu(self):
+        """
+        Alias for kinematic viscosity.
+        """
+        return self.kinematic_viscosity
 
     @property
     def P(self) -> float:
@@ -138,6 +274,9 @@ class PerfectGas(GasModel):
     """
 
     heat_capacity_ratio: float
+    Sutherland_constant: float | None = None
+    mu_0: float | None = None
+    T_0: float | None = None
 
     @property
     def gamma(self):
@@ -171,6 +310,23 @@ class PerfectGas(GasModel):
         return sound_velocity
 
     @property
+    def dynamic_viscosity(self):
+        if self.Sutherland_constant is not None and self.mu_0 is not None and self.T_0 is not None:
+            temperature_ratio = self.T / self.T_0
+            mu = self.mu_0 * np.power(temperature_ratio, 3 / 2) * (
+                self.T_0 + self.Sutherland_constant) / (self.T + self.Sutherland_constant)
+            return mu
+
+        if self.name in SUTHERLAND_CONSTANTS:
+            self.Sutherland_constant = SUTHERLAND_CONSTANTS[self.name]["S"]
+            self.mu_0 = SUTHERLAND_CONSTANTS[self.name]["mu_0"]
+            self.T_0 = SUTHERLAND_CONSTANTS[self.name]["T_0"]
+            return self.dynamic_viscosity
+
+        raise ValueError(
+            "No values available to compute the dynamic viscosity. Please provide a Sutherland's constant and a reference viscosity and temperature.")
+
+    @property
     def specific_gas_constant(self):
         """
         Specific gas constant in J.kg-1.K-1.
@@ -184,6 +340,7 @@ class PerfectGas(GasModel):
         Alias for specific gas constant.
         """
         return self.specific_gas_constant
+
 
 class MonoatomicPerfectGas(PerfectGas):
     """
@@ -382,3 +539,24 @@ class GasMixture(GasModel):
                 self.gas_model_dict[key].sound_velocity
         sound_velocity = 1 / sound_velocity_invert
         return sound_velocity
+
+    @property
+    @lazy
+    def dynamic_viscosity(self):
+
+        # Update gas variables
+        self._update_gas_variables()
+
+        # Extract arrays of values
+        molar_fraction_array = np.array(
+            [self.gas_molar_fraction_dict[key] for key in self.gas_model_dict])
+        molar_mass_array = np.array(
+            [self.gas_model_dict[key].molar_mass for key in self.gas_model_dict])
+        viscosity_array = np.array(
+            [self.gas_model_dict[key].dynamic_viscosity for key in self.gas_model_dict])
+
+        # Compute mixture viscosity
+        mixture_viscosity = compute_mixing_viscosity_Wilke(
+            molar_fraction_array, viscosity_array, molar_mass_array)
+
+        return mixture_viscosity

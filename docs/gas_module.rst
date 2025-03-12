@@ -103,6 +103,7 @@ Other properties, such as density and heat capacities, are obtained as weighted 
 * The gases mix ideally without chemical interactions.
 * Follows Dalton’s Law for partial pressures.
 * Properties are computed as weighted averages.
+* Follows Wilke's Law (:cite:`wilke1950viscosity`) for dynamic viscosity of the mixture.
 
 **Limitations:**
 
@@ -123,3 +124,8 @@ Here is a short example on how to use the module. Please check the :ref:`/exampl
 
    print(helium.density)
    print(helium.Cp)
+
+References
+----------
+
+.. bibliography:: bibliography.bib

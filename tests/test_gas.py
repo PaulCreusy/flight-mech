@@ -33,6 +33,7 @@ def test_monoatomic_perfect_gas():
 
     assert np.isclose(helium.density, 0.1786, rtol=0.05)
     assert np.isclose(helium.sound_velocity, 972, rtol=0.05)
+    assert np.isclose(helium.dynamic_viscosity, 1.87e-5, rtol=0.05)
 
 
 def test_diatomic_perfect_gas():
@@ -63,6 +64,7 @@ def test_gas_mixture():
     assert np.isclose(air.density, 1.225, rtol=0.01)
     assert np.isclose(air.sound_velocity, 330, rtol=0.05)
     assert np.isclose(air.Cp, 1005, rtol=0.01)
+    assert np.isclose(air.dynamic_viscosity, 17.26e-6, rtol=0.05)
 
     air.temperature = 750
     assert np.isclose(air.density, 0.471, rtol=0.05)

@@ -41,7 +41,8 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.napoleon',
     'nbsphinx',
-    'sphinx_sitemap'
+    'sphinx_sitemap',
+    'sphinxcontrib.bibtex'
 ]
 
 templates_path = ['_templates']
@@ -100,3 +101,7 @@ for file in os.listdir(examples_folder_path):
     if file.endswith(".ipynb"):
         shutil.copy(os.path.join(examples_folder_path, file),
                     os.path.join(sphinx_examples_folder_path, file))
+
+# -- Options for bibtex extension --------------------------------------------
+
+bibtex_bibfiles = ['bibliography.bib']
