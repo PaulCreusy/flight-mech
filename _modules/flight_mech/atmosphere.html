@@ -376,6 +376,7 @@
 <span class="c1"># Local imports #</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flight_mech.gas</span><span class="w"> </span><span class="kn">import</span> <span class="n">Air</span><span class="p">,</span> <span class="n">GasModel</span>
 
 <span class="c1">#############</span>
 <span class="c1"># Constants #</span>
@@ -390,32 +391,9 @@
     <span class="s2">&quot;kinematic_viscosity&quot;</span><span class="p">:</span> <span class="s2">&quot;m2.s-1&quot;</span>
 <span class="p">}</span>
 
-<span class="c1">#############</span>
-<span class="c1"># Functions #</span>
-<span class="c1">#############</span>
-
-<div class="viewcode-block" id="compute_air_sound_speed">
-<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.compute_air_sound_speed">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_air_sound_speed</span><span class="p">(</span><span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the air sound speed at the given temperature, assuming it is a perfect gas.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    temperature : float</span>
-<span class="sd">        Temperature of the air in K.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    float</span>
-<span class="sd">        Sound speed in m.s-1.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">sound_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">StandardAtmosphere</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span>
-                          <span class="n">StandardAtmosphere</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">sound_speed</span></div>
-
+<span class="n">SEA_LEVEL_TEMPERATURE</span> <span class="o">=</span> <span class="mf">283.15</span>
+<span class="n">SEA_LEVEL_PRESSURE</span> <span class="o">=</span> <span class="mf">101325.</span>
+<span class="n">SEA_LEVEL_DENSITY</span> <span class="o">=</span> <span class="mf">1.225</span>
 
 <span class="c1">###########</span>
 <span class="c1"># Classes #</span>
@@ -428,7 +406,7 @@
 <span class="sd">    Atmosphere abstract class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">rho_0</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gas_model</span><span class="p">:</span> <span class="n">GasModel</span>
 
 <div class="viewcode-block" id="AtmosphereModel.compute_sigma_from_altitude">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.compute_sigma_from_altitude">[docs]</a>
@@ -547,7 +525,10 @@
 <span class="sd">    A constant atmosphere model. Used for test purposes only.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">rho_0</span> <span class="o">=</span> <span class="mf">1.225</span>  <span class="c1"># kg.m-3</span>
+    <span class="n">gas_model</span> <span class="o">=</span> <span class="n">Air</span><span class="p">(</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="n">SEA_LEVEL_TEMPERATURE</span><span class="p">,</span>
+        <span class="n">pressure</span><span class="o">=</span><span class="n">SEA_LEVEL_PRESSURE</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="ConstantAtmosphere.compute_sigma_from_altitude">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.ConstantAtmosphere.compute_sigma_from_altitude">[docs]</a>
@@ -567,7 +548,7 @@
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.ConstantAtmosphere.compute_density_from_altitude">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_density_from_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_0</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">density</span></div>
 </div>
 
 
@@ -579,7 +560,10 @@
 <span class="sd">    A very basic linear model for the atmosphere allowing to compute the density only.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">rho_0</span> <span class="o">=</span> <span class="mf">1.225</span>  <span class="c1"># kg.m-3</span>
+    <span class="n">gas_model</span> <span class="o">=</span> <span class="n">Air</span><span class="p">(</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="n">SEA_LEVEL_TEMPERATURE</span><span class="p">,</span>
+        <span class="n">pressure</span><span class="o">=</span><span class="n">SEA_LEVEL_PRESSURE</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="LinearAtmosphere.compute_sigma_from_altitude">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.compute_sigma_from_altitude">[docs]</a>
@@ -594,7 +578,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_density_from_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_sigma_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_0</span> <span class="o">*</span> <span class="n">sigma</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">density</span> <span class="o">*</span> <span class="n">sigma</span>
         <span class="k">return</span> <span class="n">rho</span></div>
 
 
@@ -620,10 +604,10 @@
 <span class="sd">    For the original paper, see: https://www.digitaldutch.com/atmoscalc/US_Standard_Atmosphere_1976.pdf.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.4</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="mf">287.058</span>  <span class="c1"># J.kg-1.K-1</span>
-    <span class="n">rho_0</span> <span class="o">=</span> <span class="mf">1.225</span>  <span class="c1"># kg.m-3</span>
-    <span class="n">mu_0</span> <span class="o">=</span> <span class="mf">17.26e-6</span>  <span class="c1"># kg.m-1.s-1</span>
+    <span class="n">gas_model</span> <span class="o">=</span> <span class="n">Air</span><span class="p">(</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="n">SEA_LEVEL_TEMPERATURE</span><span class="p">,</span>
+        <span class="n">pressure</span><span class="o">=</span><span class="n">SEA_LEVEL_PRESSURE</span>
+    <span class="p">)</span>
 
 <div class="viewcode-block" id="StandardAtmosphere.compute_temperature_from_altitude">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_temperature_from_altitude">[docs]</a>
@@ -687,19 +671,23 @@
         <span class="k">return</span> <span class="n">pressure</span></div>
 
 
+<div class="viewcode-block" id="StandardAtmosphere.update_gas_model_to_altitude_conditions">
+<a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.update_gas_model_to_altitude_conditions">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_gas_model_to_altitude_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">pressure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_pressure_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_temperature_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="StandardAtmosphere.compute_density_from_altitude">
 <a class="viewcode-back" href="../../flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.compute_density_from_altitude">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_density_from_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 
-        <span class="c1"># Compute pressure and temperature</span>
-        <span class="n">pressure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_pressure_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_temperature_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="c1"># Update gas model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_gas_model_to_altitude_conditions</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
-        <span class="c1"># Use perfect gas law to find density</span>
-        <span class="n">density</span> <span class="o">=</span> <span class="n">pressure</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">density</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">density</span></div>
 
 
 <div class="viewcode-block" id="StandardAtmosphere.compute_sigma_from_altitude">
@@ -708,7 +696,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_sigma_from_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 
         <span class="n">density</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_density_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">sigma</span> <span class="o">=</span> <span class="n">density</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_0</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">density</span> <span class="o">/</span> <span class="n">SEA_LEVEL_DENSITY</span>
 
         <span class="k">return</span> <span class="n">sigma</span></div>
 
@@ -731,10 +719,10 @@
 <span class="sd">            Sound speed in m.s-1.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_temperature_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">sound_speed</span> <span class="o">=</span> <span class="n">compute_air_sound_speed</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+        <span class="c1"># Update gas model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_gas_model_to_altitude_conditions</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">sound_speed</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">sound_velocity</span></div>
 
 
 <div class="viewcode-block" id="StandardAtmosphere.compute_dynamic_viscosity_from_altitude">
@@ -755,14 +743,10 @@
 <span class="sd">            Dynamic viscosity in kg.m-1.s-1.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># Compute temperature</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_temperature_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="c1"># Update gas model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_gas_model_to_altitude_conditions</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
-        <span class="c1"># Compute mu</span>
-        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_0</span> <span class="o">*</span> <span class="mf">0.083</span> <span class="o">*</span> \
-            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">temperature</span> <span class="o">+</span> <span class="mf">110.4</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">mu</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">dynamic_viscosity</span></div>
 
 
 <div class="viewcode-block" id="StandardAtmosphere.compute_kinematic_viscosity_from_altitude">
@@ -783,14 +767,10 @@
 <span class="sd">            Kinematic viscosity in m2.s-1.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># Compute mu and rho</span>
-        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_dynamic_viscosity_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_density_from_altitude</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="c1"># Update gas model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_gas_model_to_altitude_conditions</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
-        <span class="c1"># Compute nu</span>
-        <span class="n">nu</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">/</span> <span class="n">rho</span>
-
-        <span class="k">return</span> <span class="n">nu</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_model</span><span class="o">.</span><span class="n">kinematic_viscosity</span></div>
 
 
 <div class="viewcode-block" id="StandardAtmosphere.compute_altitude_from_sigma">

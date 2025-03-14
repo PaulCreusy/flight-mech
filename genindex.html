@@ -441,8 +441,6 @@
 </li>
       <li><a href="flight_mech.turbine.html#flight_mech.turbine.TurbojetSingleBody.compressor_efficiency">compressor_efficiency (flight_mech.turbine.TurbojetSingleBody attribute)</a>
 </li>
-      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.compute_air_sound_speed">compute_air_sound_speed() (in module flight_mech.atmosphere)</a>
-</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.compute_airfoil_fourrier_coefficients">compute_airfoil_fourrier_coefficients() (flight_mech.airfoil.Airfoil method)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.compute_alpha_and_delta_at_flight_point">compute_alpha_and_delta_at_flight_point() (flight_mech.plane.Plane method)</a>
@@ -728,8 +726,16 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.gamma">gamma (flight_mech.atmosphere.StandardAtmosphere attribute)</a>
+      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.gas_model">gas_model (flight_mech.atmosphere.AtmosphereModel attribute)</a>
+
+      <ul>
+        <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.ConstantAtmosphere.gas_model">(flight_mech.atmosphere.ConstantAtmosphere attribute)</a>
 </li>
+        <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.gas_model">(flight_mech.atmosphere.LinearAtmosphere attribute)</a>
+</li>
+        <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.gas_model">(flight_mech.atmosphere.StandardAtmosphere attribute)</a>
+</li>
+      </ul></li>
       <li>
     gas_models
 
@@ -737,10 +743,10 @@
         <li><a href="gas_module.html#module-gas_models">module</a>
 </li>
       </ul></li>
-      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTable.GASOLINE">GASOLINE (flight_mech.fuel.FuelTable attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flight_mech.fuel.html#flight_mech.fuel.FuelTable.GASOLINE">GASOLINE (flight_mech.fuel.FuelTable attribute)</a>
+</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_chord_incidence">get_chord_incidence() (flight_mech.airfoil.Airfoil method)</a>
 </li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.get_rotated_selig_arrays">get_rotated_selig_arrays() (flight_mech.airfoil.Airfoil method)</a>
@@ -892,8 +898,6 @@
         <li><a href="gas_module.html#module-gas_models">gas_models</a>
 </li>
       </ul></li>
-      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.mu_0">mu_0 (flight_mech.atmosphere.StandardAtmosphere attribute)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -982,8 +986,6 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.r">r (flight_mech.atmosphere.StandardAtmosphere attribute)</a>
-</li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate">re_interpolate() (flight_mech.airfoil.Airfoil method)</a>
 
       <ul>
@@ -992,20 +994,10 @@
       </ul></li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.Airfoil.re_interpolate_with_cosine_distribution">re_interpolate_with_cosine_distribution() (flight_mech.airfoil.Airfoil method)</a>
 </li>
-      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.reference_surface">reference_surface (flight_mech.wing.Wing property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.AtmosphereModel.rho_0">rho_0 (flight_mech.atmosphere.AtmosphereModel attribute)</a>
-
-      <ul>
-        <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.ConstantAtmosphere.rho_0">(flight_mech.atmosphere.ConstantAtmosphere attribute)</a>
+      <li><a href="flight_mech.wing.html#flight_mech.wing.Wing.reference_surface">reference_surface (flight_mech.wing.Wing property)</a>
 </li>
-        <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.LinearAtmosphere.rho_0">(flight_mech.atmosphere.LinearAtmosphere attribute)</a>
-</li>
-        <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.rho_0">(flight_mech.atmosphere.StandardAtmosphere attribute)</a>
-</li>
-      </ul></li>
       <li><a href="flight_mech.airfoil.html#flight_mech.airfoil.rotate_arrays">rotate_arrays() (in module flight_mech.airfoil)</a>
 </li>
       <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.rotation_speed">rotation_speed (flight_mech.motor.ElectricalMotor property)</a>
@@ -1101,6 +1093,8 @@
       <li><a href="flight_mech.motor.html#flight_mech.motor.ElectricalMotor.U_max">U_max (flight_mech.motor.ElectricalMotor attribute)</a>
 </li>
       <li><a href="flight_mech.plane.html#flight_mech.plane.Plane.update_C_L_max">update_C_L_max() (flight_mech.plane.Plane method)</a>
+</li>
+      <li><a href="flight_mech.atmosphere.html#flight_mech.atmosphere.StandardAtmosphere.update_gas_model_to_altitude_conditions">update_gas_model_to_altitude_conditions() (flight_mech.atmosphere.StandardAtmosphere class method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
