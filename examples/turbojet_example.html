@@ -388,7 +388,7 @@
 <section id="Imports">
 <h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python imports</span>
@@ -410,7 +410,7 @@
 <h2>Turbojet definition<a class="headerlink" href="#Turbojet-definition" title="Link to this heading">#</a></h2>
 <p>You first need to define the turbojet with its essential quantities.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the turbojet</span>
@@ -426,7 +426,7 @@
 </div>
 <p>Additionally, you need to set operating conditions.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the operating conditions</span>
@@ -442,7 +442,7 @@
 <p>The turbojet includes two modes, one for which the surface A4* will be considered as a variable and tuned to obtain a desired force. This mode is called the design mode.</p>
 <p>We can now tune its value to obtain the desired thrust, here 7500 N.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tune A4* to obtain 7500N of thrust</span>
@@ -456,7 +456,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-A4* at 7500N [m2]: 0.008131223754882832
+A4* at 7500N [m2]: 0.00813621917724611
 </pre></div></div>
 </div>
 </section>
@@ -465,7 +465,7 @@ A4* at 7500N [m2]: 0.008131223754882832
 <p>Once the turbojet has been designed, you can switch to the operation mode. This mode allows you to compute the thrust and other quantities of the turbojet in a user-defined configuration.</p>
 <p>First let us define the operation conditions and change the mode.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the flight characteristics</span>
@@ -486,11 +486,30 @@ A4* at 7500N [m2]: 0.008131223754882832
 <h3>T4 influence<a class="headerlink" href="#T4-influence" title="Link to this heading">#</a></h3>
 <p>We can now for instance see the influence of a variation of T4 on the thrust. This roughly corresponds to changing the position of the throttle lever.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">turbojet</span><span class="o">.</span><span class="n">T4_instruction</span><span class="o">=</span><span class="mi">800</span>
+<span class="n">turbojet</span><span class="o">.</span><span class="n">tune_current_OPR</span><span class="p">()</span>
+<span class="n">turbojet</span><span class="o">.</span><span class="n">current_OPR</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+np.float64(3.565578125000005)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute thrust evolution with T4 instruction</span>
-<span class="n">T4_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">turbojet</span><span class="o">.</span><span class="n">T4_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
+<span class="n">T4_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="n">turbojet</span><span class="o">.</span><span class="n">T4_max</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">)</span>
 <span class="n">thrust_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb_points</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">T4</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">T4_array</span><span class="p">):</span>
     <span class="n">turbojet</span><span class="o">.</span><span class="n">T4_instruction</span> <span class="o">=</span> <span class="n">T4</span>
@@ -510,42 +529,11 @@ A4* at 7500N [m2]: 0.008131223754882832
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-T3 is negative (-46.39534883720932), the domain is outside its domain of validity.
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:251: RuntimeWarning: invalid value encountered in divide
-  W4 = self.W4R * (self.P4 / REFERENCE_PRESSURE) / \
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:264: RuntimeWarning: divide by zero encountered in divide
-  * (1 - (self.T5 / self.T4)), GAMMA / (GAMMA - 1))
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:263: RuntimeWarning: invalid value encountered in multiply
-  P5 = self.P4 * np.power(1 - (1 / self.turbine_efficiency)
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:251: RuntimeWarning: divide by zero encountered in divide
-  W4 = self.W4R * (self.P4 / REFERENCE_PRESSURE) / \
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:310: RuntimeWarning: invalid value encountered in divide
-  W8R = self.W8 * np.sqrt(self.T8 / REFERENCE_TEMPERATURE) / \
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:310: RuntimeWarning: invalid value encountered in sqrt
-  W8R = self.W8 * np.sqrt(self.T8 / REFERENCE_TEMPERATURE) / \
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:224: RuntimeWarning: invalid value encountered in power
-  (np.power(self.P3 / self.P2, (GAMMA - 1) / GAMMA) - 1))
-c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_mech\turbine.py:263: RuntimeWarning: invalid value encountered in power
-  P5 = self.P4 * np.power(1 - (1 / self.turbine_efficiency)
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_turbojet_example_13_2.png" src="../_images/examples_turbojet_example_13_2.png" />
+<img alt="../_images/examples_turbojet_example_14_0.png" src="../_images/examples_turbojet_example_14_0.png" />
 </div>
 </div>
 </section>
@@ -553,7 +541,7 @@ c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_
 <h3>Cruise<a class="headerlink" href="#Cruise" title="Link to this heading">#</a></h3>
 <p>Let us now check the thrust obtained in cruise conditions.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Switch to cruise conditions</span>
@@ -573,7 +561,7 @@ c:\Users\paulc\Documents\Projets\Flight-Mechanics-Calculator\examples\..\flight_
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-cruise thrust [N]: 2527.981077021654
+cruise thrust [N]: 2527.981038576462
 </pre></div></div>
 </div>
 </section>
@@ -581,7 +569,7 @@ cruise thrust [N]: 2527.981077021654
 <h3>Velocity influence<a class="headerlink" href="#Velocity-influence" title="Link to this heading">#</a></h3>
 <p>The velocity also has an influence on the thrust of the engine.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute thrust evolution with velocity</span>
@@ -605,7 +593,7 @@ cruise thrust [N]: 2527.981077021654
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_turbojet_example_17_0.png" src="../_images/examples_turbojet_example_17_0.png" />
+<img alt="../_images/examples_turbojet_example_18_0.png" src="../_images/examples_turbojet_example_18_0.png" />
 </div>
 </div>
 </section>
@@ -613,7 +601,7 @@ cruise thrust [N]: 2527.981077021654
 <h3>Altitude influence<a class="headerlink" href="#Altitude-influence" title="Link to this heading">#</a></h3>
 <p>The altitude also has an influence on the thrust of the engine.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute thrust evolution with altitude</span>
@@ -638,7 +626,7 @@ cruise thrust [N]: 2527.981077021654
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_turbojet_example_19_0.png" src="../_images/examples_turbojet_example_19_0.png" />
+<img alt="../_images/examples_turbojet_example_20_0.png" src="../_images/examples_turbojet_example_20_0.png" />
 </div>
 </div>
 </section>
