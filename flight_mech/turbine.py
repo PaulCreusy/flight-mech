@@ -18,8 +18,10 @@ from scipy.optimize import brute
 # Local imports #
 
 from flight_mech.atmosphere import (
-    StandardAtmosphere,
-    compute_air_sound_speed
+    StandardAtmosphere
+)
+from flight_mech.gas import (
+    Air
 )
 from flight_mech.fuel import FuelTable
 from flight_mech._common import plot_graph
@@ -31,8 +33,7 @@ from flight_mech._common import plot_graph
 # Define reference quantities for computations
 REFERENCE_PRESSURE = 101325  # Pa
 REFERENCE_TEMPERATURE = 288.15  # K
-GAMMA = StandardAtmosphere.gamma
-cp = (GAMMA * StandardAtmosphere.r) / (GAMMA - 1)
+air = Air()
 
 VARIABLE_TO_CODE = {
     "pressure": "P",
@@ -170,18 +171,19 @@ class TurbojetSingleBody(_Turbojet):
     @property
     def P0(self):
         P0 = self.ambient_pressure * \
-            np.power((1 + (GAMMA - 1) / 2 * np.power(self.M0, 2)),
-                     GAMMA / (GAMMA - 1))
+            np.power((1 + (air.gamma - 1) / 2 * np.power(self.M0, 2)),
+                     air.gamma / (air.gamma - 1))
         return P0
 
     @property
     def V0(self):
-        return self.M0 * compute_air_sound_speed(self.ambient_temperature)
+        air.temperature = self.ambient_temperature
+        return self.M0 * air.sound_velocity
 
     @property
     def T0(self):
         T0 = self.ambient_temperature * \
-            (1 + (GAMMA - 1) / 2 * np.power(self.M0, 2))
+            (1 + (air.gamma - 1) / 2 * np.power(self.M0, 2))
         return T0
 
     @property
@@ -222,7 +224,7 @@ class TurbojetSingleBody(_Turbojet):
     @property
     def T3(self):
         T3 = self.T2 * (1 + (1 / self.compressor_efficiency) *
-                        (np.power(self.P3 / self.P2, (GAMMA - 1) / GAMMA) - 1))
+                        (np.power(self.P3 / self.P2, (air.gamma - 1) / air.gamma) - 1))
         return T3
 
     @property
@@ -256,13 +258,13 @@ class TurbojetSingleBody(_Turbojet):
     @property
     def Wf(self):
         Wf = (1 / self.fuel.lower_heating_value) * \
-            self.W4 * cp * (self.T4 - self.T3)
+            self.W4 * air.Cp * (self.T4 - self.T3)
         return Wf
 
     @property
     def P5(self):
         P5 = self.P4 * np.power(1 - (1 / self.turbine_efficiency)
-                                * (1 - (self.T5 / self.T4)), GAMMA / (GAMMA - 1))
+                                * (1 - (self.T5 / self.T4)), air.gamma / (air.gamma - 1))
         return P5
 
     @property
@@ -290,7 +292,7 @@ class TurbojetSingleBody(_Turbojet):
     def M8(self):
         if self.mode == "design":
             M8 = np.sqrt(
-                (np.power(self.P8 / self.Ps8, (GAMMA - 1) / GAMMA) - 1) * (2 / (GAMMA - 1)))
+                (np.power(self.P8 / self.Ps8, (air.gamma - 1) / air.gamma) - 1) * (2 / (air.gamma - 1)))
             return M8
         elif self.mode == "operation":
             # Use this property because all the computations need to be performed in design mode
@@ -298,7 +300,7 @@ class TurbojetSingleBody(_Turbojet):
 
     @property
     def Ts8(self):
-        Ts8 = self.T8 * np.power(1 + (GAMMA - 1) / 2 *
+        Ts8 = self.T8 * np.power(1 + (air.gamma - 1) / 2 *
                                  np.power(self.M8, 2), -1)
         return Ts8
 
@@ -324,8 +326,8 @@ class TurbojetSingleBody(_Turbojet):
     @property
     def A8(self):
         if self.mode == "design":
-            A8 = self.A8_star * (1 / self.M8) * np.power((2 / (GAMMA + 1)) * (
-                1 + (GAMMA - 1) / 2 * np.power(self.M8, 2)), (GAMMA + 1) / (2 * (GAMMA - 1)))
+            A8 = self.A8_star * (1 / self.M8) * np.power((2 / (air.gamma + 1)) * (
+                1 + (air.gamma - 1) / 2 * np.power(self.M8, 2)), (air.gamma + 1) / (2 * (air.gamma - 1)))
             return A8
         elif self.mode == "operation":
             # Use this property because all the computations need to be performed in design mode
@@ -333,7 +335,8 @@ class TurbojetSingleBody(_Turbojet):
 
     @property
     def V8(self):
-        v8 = self.M8 * compute_air_sound_speed(self.Ts8)
+        air.temperature = self.Ts8
+        v8 = self.M8 * air.sound_velocity
         return v8
 
     @property

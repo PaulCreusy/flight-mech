@@ -35,6 +35,7 @@ SUTHERLAND_CONSTANTS = {
     "O2": {"T_0": 173, "mu_0": 12.948e-6, "S": 124.1},
     "CH4": {"T_0": 173, "mu_0": 6.6944e-6, "S": 170.1},
     "He": {"T_0": 173, "mu_0": 13.743e-6, "S": 54.35},
+    "air": {"T_0": 273, "mu_0": 1.716e-5, "S": 111}
 }
 
 #############
@@ -149,7 +150,7 @@ class GasModel(ABC):
     pressure: float = 1e5  # Pa
     molar_mass: float = 1.  # kg.mol-1
 
-    def __init__(self, name: str, molar_mass: float | None = None, temperature: float | None = None, pressure: float | None = None):
+    def __init__(self, name: str = "", molar_mass: float | None = None, temperature: float | None = None, pressure: float | None = None):
         self.name = name
 
         # Attribute molar mass
@@ -366,11 +367,90 @@ class GasMixture(GasModel):
     _gas_state_hash: int = 0
     _molar_mass: float
 
-    def __init__(self, gas_model_dict: dict[str, GasModel], gas_molar_fraction_dict: dict[str, float]):
+    def __init__(self,
+                 gas_model_dict: dict[str, GasModel],
+                 gas_molar_fraction_dict: dict[str, float],
+                 temperature: float | None = None,
+                 pressure: float | None = None):
+
         self.gas_model_dict = gas_model_dict
         self.gas_molar_fraction_dict = gas_molar_fraction_dict
         self._check_gaz_molar_fraction()
         self._check_dict_correspondance()
+
+        if temperature is not None:
+            self.temperature = temperature
+
+        if pressure is not None:
+            self.pressure = pressure
+
+    def combine_into_single_model(self):
+        """
+        Combine all the gas models into a single one if they all belong to the same class.
+
+        Returns
+        -------
+        GasModel
+            New gas model representing the combination.
+
+        Raises
+        ------
+        ValueError
+            Raise error if not all the gas models are of the same type.
+        """
+
+        # Merge everything into a single instance if possible
+        class_name = None
+        is_all_same_class = True
+        for key in self.gas_model_dict:
+            if class_name is None:
+                class_name = self.gas_model_dict[key].__name__
+            elif class_name != self.gas_model_dict[key].__name__:
+                is_all_same_class = False
+                break
+
+        if not is_all_same_class:
+            raise ValueError(
+                "Unable to combine everything into a single model as the components are not all of the same type.")
+
+        # Save current state
+        current_temperature = self.temperature
+        current_pressure = self.pressure
+
+        # Compute the new quantities to define the combination
+        molar_mass = self.molar_mass
+        T_0 = 173
+        self.temperature = T_0
+        self.pressure = 1e5
+        mu_0 = self.dynamic_viscosity
+        T_1 = 373
+        self.temperature = T_1
+        mu_1 = self.dynamic_viscosity
+        S = compute_Sutherland_constant(
+            mu_0=mu_0,
+            mu_1=mu_1,
+            T_0=T_0,
+            T_1=T_1
+        )
+
+        # Create the new instance
+        new_instance = self.gas_model_dict[key].__class__(
+            molar_mass=molar_mass,
+            temperature=current_temperature,
+            pressure=current_pressure
+        )
+
+        # Attribute Sutherland's constant
+        if "Sutherland_constant" in dir(new_instance):
+            self.Sutherland_constant = S
+            self.mu_0 = mu_0
+            self.T_0 = T_0
+
+        # Reset to original state
+        self.pressure = current_pressure
+        self.temperature = current_temperature
+
+        return new_instance
 
     def __hash__(self):
         return self._get_gas_state_hash() + hash(self.T) + hash(self.P)
@@ -560,3 +640,16 @@ class GasMixture(GasModel):
             molar_fraction_array, viscosity_array, molar_mass_array)
 
         return mixture_viscosity
+
+class Air(DiatomicPerfectGas):
+    """
+    Class to create an air ideal gas model.
+    """
+
+    def __init__(self, temperature: float | None = None, pressure: float | None = None):
+        super().__init__(
+            name="air",
+            molar_mass=29e-3,
+            temperature=temperature,
+            pressure=pressure
+        )

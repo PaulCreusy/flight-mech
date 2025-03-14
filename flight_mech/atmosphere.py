@@ -19,6 +19,7 @@ from scipy.optimize import minimize, Bounds
 # Local imports #
 
 from flight_mech._common import plot_graph
+from flight_mech.gas import Air, GasModel
 
 #############
 # Constants #
@@ -33,29 +34,9 @@ VARIABLE_TO_UNIT = {
     "kinematic_viscosity": "m2.s-1"
 }
 
-#############
-# Functions #
-#############
-
-def compute_air_sound_speed(temperature: float):
-    """
-    Compute the air sound speed at the given temperature, assuming it is a perfect gas.
-
-    Parameters
-    ----------
-    temperature : float
-        Temperature of the air in K.
-
-    Returns
-    -------
-    float
-        Sound speed in m.s-1.
-    """
-
-    sound_speed = np.sqrt(StandardAtmosphere.gamma *
-                          StandardAtmosphere.r * temperature)
-
-    return sound_speed
+SEA_LEVEL_TEMPERATURE = 283.15
+SEA_LEVEL_PRESSURE = 101325.
+SEA_LEVEL_DENSITY = 1.225
 
 ###########
 # Classes #
@@ -66,7 +47,7 @@ class AtmosphereModel(ABC):
     Atmosphere abstract class.
     """
 
-    rho_0: float
+    gas_model: GasModel
 
     @staticmethod
     @abstractmethod
@@ -170,7 +151,10 @@ class ConstantAtmosphere(AtmosphereModel):
     A constant atmosphere model. Used for test purposes only.
     """
 
-    rho_0 = 1.225  # kg.m-3
+    gas_model = Air(
+        temperature=SEA_LEVEL_TEMPERATURE,
+        pressure=SEA_LEVEL_PRESSURE
+    )
 
     @staticmethod
     def compute_sigma_from_altitude(z: float):
@@ -182,7 +166,7 @@ class ConstantAtmosphere(AtmosphereModel):
 
     @classmethod
     def compute_density_from_altitude(self, z: float):
-        return self.rho_0
+        return self.gas_model.density
 
 
 class LinearAtmosphere(AtmosphereModel):
@@ -190,7 +174,10 @@ class LinearAtmosphere(AtmosphereModel):
     A very basic linear model for the atmosphere allowing to compute the density only.
     """
 
-    rho_0 = 1.225  # kg.m-3
+    gas_model = Air(
+        temperature=SEA_LEVEL_TEMPERATURE,
+        pressure=SEA_LEVEL_PRESSURE
+    )
 
     @staticmethod
     def compute_sigma_from_altitude(z: float):
@@ -200,7 +187,7 @@ class LinearAtmosphere(AtmosphereModel):
     @classmethod
     def compute_density_from_altitude(self, z: float):
         sigma = self.compute_sigma_from_altitude(z)
-        rho = self.rho_0 * sigma
+        rho = self.gas_model.density * sigma
         return rho
 
     @staticmethod
@@ -219,10 +206,10 @@ class StandardAtmosphere(AtmosphereModel):
     For the original paper, see: https://www.digitaldutch.com/atmoscalc/US_Standard_Atmosphere_1976.pdf.
     """
 
-    gamma = 1.4
-    r = 287.058  # J.kg-1.K-1
-    rho_0 = 1.225  # kg.m-3
-    mu_0 = 17.26e-6  # kg.m-1.s-1
+    gas_model = Air(
+        temperature=SEA_LEVEL_TEMPERATURE,
+        pressure=SEA_LEVEL_PRESSURE
+    )
 
     @staticmethod
     def compute_temperature_from_altitude(z: float):
@@ -281,22 +268,23 @@ class StandardAtmosphere(AtmosphereModel):
         return pressure
 
     @classmethod
+    def update_gas_model_to_altitude_conditions(self, z: float):
+        self.gas_model.pressure = self.compute_pressure_from_altitude(z)
+        self.gas_model.temperature = self.compute_temperature_from_altitude(z)
+
+    @classmethod
     def compute_density_from_altitude(self, z: float):
 
-        # Compute pressure and temperature
-        pressure = self.compute_pressure_from_altitude(z)
-        temperature = self.compute_temperature_from_altitude(z)
+        # Update gas model
+        self.update_gas_model_to_altitude_conditions(z)
 
-        # Use perfect gas law to find density
-        density = pressure / (self.r * temperature)
-
-        return density
+        return self.gas_model.density
 
     @classmethod
     def compute_sigma_from_altitude(self, z: float):
 
         density = self.compute_density_from_altitude(z)
-        sigma = density / self.rho_0
+        sigma = density / SEA_LEVEL_DENSITY
 
         return sigma
 
@@ -316,10 +304,10 @@ class StandardAtmosphere(AtmosphereModel):
             Sound speed in m.s-1.
         """
 
-        temperature = self.compute_temperature_from_altitude(z)
-        sound_speed = compute_air_sound_speed(temperature)
+        # Update gas model
+        self.update_gas_model_to_altitude_conditions(z)
 
-        return sound_speed
+        return self.gas_model.sound_velocity
 
     @classmethod
     def compute_dynamic_viscosity_from_altitude(self, z: float):
@@ -337,14 +325,10 @@ class StandardAtmosphere(AtmosphereModel):
             Dynamic viscosity in kg.m-1.s-1.
         """
 
-        # Compute temperature
-        temperature = self.compute_temperature_from_altitude(z)
+        # Update gas model
+        self.update_gas_model_to_altitude_conditions(z)
 
-        # Compute mu
-        mu = self.mu_0 * 0.083 * \
-            np.power(temperature, 3 / 2) / (temperature + 110.4)
-
-        return mu
+        return self.gas_model.dynamic_viscosity
 
     @classmethod
     def compute_kinematic_viscosity_from_altitude(self, z: float):
@@ -362,14 +346,10 @@ class StandardAtmosphere(AtmosphereModel):
             Kinematic viscosity in m2.s-1.
         """
 
-        # Compute mu and rho
-        mu = self.compute_dynamic_viscosity_from_altitude(z)
-        rho = self.compute_density_from_altitude(z)
+        # Update gas model
+        self.update_gas_model_to_altitude_conditions(z)
 
-        # Compute nu
-        nu = mu / rho
-
-        return nu
+        return self.gas_model.kinematic_viscosity
 
     @classmethod
     def compute_altitude_from_sigma(self, sigma: float):
