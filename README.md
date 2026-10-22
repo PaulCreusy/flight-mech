@@ -5,7 +5,7 @@
 ## License
 
 This software has been developed by Paul Creusy and is shared under the MIT License.
-
+ 
 ## Getting started
 
 ### Installation
